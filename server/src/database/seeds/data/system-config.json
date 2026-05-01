@@ -1,0 +1,80 @@
+[
+  {
+    "config_key": "ai_daily_usage_limit",
+    "config_value": "10",
+    "description": "用户每日 AI 使用次数限制",
+    "group": "ai"
+  },
+  {
+    "config_key": "ai_extend_model",
+    "config_value": "gpt-3.5-turbo",
+    "description": "AI 延伸解读使用的模型",
+    "group": "ai"
+  },
+  {
+    "config_key": "ai_image_model",
+    "config_value": "gpt-4-vision-preview",
+    "description": "AI 图片识别使用的模型",
+    "group": "ai"
+  },
+  {
+    "config_key": "check_in_enabled",
+    "config_value": "true",
+    "description": "是否开启打卡功能",
+    "group": "check_in"
+  },
+  {
+    "config_key": "check_in_reward_days",
+    "config_value": "7,14,30,60,90",
+    "description": "打卡奖励天数（逗号分隔）",
+    "group": "check_in"
+  },
+  {
+    "config_key": "favorite_max_count",
+    "config_value": "500",
+    "description": "用户最大收藏数量",
+    "group": "favorite"
+  },
+  {
+    "config_key": "recommend_content_weight",
+    "config_value": "0.4",
+    "description": "推荐算法 - 内容相似度权重",
+    "group": "recommend"
+  },
+  {
+    "config_key": "recommend_hot_weight",
+    "config_value": "0.3",
+    "description": "推荐算法 - 热度权重",
+    "group": "recommend"
+  },
+  {
+    "config_key": "recommend_new_weight",
+    "config_value": "0.2",
+    "description": "推荐算法 - 新卡片权重",
+    "group": "recommend"
+  },
+  {
+    "config_key": "recommend_random_weight",
+    "config_value": "0.1",
+    "description": "推荐算法 - 随机权重",
+    "group": "recommend"
+  },
+  {
+    "config_key": "recommend_dedup_days",
+    "config_value": "7",
+    "description": "推荐去重天数（已浏览卡片不再推荐的天数）",
+    "group": "recommend"
+  },
+  {
+    "config_key": "upload_max_size",
+    "config_value": "10485760",
+    "description": "上传文件最大大小（字节），默认 10MB",
+    "group": "upload"
+  },
+  {
+    "config_key": "upload_allowed_types",
+    "config_value": "image/jpeg,image/png,image/gif,image/webp",
+    "description": "允许上传的文件类型",
+    "group": "upload"
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "name": "日常生活",
+    "icon": "https://cdn.funfact.com/icons/daily-life.png",
+    "description": "生活中的冷知识和小技巧",
+    "sort_order": 1
+  },
+  {
+    "name": "自然科学",
+    "icon": "https://cdn.funfact.com/icons/nature.png",
+    "description": "大自然中的奇妙现象",
+    "sort_order": 2
+  },
+  {
+    "name": "科学原理",
+    "icon": "https://cdn.funfact.com/icons/science.png",
+    "description": "有趣的科学知识和原理",
+    "sort_order": 3
+  },
+  {
+    "name": "数学趣闻",
+    "icon": "https://cdn.funfact.com/icons/math.png",
+    "description": "数学中的有趣知识",
+    "sort_order": 4
+  },
+  {
+    "name": "历史故事",
+    "icon": "https://cdn.funfact.com/icons/history.png",
+    "description": "历史上的冷知识和趣事",
+    "sort_order": 5
+  },
+  {
+    "name": "动物世界",
+    "icon": "https://cdn.funfact.com/icons/animal.png",
+    "description": "动物界的奇妙知识",
+    "sort_order": 6
+  },
+  {
+    "name": "植物王国",
+    "icon": "https://cdn.funfact.com/icons/plant.png",
+    "description": "植物界的有趣知识",
+    "sort_order": 7
+  },
+  {
+    "name": "人体奥秘",
+    "icon": "https://cdn.funfact.com/icons/human-body.png",
+    "description": "人体的奇妙之处",
+    "sort_order": 8
+  },
+  {
+    "name": "科技前沿",
+    "icon": "https://cdn.funfact.com/icons/technology.png",
+    "description": "科技领域的最新发现",
+    "sort_order": 9
+  },
+  {
+    "name": "文化艺术",
+    "icon": "https://cdn.funfact.com/icons/culture.png",
+    "description": "文化与艺术中的冷知识",
+    "sort_order": 10
+  }
+]

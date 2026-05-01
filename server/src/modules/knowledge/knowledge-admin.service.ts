@@ -1,0 +1,123 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Knowledge } from './entities/knowledge.entity';
+import { CreateKnowledgeDto } from './dto/create-knowledge.dto';
+import { UpdateKnowledgeDto } from './dto/update-knowledge.dto';
+import { QueryKnowledgeDto } from './dto/query-knowledge.dto';
+import { PaginatedResponseDto } from '../../common/dto/pagination.dto';
+import { KnowledgeStatus } from '../../common/enums/status.enum';
+
+/**
+ * 知识卡片管理端服务
+ */
+@Injectable()
+export class KnowledgeAdminService {
+  constructor(
+    @InjectRepository(Knowledge)
+    private knowledgeRepo: Repository<Knowledge>,
+  ) {}
+
+  /**
+   * 获取知识卡片列表（管理端）
+   */
+  async findAll(query: QueryKnowledgeDto): Promise<PaginatedResponseDto<Knowledge>> {
+    const { page = 1, pageSize = 10, title, category_id, status } = query;
+
+    const qb = this.knowledgeRepo
+      .createQueryBuilder('k')
+      .leftJoinAndSelect('k.category', 'c')
+      .where('k.deleted_at IS NULL');
+
+    if (title) {
+      qb.andWhere('k.title LIKE :title', { title: `%${title}%` });
+    }
+
+    if (category_id) {
+      qb.andWhere('k.category_id = :category_id', { category_id });
+    }
+
+    if (status !== undefined) {
+      qb.andWhere('k.status = :status', { status });
+    }
+
+    qb.orderBy('k.sort_weight', 'DESC');
+    qb.addOrderBy('k.created_at', 'DESC');
+
+    const total = await qb.getCount();
+    const list = await qb
+      .skip((page - 1) * pageSize)
+      .take(pageSize)
+      .getMany();
+
+    return new PaginatedResponseDto(list, total, page, pageSize);
+  }
+
+  /**
+   * 创建知识卡片
+   */
+  async create(dto: CreateKnowledgeDto, adminId: string): Promise<Knowledge> {
+    const knowledge = this.knowledgeRepo.create({
+      ...dto,
+      created_by: adminId,
+      updated_by: adminId,
+    });
+
+    return this.knowledgeRepo.save(knowledge);
+  }
+
+  /**
+   * 更新知识卡片
+   */
+  async update(id: string, dto: UpdateKnowledgeDto, adminId: string): Promise<Knowledge> {
+    const knowledge = await this.knowledgeRepo.findOne({
+      where: { id },
+      withDeleted: true,
+    });
+
+    if (!knowledge) {
+      throw new NotFoundException('知识卡片不存在');
+    }
+
+    Object.assign(knowledge, dto, { updated_by: adminId });
+    return this.knowledgeRepo.save(knowledge);
+  }
+
+  /**
+   * 删除知识卡片（软删除）
+   */
+  async remove(id: string): Promise<void> {
+    const knowledge = await this.knowledgeRepo.findOne({
+      where: { id },
+      withDeleted: true,
+    });
+
+    if (!knowledge) {
+      throw new NotFoundException('知识卡片不存在');
+    }
+
+    await this.knowledgeRepo.softDelete(id);
+  }
+
+  /**
+   * 切换知识卡片状态（上架/下架）
+   */
+  async toggleStatus(id: string, adminId: string): Promise<Knowledge> {
+    const knowledge = await this.knowledgeRepo.findOne({
+      where: { id },
+      withDeleted: true,
+    });
+
+    if (!knowledge) {
+      throw new NotFoundException('知识卡片不存在');
+    }
+
+    knowledge.status =
+      knowledge.status === KnowledgeStatus.ONLINE
+        ? KnowledgeStatus.OFFLINE
+        : KnowledgeStatus.ONLINE;
+    knowledge.updated_by = adminId;
+
+    return this.knowledgeRepo.save(knowledge);
+  }
+}
