@@ -1,0 +1,54 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build output
+dist/
+build/
+.output/
+.nuxt/
+.next/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+*.tsbuildinfo
+*.local
+
+# Figma imports (generated assets)
+app/src/imports/**/*.png
+app/src/imports/**/*.jpeg
+app/src/imports/**/*.jpg
+
+# Server (if added later)
+server/node_modules/
+server/dist/
+server/.env

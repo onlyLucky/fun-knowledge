@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --color-primary: #292526;
+  --color-primary-soft: #433f40;
+  --color-text-main: #121111;
+  --color-text-sub: #787676;
+  --color-text-muted: #878787;
+  --color-bg-page: #F2F2F2;
+  --color-bg-card: #FDFDFD;
+  --color-border: #DFDEDE;
+  --color-accent: #347EFB;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: #000;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
