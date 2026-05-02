@@ -149,7 +149,8 @@ export class RecommendService {
     }
 
     // 热度排序：浏览数 + 收藏数*5
-    queryBuilder.orderBy('(k.view_count + k.favorite_count * 5)', 'DESC');
+    queryBuilder.addSelect('k.view_count + k.favorite_count * 5', 'hot_score');
+    queryBuilder.orderBy('hot_score', 'DESC');
     queryBuilder.addOrderBy('k.created_at', 'DESC');
 
     return queryBuilder

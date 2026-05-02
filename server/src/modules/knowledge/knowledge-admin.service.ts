@@ -96,6 +96,10 @@ export class KnowledgeAdminService {
       throw new NotFoundException('知识卡片不存在');
     }
 
+    if (knowledge.deleted_at) {
+      throw new NotFoundException('知识卡片不存在');
+    }
+
     await this.knowledgeRepo.softDelete(id);
   }
 

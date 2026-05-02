@@ -8,6 +8,7 @@ import {
   Param,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -19,6 +20,7 @@ import {
 import { LoginPlatform } from '../../common/enums/status.enum';
 import { Public } from '../../common/decorators/public.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { User } from '../user/entities/user.entity';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -26,6 +28,7 @@ import { UpdateProfileDto } from './dto/update-profile.dto';
 import { BindPlatformDto } from './dto/bind-platform.dto';
 
 @ApiTags('客户端认证')
+@UseGuards(JwtAuthGuard)
 @Controller('v1/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

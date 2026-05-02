@@ -5,6 +5,7 @@ import {
   Req,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -15,11 +16,13 @@ import {
 import { Request } from 'express';
 import { Public } from '../../common/decorators/public.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { AdminAuthGuard } from '../../common/guards/admin-auth.guard';
 import { Admin } from '../admin/entities/admin.entity';
 import { AuthAdminService } from './auth-admin.service';
 import { AdminLoginDto } from './dto/admin-login.dto';
 
 @ApiTags('管理端认证')
+@UseGuards(AdminAuthGuard)
 @Controller('admin/v1/auth')
 export class AuthAdminController {
   constructor(private readonly authAdminService: AuthAdminService) {}

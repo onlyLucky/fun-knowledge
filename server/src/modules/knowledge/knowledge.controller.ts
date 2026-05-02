@@ -17,7 +17,7 @@ export class KnowledgeController {
     return this.knowledgeService.findAll(query);
   }
 
-  @Get(':id')
+  @Get(':id([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})')
   @Public()
   @ApiOperation({ summary: '获取知识卡片详情' })
   @ApiParam({ name: 'id', description: '知识卡片 UUID' })

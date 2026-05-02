@@ -7,6 +7,7 @@ import {
   UseGuards,
   UseInterceptors,
   Res,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -53,6 +54,9 @@ export class ImportController {
     @CurrentUser() admin: RequestAdmin,
     @UploadedFile() file: Express.Multer.File,
   ) {
+    if (!file) {
+      throw new BadRequestException('请上传 Excel 文件');
+    }
     return this.importService.startImport(admin.id, file);
   }
 
