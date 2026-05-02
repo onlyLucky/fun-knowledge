@@ -5,7 +5,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { BullModule } from '@nestjs/bull';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerStorageRedisService } from '@nestjs/throttler-storage-redis';
 
 // 配置模块
 import { appConfig } from './config/app.config';

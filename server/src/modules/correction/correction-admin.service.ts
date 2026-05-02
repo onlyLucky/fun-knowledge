@@ -83,7 +83,7 @@ export class CorrectionAdminService {
     }
 
     correction.status = dto.status;
-    correction.review_remark = dto.review_remark || null;
+    correction.review_remark = dto.review_remark ?? (undefined as any);
     correction.reviewed_by = adminId;
     correction.review_time = new Date();
 

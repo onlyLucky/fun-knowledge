@@ -11,15 +11,24 @@ dotenv.config();
 import { Admin } from '../../modules/admin/entities/admin.entity';
 import { Category } from '../../modules/category/entities/category.entity';
 import { SystemConfig } from '../../modules/config/entities/system-config.entity';
+import { Knowledge } from '../../modules/knowledge/entities/knowledge.entity';
+import { User } from '../../modules/user/entities/user.entity';
+import { Favorite } from '../../modules/favorite/entities/favorite.entity';
+import { Correction } from '../../modules/correction/entities/correction.entity';
+import { CheckIn } from '../../modules/check-in/entities/check-in.entity';
+import { AiExtendLog } from '../../modules/ai/entities/ai-extend-log.entity';
+import { AiImageLog } from '../../modules/ai/entities/ai-image-log.entity';
+import { ImportTask } from '../../modules/import/entities/import-task.entity';
+import { UserInterest } from '../../modules/recommend/entities/user-interest.entity';
 
 const dataSource = new DataSource({
   type: 'postgres',
   host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT, 10) || 5432,
+  port: parseInt(process.env.DB_PORT || '5432', 10),
   username: process.env.DB_USERNAME || 'postgres',
   password: process.env.DB_PASSWORD || 'postgres',
   database: process.env.DB_DATABASE || 'funfact',
-  entities: [Admin, Category, SystemConfig],
+  entities: [Admin, Category, SystemConfig, Knowledge, User, Favorite, Correction, CheckIn, AiExtendLog, AiImageLog, ImportTask, UserInterest],
   synchronize: true,
 });
 

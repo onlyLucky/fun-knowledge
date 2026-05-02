@@ -81,17 +81,16 @@ export class ImportProcessor {
           ? row.tags.split(',').map((t) => t.trim()).filter(Boolean)
           : [];
 
-        const knowledge = this.knowledgeRepo.create({
-          title: row.title,
-          content: row.content,
-          image_url: row.image_name || null,
-          category_id: category.id,
-          tags,
-          source: row.source || null,
-          created_by: row.admin_id,
-          updated_by: row.admin_id,
-          status: 1, // 默认上架
-        });
+        const knowledge = new Knowledge();
+          knowledge.title = row.title;
+          knowledge.content = row.content;
+          knowledge.image_url = row.image_name || '';
+          knowledge.category_id = category.id;
+          knowledge.tags = tags;
+          knowledge.source = row.source || '';
+          knowledge.created_by = row.admin_id;
+          knowledge.updated_by = row.admin_id;
+          knowledge.status = 1; // 默认上架
 
         await this.knowledgeRepo.save(knowledge);
         successCount++;
@@ -110,7 +109,7 @@ export class ImportProcessor {
 
     // 更新最终状态
     task.status = failCount === rows.length ? ImportStatus.FAILED : ImportStatus.SUCCESS;
-    task.error_log = errorLogs.length > 0 ? errorLogs.join('\n') : null;
+    task.error_log = errorLogs.length > 0 ? errorLogs.join('\n') : '';
     task.completed_at = new Date();
     await this.importTaskRepo.save(task);
 

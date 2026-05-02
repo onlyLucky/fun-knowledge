@@ -60,18 +60,18 @@ export class AuthService {
 
     switch (loginDto.platform) {
       case LoginPlatform.WECHAT:
-        user = await this.loginByWeChat(loginDto.code, loginDto.nickname, loginDto.avatar);
+        user = await this.loginByWeChat(loginDto.code!, loginDto.nickname, loginDto.avatar);
         break;
       case LoginPlatform.QQ:
       case LoginPlatform.DOUYIN:
       case LoginPlatform.APPLE:
-        user = await this.loginByOAuth(loginDto.platform, loginDto.code, loginDto.nickname, loginDto.avatar);
+        user = await this.loginByOAuth(loginDto.platform, loginDto.code!, loginDto.nickname, loginDto.avatar);
         break;
       case LoginPlatform.PHONE:
-        user = await this.loginByPhone(loginDto.phone, loginDto.smsCode);
+        user = await this.loginByPhone(loginDto.phone!, loginDto.smsCode!);
         break;
       case LoginPlatform.EMAIL:
-        user = await this.loginByEmail(loginDto.email, loginDto.password);
+        user = await this.loginByEmail(loginDto.email!, loginDto.password!);
         break;
       default:
         throw new BadRequestException('不支持的登录平台');
@@ -327,7 +327,7 @@ export class AuthService {
 
     switch (dto.platform) {
       case LoginPlatform.WECHAT: {
-        const sessionData = await this.getWechatSession(dto.code);
+        const sessionData = await this.getWechatSession(dto.code!);
         platformData = { openid: sessionData.openid, unionid: sessionData.unionid };
         // 检查该 openid 是否已被其他用户绑定
         const existingUser = await this.userRepository.findOne({
@@ -348,7 +348,7 @@ export class AuthService {
         if (existingPhoneUser && existingPhoneUser.id !== userId) {
           throw new ConflictException('该手机号已被其他用户绑定');
         }
-        user.phone = dto.phone;
+        user.phone = dto.phone!;
         break;
       }
       case LoginPlatform.EMAIL: {
@@ -363,7 +363,7 @@ export class AuthService {
         if (existingEmailUser && existingEmailUser.id !== userId) {
           throw new ConflictException('该邮箱已被其他用户绑定');
         }
-        user.email = dto.email;
+        user.email = dto.email!;
         break;
       }
       case LoginPlatform.QQ:
@@ -415,13 +415,13 @@ export class AuthService {
     // 清除对应的主字段
     switch (platform) {
       case LoginPlatform.WECHAT:
-        user.openid = null;
+        user.openid = undefined as any;
         break;
       case LoginPlatform.PHONE:
-        user.phone = null;
+        user.phone = undefined as any;
         break;
       case LoginPlatform.EMAIL:
-        user.email = null;
+        user.email = undefined as any;
         break;
     }
 

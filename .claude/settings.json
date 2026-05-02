@@ -1,4 +1,16 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(kill %1)",
+      "Bash(wait)",
+      "Bash(npx nest *)",
+      "Bash(npm --prefix /Users/feynman/Documents/code/2026/@IDEA/FunFact/server install axios @types/multer)",
+      "Bash(npm --prefix /Users/feynman/Documents/code/2026/@IDEA/FunFact/server run build)",
+      "Bash(npm --prefix /Users/feynman/Documents/code/2026/@IDEA/FunFact/server run start:dev)",
+      "Bash(curl -s http://localhost:3000/api/docs)",
+      "Bash(docker compose *)"
+    ]
+  },
   "enabledPlugins": {
     "superpowers@claude-plugins-official": true
   }
