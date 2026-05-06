@@ -148,7 +148,7 @@ function buildMenuItems(
 
 export function Sidebar() {
   const menus = useAuthStore((s) => s.menus);
-  const user = useAuthStore((s) => s.user);
+  const admin = useAuthStore((s) => s.admin);
   const logout = useAuthStore((s) => s.logout);
   const collapsed = useSettingsStore((s) => s.sidebarCollapsed);
   const setSidebarCollapsed = useSettingsStore((s) => s.setSidebarCollapsed);
@@ -345,7 +345,7 @@ export function Sidebar() {
       />
       <UserMenu
         collapsed={isCollapsed}
-        user={user}
+        admin={admin}
         userMenuItems={userMenuItems}
         accountMenuTriggerAriaLabel={t`Open account menu`}
       />

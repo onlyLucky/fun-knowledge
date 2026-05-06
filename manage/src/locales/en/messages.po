@@ -13,6 +13,16 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. placeholder {0}: s.label
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/correction/index.tsx
+msgid "{0}"
+msgstr "{0}"
+
+#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/correction/index.tsx
+#: src/routes/_auth/knowledge/index.tsx
+#: src/routes/_auth/logs/index.tsx
 #: src/routes/_auth/users/index.tsx
 msgid "{total} rows"
 msgstr "{total} rows"
@@ -57,10 +67,28 @@ msgstr "403"
 msgid "Account created successfully"
 msgstr "Account created successfully"
 
+#: src/routes/_auth/logs/index.tsx
+msgid "Action"
+msgstr "Action"
+
+#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/correction/index.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "Actions"
+msgstr "Actions"
+
+#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/category/index.tsx
+msgid "Active"
+msgstr "Active"
+
 #: src/routes/_auth/dashboard/index.tsx
 msgid "Active Now"
 msgstr "Active Now"
 
+#: src/components/Layout/Header/index.tsx
+#: src/routes/_auth/logs/index.tsx
 #: src/routes/_auth/users/-FormModal.tsx
 #: src/routes/_auth/users/-Toolbar.tsx
 msgid "Admin"
@@ -70,10 +98,21 @@ msgstr "Admin"
 msgid "Admin changed sidebar visibility and permission mapping."
 msgstr "Admin changed sidebar visibility and permission mapping."
 
+#: src/routes/_auth/correction/index.tsx
+msgid "All"
+msgstr "All"
+
 #: src/routes/register/index.tsx
 msgid "Already have an account?"
 msgstr "Already have an account?"
 
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "Approve"
+msgstr "Approve"
+
+#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/knowledge/index.tsx
 #: src/routes/_auth/users/index.tsx
 msgid "Are you absolutely sure?"
 msgstr "Are you absolutely sure?"
@@ -87,26 +126,79 @@ msgstr "Auto login"
 msgid "Back to Home"
 msgstr "Back to Home"
 
+#: src/routes/_auth/admin/-FormModal.tsx
+#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/category/-FormModal.tsx
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/knowledge/-FormModal.tsx
+#: src/routes/_auth/knowledge/index.tsx
 #: src/routes/_auth/users/-FormModal.tsx
 #: src/routes/_auth/users/index.tsx
 msgid "Cancel"
 msgstr "Cancel"
 
+#: src/components/Layout/Header/index.tsx
+#: src/routes/_auth/knowledge/-FormModal.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "Category"
+msgstr "Category"
+
+#: src/components/Layout/Header/index.tsx
+msgid "Config"
+msgstr "Config"
+
+#: src/routes/_auth/config/index.tsx
+msgid "Config updated"
+msgstr "Config updated"
+
 #: src/routes/register/index.tsx
 msgid "Confirm password"
 msgstr "Confirm password"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "Content"
+msgstr "Content"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+msgid "Content Admin"
+msgstr "Content Admin"
+
+#: src/components/Layout/Header/index.tsx
+msgid "Correction"
+msgstr "Correction"
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "Correction Detail"
+msgstr "Correction Detail"
 
 #: src/routes/register/index.tsx
 msgid "Create account"
 msgstr "Create account"
 
+#: src/routes/_auth/admin/index.tsx
+msgid "Create Admin"
+msgstr "Create Admin"
+
+#: src/routes/_auth/category/index.tsx
+msgid "Create Category"
+msgstr "Create Category"
+
 #: src/hooks/useCrudToasts.ts
 msgid "Create failed"
 msgstr "Create failed"
 
+#: src/routes/_auth/knowledge/-Toolbar.tsx
+msgid "Create Knowledge"
+msgstr "Create Knowledge"
+
 #: src/routes/_auth/users/-Toolbar.tsx
 msgid "Create User"
 msgstr "Create User"
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/correction/index.tsx
+msgid "Created"
+msgstr "Created"
 
 #: src/hooks/useCrudToasts.ts
 msgid "Created successfully"
@@ -117,6 +209,9 @@ msgstr "Created successfully"
 msgid "Dashboard"
 msgstr "Dashboard"
 
+#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/knowledge/index.tsx
 #: src/routes/_auth/users/index.tsx
 msgid "Delete"
 msgstr "Delete"
@@ -133,6 +228,14 @@ msgstr "Deleted successfully"
 msgid "Deleting…"
 msgstr "Deleting…"
 
+#: src/routes/_auth/category/-FormModal.tsx
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/correction/index.tsx
+#: src/routes/_auth/logs/index.tsx
+msgid "Description"
+msgstr "Description"
+
 #: src/components/Layout/Sidebar/index.tsx
 msgid "Design Engineering"
 msgstr "Design Engineering"
@@ -141,9 +244,33 @@ msgstr "Design Engineering"
 msgid "Don't have an account?"
 msgstr "Don't have an account?"
 
+#: src/routes/_auth/knowledge/-Toolbar.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "Draft"
+msgstr "Draft"
+
+#: src/routes/_auth/logs/index.tsx
+msgid "Duration"
+msgstr "Duration"
+
+#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/knowledge/index.tsx
 #: src/routes/_auth/users/index.tsx
 msgid "Edit"
 msgstr "Edit"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+msgid "Edit Admin"
+msgstr "Edit Admin"
+
+#: src/routes/_auth/category/-FormModal.tsx
+msgid "Edit Category"
+msgstr "Edit Category"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "Edit Knowledge"
+msgstr "Edit Knowledge"
 
 #: src/routes/_auth/users/-FormModal.tsx
 msgid "Edit User"
@@ -167,6 +294,10 @@ msgstr "Email address"
 msgid "Enter at least 6 characters"
 msgstr "Enter at least 6 characters"
 
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "Enter tags"
+msgstr "Enter tags"
+
 #: src/routes/login/index.tsx
 msgid "Forgot password?"
 msgstr "Forgot password?"
@@ -174,6 +305,36 @@ msgstr "Forgot password?"
 #: src/components/NotFound/index.tsx
 msgid "Go back"
 msgstr "Go back"
+
+#: src/routes/_auth/category/-FormModal.tsx
+msgid "Icon"
+msgstr "Icon"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "Image URL"
+msgstr "Image URL"
+
+#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/category/index.tsx
+msgid "Inactive"
+msgstr "Inactive"
+
+#: src/routes/_auth/logs/index.tsx
+msgid "IP"
+msgstr "IP"
+
+#: src/components/Layout/Header/index.tsx
+#: src/routes/_auth/correction/index.tsx
+msgid "Knowledge"
+msgstr "Knowledge"
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "Knowledge ID"
+msgstr "Knowledge ID"
+
+#: src/routes/_auth/admin/index.tsx
+msgid "Last Login"
+msgstr "Last Login"
 
 #: src/routes/login/index.tsx
 msgid "Login failed"
@@ -183,9 +344,35 @@ msgstr "Login failed"
 msgid "Login successful"
 msgstr "Login successful"
 
+#: src/components/Layout/Header/index.tsx
+msgid "Logs"
+msgstr "Logs"
+
+#: src/routes/_auth/logs/index.tsx
+msgid "Module"
+msgstr "Module"
+
+#: src/routes/_auth/knowledge/-Toolbar.tsx
 #: src/routes/_auth/users/-Toolbar.tsx
 msgid "More filters"
 msgstr "More filters"
+
+#: src/routes/_auth/category/-FormModal.tsx
+#: src/routes/_auth/category/index.tsx
+msgid "Name"
+msgstr "Name"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+msgid "New Admin"
+msgstr "New Admin"
+
+#: src/routes/_auth/category/-FormModal.tsx
+msgid "New Category"
+msgstr "New Category"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "New Knowledge"
+msgstr "New Knowledge"
 
 #: src/routes/_auth/users/-FormModal.tsx
 msgid "New User"
@@ -199,6 +386,14 @@ msgstr "No data"
 msgid "Nothing to show in this list yet"
 msgstr "Nothing to show in this list yet"
 
+#: src/routes/_auth/knowledge/-Toolbar.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "Offline"
+msgstr "Offline"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+#: src/routes/_auth/category/-FormModal.tsx
+#: src/routes/_auth/knowledge/-FormModal.tsx
 #: src/routes/_auth/users/-FormModal.tsx
 msgid "OK"
 msgstr "OK"
@@ -207,6 +402,11 @@ msgstr "OK"
 msgid "Open account menu"
 msgstr "Open account menu"
 
+#: src/routes/_auth/admin/-FormModal.tsx
+msgid "Operations"
+msgstr "Operations"
+
+#: src/routes/_auth/admin/-FormModal.tsx
 #: src/routes/login/index.tsx
 #: src/routes/register/index.tsx
 msgid "Password"
@@ -232,10 +432,24 @@ msgstr "Please confirm your password"
 msgid "Please enter a valid email address"
 msgstr "Please enter a valid email address"
 
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "Please enter content"
+msgstr "Please enter content"
+
+#: src/routes/_auth/category/-FormModal.tsx
+msgid "Please enter name"
+msgstr "Please enter name"
+
+#: src/routes/_auth/admin/-FormModal.tsx
 #: src/routes/login/index.tsx
 msgid "Please enter password"
 msgstr "Please enter password"
 
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "Please enter title"
+msgstr "Please enter title"
+
+#: src/routes/_auth/admin/-FormModal.tsx
 #: src/routes/_auth/users/-FormModal.tsx
 #: src/routes/login/index.tsx
 msgid "Please enter username"
@@ -248,6 +462,14 @@ msgstr "Please enter your password"
 #: src/routes/register/index.tsx
 msgid "Please enter your username"
 msgstr "Please enter your username"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "Please select category"
+msgstr "Please select category"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+msgid "Please select role"
+msgstr "Please select role"
 
 #: src/routes/_auth/users/-FormModal.tsx
 msgid "Please select roles"
@@ -265,9 +487,19 @@ msgstr "Powered by"
 msgid "Projects"
 msgstr "Projects"
 
+#: src/routes/_auth/knowledge/-Toolbar.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "Published"
+msgstr "Published"
+
 #: src/routes/register/index.tsx
 msgid "Re-enter your password"
 msgstr "Re-enter your password"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+#: src/routes/_auth/admin/index.tsx
+msgid "Real Name"
+msgstr "Real Name"
 
 #: src/routes/_auth/dashboard/index.tsx
 msgid "Recent Sales"
@@ -277,6 +509,10 @@ msgstr "Recent Sales"
 msgid "Registration failed"
 msgstr "Registration failed"
 
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "Reject"
+msgstr "Reject"
+
 #: src/routes/_auth/dashboard/index.tsx
 msgid "Release branch merged and production rollout completed."
 msgstr "Release branch merged and production rollout completed."
@@ -285,6 +521,24 @@ msgstr "Release branch merged and production rollout completed."
 msgid "Retry"
 msgstr "Retry"
 
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "Review failed"
+msgstr "Review failed"
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "Review Remark"
+msgstr "Review Remark"
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "Review submitted"
+msgstr "Review submitted"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+msgid "Reviewer"
+msgstr "Reviewer"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+#: src/routes/_auth/admin/index.tsx
 #: src/routes/_auth/users/-Toolbar.tsx
 msgid "Role"
 msgstr "Role"
@@ -294,6 +548,9 @@ msgstr "Role"
 msgid "Roles"
 msgstr "Roles"
 
+#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/knowledge/index.tsx
 #: src/routes/_auth/users/index.tsx
 msgid "Row actions"
 msgstr "Row actions"
@@ -305,6 +562,14 @@ msgstr "Sales"
 #: src/components/Layout/Sidebar/index.tsx
 msgid "Sales & Marketing"
 msgstr "Sales & Marketing"
+
+#: src/routes/_auth/config/index.tsx
+msgid "Save"
+msgstr "Save"
+
+#: src/routes/_auth/knowledge/-Toolbar.tsx
+msgid "Search knowledge"
+msgstr "Search knowledge"
 
 #: src/routes/_auth/users/-Toolbar.tsx
 msgid "Search User"
@@ -338,22 +603,68 @@ msgstr "Sorry, the page you visited does not exist."
 msgid "Sorry, you don't have permission to access this page."
 msgstr "Sorry, you don't have permission to access this page."
 
+#: src/routes/_auth/category/-FormModal.tsx
+#: src/routes/_auth/category/index.tsx
+msgid "Sort Order"
+msgstr "Sort Order"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "Sort Weight"
+msgstr "Sort Weight"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "Source"
+msgstr "Source"
+
+#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/correction/index.tsx
+#: src/routes/_auth/knowledge/-Toolbar.tsx
+#: src/routes/_auth/knowledge/index.tsx
+#: src/routes/_auth/logs/index.tsx
+msgid "Status"
+msgstr "Status"
+
 #: src/routes/_auth/dashboard/index.tsx
 msgid "Subscriptions"
 msgstr "Subscriptions"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+msgid "Super Admin"
+msgstr "Super Admin"
 
 #: src/components/Layout/AppFooter/index.tsx
 #: src/components/Layout/Header/index.tsx
 msgid "Switch language"
 msgstr "Switch language"
 
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "Tags"
+msgstr "Tags"
+
+#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "This action cannot be undone."
+msgstr "This action cannot be undone."
+
 #: src/routes/_auth/users/index.tsx
 msgid "This action cannot be undone. This will permanently delete the user."
 msgstr "This action cannot be undone. This will permanently delete the user."
 
+#: src/routes/_auth/logs/index.tsx
+msgid "Time"
+msgstr "Time"
+
 #: src/routes/_auth/dashboard/index.tsx
 msgid "Timeline"
 msgstr "Timeline"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "Title"
+msgstr "Title"
 
 #: src/routes/_auth/dashboard/index.tsx
 msgid "Today"
@@ -377,7 +688,13 @@ msgstr "Token refresh behavior and 403 routes validated."
 msgid "Total Revenue"
 msgstr "Total Revenue"
 
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/correction/index.tsx
+msgid "Type"
+msgstr "Type"
+
 #: src/hooks/useCrudToasts.ts
+#: src/routes/_auth/config/index.tsx
 msgid "Update failed"
 msgstr "Update failed"
 
@@ -393,6 +710,8 @@ msgstr "Updating…"
 msgid "User creation spike handled and queue restored."
 msgstr "User creation spike handled and queue restored."
 
+#: src/routes/_auth/admin/-FormModal.tsx
+#: src/routes/_auth/admin/index.tsx
 #: src/routes/_auth/users/-FormModal.tsx
 #: src/routes/_auth/users/index.tsx
 #: src/routes/login/index.tsx
@@ -404,3 +723,7 @@ msgstr "Username"
 #: src/components/Layout/Sidebar/index.tsx
 msgid "Users"
 msgstr "Users"
+
+#: src/routes/_auth/knowledge/index.tsx
+msgid "Views"
+msgstr "Views"

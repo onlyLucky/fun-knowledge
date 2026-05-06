@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 
-export function useUrlSearchState<TSearch extends { keyword: string; offset: number }>(args: {
+type SearchWithKeyword = { keyword: string } & Record<string, unknown>;
+
+export function useUrlSearchState<TSearch extends SearchWithKeyword>(args: {
   search: TSearch;
   setSearch: (next: TSearch) => void;
 }) {
@@ -11,16 +13,23 @@ export function useUrlSearchState<TSearch extends { keyword: string; offset: num
     setKeywordInput(search.keyword);
   }, [search.keyword]);
 
+  const resetPage = (s: TSearch, keyword: string): TSearch => {
+    const next = { ...s, keyword };
+    if ("offset" in next) (next as Record<string, unknown>).offset = 0;
+    if ("page" in next) (next as Record<string, unknown>).page = 1;
+    return next;
+  };
+
   const commitKeyword = useCallback(() => {
     const trimmed = keywordInput.trim();
-    setSearch({ ...search, keyword: trimmed, offset: 0 });
+    setSearch(resetPage(search, trimmed));
   }, [keywordInput, search, setSearch]);
 
   const applyKeyword = useCallback(
     (kw: string) => {
       const trimmed = kw.trim();
       setKeywordInput(trimmed);
-      setSearch({ ...search, keyword: trimmed, offset: 0 });
+      setSearch(resetPage(search, trimmed));
     },
     [search, setSearch],
   );

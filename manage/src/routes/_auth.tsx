@@ -6,12 +6,12 @@ import { fetchSessionAndApplyToStore } from "@/utils/session";
 
 export const Route = createFileRoute("/_auth")({
   beforeLoad: async ({ location }) => {
-    const { isAuthenticated, user, tokens } = useAuthStore.getState();
+    const { isAuthenticated, admin, tokens } = useAuthStore.getState();
     if (!isAuthenticated) {
       throw redirect({ to: "/login" });
     }
 
-    if (tokens && !user) {
+    if (tokens && !admin) {
       try {
         await fetchSessionAndApplyToStore();
       } catch {
@@ -20,11 +20,11 @@ export const Route = createFileRoute("/_auth")({
       }
     }
 
-    const { user: nextUser } = useAuthStore.getState();
+    const permissions = useAuthStore.getState().getPermissions();
     const path = normalizeAppPath(location.pathname);
     if (path === "/403") return;
 
-    if (!canAccessPath(location.pathname, nextUser?.permissions)) {
+    if (!canAccessPath(location.pathname, permissions)) {
       throw redirect({ to: "/403" });
     }
   },

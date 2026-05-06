@@ -1,6 +1,6 @@
-import { Input, Select, theme } from "antd";
+import { Button, Input, Select, theme } from "antd";
 import { useLingui } from "@lingui/react/macro";
-import { UserRound } from "lucide-react";
+import { Plus } from "lucide-react";
 import { forwardRef, useMemo } from "react";
 import { FilterToolbar } from "@/components/FilterToolbar";
 
@@ -11,12 +11,21 @@ export type ToolbarProps = {
   onKeywordChange: (value: string) => void;
   onSearch: (keyword: string) => void;
   onClearSearch: () => void;
-  roleValue: string | undefined;
-  onRoleChange: (role: string) => void;
+  statusValue: string | undefined;
+  onStatusChange: (status: string) => void;
+  onCreateClick: () => void;
 };
 
 export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(
-  { keywordInput, onKeywordChange, onSearch, onClearSearch, roleValue, onRoleChange },
+  {
+    keywordInput,
+    onKeywordChange,
+    onSearch,
+    onClearSearch,
+    statusValue,
+    onStatusChange,
+    onCreateClick,
+  },
   ref,
 ) {
   const { t } = useLingui();
@@ -30,7 +39,7 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
         children: (
           <Input.Search
             allowClear
-            placeholder={t`Search User`}
+            placeholder={t`Search knowledge`}
             style={{ width: FILTER_CONTROL_WIDTH }}
             value={keywordInput}
             onChange={(e) => onKeywordChange(e.target.value)}
@@ -40,19 +49,19 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
         ),
       },
       {
-        key: "role",
+        key: "status",
         minWidth: FILTER_CONTROL_WIDTH,
         children: (
           <Select
             allowClear
-            placeholder={t`Role`}
+            placeholder={t`Status`}
             style={{ width: FILTER_CONTROL_WIDTH }}
-            prefix={<UserRound size={token.fontSize} />}
-            value={roleValue}
-            onChange={(v) => onRoleChange(v ?? "")}
+            value={statusValue}
+            onChange={(v) => onStatusChange(v ?? "")}
             options={[
-              { label: t`Admin`, value: "admin" },
-              { label: t`Editor`, value: "editor" },
+              { label: t`Published`, value: "1" },
+              { label: t`Draft`, value: "0" },
+              { label: t`Offline`, value: "2" },
             ]}
           />
         ),
@@ -62,9 +71,9 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
       keywordInput,
       onClearSearch,
       onKeywordChange,
-      onRoleChange,
+      onStatusChange,
       onSearch,
-      roleValue,
+      statusValue,
       t,
       token.fontSize,
     ],
@@ -74,7 +83,11 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
     <FilterToolbar
       ref={ref}
       slots={slots}
-      actions={null}
+      actions={
+        <Button type="primary" icon={<Plus size={token.fontSize} />} onClick={onCreateClick}>
+          {t`Create Knowledge`}
+        </Button>
+      }
       moreFiltersLabel={t`More filters`}
       moreFiltersTitle={t`More filters`}
     />

@@ -64,7 +64,9 @@ async function doRefreshSessionTokens(): Promise<boolean> {
 
     const json: unknown = await res.json();
     const envelope = json as { code?: number; data?: unknown; message?: string };
-    if (envelope.code !== undefined && envelope.code !== 0) {
+    // TODO: 服务端暂无 admin token 刷新端点，此处可能需要适配
+    const isSuccess = envelope.code === 200 || envelope.code === 0;
+    if (envelope.code !== undefined && !isSuccess) {
       logout();
       navigateToLogin();
       return false;
@@ -154,7 +156,9 @@ async function request<T>(
   const json: unknown = await res.json();
   const envelope = json as { code?: number; data?: unknown; message?: string };
 
-  if (envelope.code !== undefined && envelope.code !== 0) {
+  // 服务端 TransformInterceptor 使用 code:200，部分端点直接返回 code:0
+  const isSuccess = envelope.code === 200 || envelope.code === 0;
+  if (envelope.code !== undefined && !isSuccess) {
     throw new ApiError(envelope.code, envelope.message ?? "Unknown error");
   }
 

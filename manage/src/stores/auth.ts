@@ -1,38 +1,48 @@
-import type { AuthTokens, User, MenuItem } from "@/api/schemas";
+import type { AuthTokens, Admin, MenuItem } from "@/api/schemas";
+import { getPermissionsByRole } from "@/api/schemas";
 import { createPersistentStore } from "./createPersistentStore";
 
 interface AuthState {
   tokens: AuthTokens | null;
-  user: User | null;
+  admin: Admin | null;
   menus: MenuItem[];
   isAuthenticated: boolean;
   setTokens: (tokens: AuthTokens) => void;
-  setUser: (user: User) => void;
+  setAdmin: (admin: Admin) => void;
   setMenus: (menus: MenuItem[]) => void;
   hasPermission: (point: string) => boolean;
+  getPermissions: () => string[];
   logout: () => void;
 }
 
 export const useAuthStore = createPersistentStore<AuthState>(
   (set, get) => ({
     tokens: null,
-    user: null,
+    admin: null,
     menus: [],
     isAuthenticated: false,
 
     setTokens: (tokens) => set({ tokens, isAuthenticated: true }),
-    setUser: (user) => set({ user }),
+    setAdmin: (admin) => set({ admin }),
     setMenus: (menus) => set({ menus }),
 
     hasPermission: (point) => {
-      const { user } = get();
-      return user?.permissions.includes(point) ?? false;
+      const { admin } = get();
+      if (!admin) return false;
+      const permissions = getPermissionsByRole(admin.role);
+      return permissions.includes(point);
+    },
+
+    getPermissions: () => {
+      const { admin } = get();
+      if (!admin) return [];
+      return getPermissionsByRole(admin.role);
     },
 
     logout: () =>
       set({
         tokens: null,
-        user: null,
+        admin: null,
         menus: [],
         isAuthenticated: false,
       }),
@@ -49,7 +59,7 @@ export const useAuthStore = createPersistentStore<AuthState>(
         ...currentState,
         tokens: p?.tokens ?? currentState.tokens,
         isAuthenticated: p?.isAuthenticated ?? currentState.isAuthenticated,
-        user: null,
+        admin: null,
         menus: [],
       };
     },

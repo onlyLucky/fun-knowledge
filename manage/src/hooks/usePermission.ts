@@ -5,6 +5,7 @@ export function hasPermission(point: string): boolean {
 }
 
 export function usePermission(point: string): boolean {
-  const user = useAuthStore((s) => s.user);
-  return user?.permissions.includes(point) ?? false;
+  const admin = useAuthStore((s) => s.admin);
+  if (!admin) return false;
+  return useAuthStore.getState().hasPermission(point);
 }

@@ -1,25 +1,22 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Avatar, Button, Space, Form, App, Dropdown, theme, Tag, Flex } from "antd";
+import { Avatar, Space, theme, Tag, Flex } from "antd";
 import type { TablePaginationConfig } from "antd/es/table/interface";
 import { useLingui } from "@lingui/react/macro";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { httpClient } from "@/utils/http";
 import { USER_ENDPOINTS } from "@/api/user";
-import { PaginatedResponseSchema, UserSchema, CreateUserRequestSchema } from "@/api/schemas";
-import type { User, CreateUserRequest } from "@/api/schemas";
+import { PaginatedResponseSchema, UserSchema } from "@/api/schemas";
+import type { User } from "@/api/schemas";
 import { z } from "zod/v4";
-import { MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { DataTable } from "@/components/DataTable";
-import { useResourceCRUD } from "@/hooks/useResourceCRUD";
 import { useTableFitHeight } from "@/hooks/useTableFitHeight";
-import { useCrudToasts } from "@/hooks/useCrudToasts";
 import { useUrlSearchState } from "@/hooks/useUrlSearchState";
 import { Toolbar } from "./-Toolbar";
-import { FormModal } from "./-FormModal";
 
 const UserSearchParamsSchema = z.object({
-  limit: z.number().int().positive().catch(100),
-  offset: z.number().int().nonnegative().catch(0),
+  page: z.number().int().positive().catch(1),
+  pageSize: z.number().int().positive().catch(10),
   sortField: z.string().nullable().catch(null),
   sortOrder: z.enum(["ascend", "descend"]).nullable().catch(null),
   keyword: z.string().catch(""),
@@ -38,17 +35,12 @@ const paginatedUserSchema = PaginatedResponseSchema(UserSchema);
 function UsersPage() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
-  const { message, modal } = App.useApp();
   const { t } = useLingui();
   const { token } = theme.useToken();
-  const [modalOpen, setModalOpen] = useState(false);
   const pageShellRef = useRef<HTMLDivElement>(null);
   const toolbarRowRef = useRef<HTMLDivElement>(null);
   const middleSectionRef = useRef<HTMLDivElement>(null);
   const tableFrameRef = useRef<HTMLDivElement>(null);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
-  const [form] = Form.useForm();
-  const currentPage = Math.floor(search.offset / search.limit) + 1;
 
   const setSearch = (next: UserSearch) => {
     void navigate({ search: next });
@@ -59,20 +51,11 @@ function UsersPage() {
     setSearch,
   });
 
-  const crudToasts = useCrudToasts<CreateUserRequest, CreateUserRequest & { id: string }>({
-    message,
-    resourceKey: "users",
-  });
-
-  const { data, isLoading, createMutation, updateMutation, deleteMutation } = useResourceCRUD<
-    { list: User[]; total: number },
-    CreateUserRequest,
-    CreateUserRequest & { id: string }
-  >({
+  const { data, isLoading } = useQuery({
     queryKey: [
       "users",
-      search.limit,
-      search.offset,
+      search.page,
+      search.pageSize,
       search.keyword,
       search.role,
       search.sortField,
@@ -81,8 +64,8 @@ function UsersPage() {
     queryFn: () =>
       httpClient.get(USER_ENDPOINTS.list, {
         params: {
-          limit: search.limit,
-          offset: search.offset,
+          page: search.page,
+          pageSize: search.pageSize,
           keyword: search.keyword || undefined,
           role: search.role || undefined,
           sortField: search.sortField ?? undefined,
@@ -90,46 +73,7 @@ function UsersPage() {
         },
       }),
     select: (raw) => paginatedUserSchema.shape.data.parse(raw),
-    createFn: (values) =>
-      httpClient.post(USER_ENDPOINTS.create, CreateUserRequestSchema.parse(values)),
-    updateFn: ({ id, ...values }) => httpClient.put(USER_ENDPOINTS.update(id), values),
-    deleteFn: (id) => httpClient.delete(USER_ENDPOINTS.delete(id)),
-    optimistic: { update: true, delete: true },
-    createLifecycle: {
-      onSuccess: (values) => {
-        crudToasts.createLifecycle?.onSuccess?.(values);
-        setModalOpen(false);
-        form.resetFields();
-      },
-      onError: crudToasts.createLifecycle?.onError,
-    },
-    updateLifecycle: {
-      onMutate: crudToasts.updateLifecycle?.onMutate,
-      onSuccess: (values) => {
-        crudToasts.updateLifecycle?.onSuccess?.(values);
-        setModalOpen(false);
-        setEditingUser(null);
-        form.resetFields();
-      },
-      onError: crudToasts.updateLifecycle?.onError,
-    },
-    deleteLifecycle: {
-      onMutate: crudToasts.deleteLifecycle?.onMutate,
-      onSuccess: crudToasts.deleteLifecycle?.onSuccess,
-      onError: crudToasts.deleteLifecycle?.onError,
-    },
   });
-
-  const confirmDelete = (record: User) => {
-    modal.confirm({
-      title: t`Are you absolutely sure?`,
-      content: t`This action cannot be undone. This will permanently delete the user.`,
-      okText: t`Delete`,
-      okType: "danger",
-      cancelText: t`Cancel`,
-      onOk: () => deleteMutation.mutate(record.id),
-    });
-  };
 
   const columns = [
     {
@@ -198,48 +142,9 @@ function UsersPage() {
         </Space>
       ),
     },
-    {
-      title: "Actions",
-      key: "actions",
-      width: 60,
-      align: "right" as const,
-      sorter: false,
-      render: (_: unknown, record: User) => (
-        <Dropdown
-          menu={{
-            items: [
-              {
-                key: "edit",
-                icon: <Pencil size={token.fontSize} />,
-                label: t`Edit`,
-                onClick: () => {
-                  setEditingUser(record);
-                  form.setFieldsValue(record);
-                  setModalOpen(true);
-                },
-              },
-              {
-                key: "delete",
-                icon: <Trash2 size={token.fontSize} />,
-                label: t`Delete`,
-                danger: true,
-                onClick: () => confirmDelete(record),
-              },
-            ],
-          }}
-          placement="bottomRight"
-        >
-          <Button
-            type="text"
-            icon={<MoreVertical size={token.fontSize} />}
-            aria-label={t`Row actions`}
-          />
-        </Dropdown>
-      ),
-    },
   ];
 
-  const showPagination = (data?.total ?? 0) > search.limit;
+  const showPagination = (data?.total ?? 0) > search.pageSize;
 
   const { tableAreaMaxHeight, tableScrollY, lockScrollHeight } = useTableFitHeight({
     pageShellRef,
@@ -257,22 +162,18 @@ function UsersPage() {
       showPagination
         ? {
             total: data?.total ?? 0,
-            current: currentPage,
-            pageSize: search.limit,
+            current: search.page,
+            pageSize: search.pageSize,
             showSizeChanger: true,
             showTotal: (total) => t`${total} rows`,
             onChange: (page, pageSize) => {
               void navigate({
-                search: {
-                  ...search,
-                  limit: pageSize ?? search.limit,
-                  offset: (page - 1) * (pageSize ?? search.limit),
-                },
+                search: { ...search, page, pageSize },
               });
             },
           }
         : false,
-    [showPagination, data?.total, currentPage, search, navigate, t],
+    [showPagination, data?.total, search, navigate, t],
   );
 
   return (
@@ -289,23 +190,14 @@ function UsersPage() {
         onSearch={applyKeyword}
         onClearSearch={() => {
           setKeywordInput("");
-          setSearch({ ...search, keyword: "", offset: 0 });
+          setSearch({ ...search, keyword: "", page: 1 });
         }}
         roleValue={search.role || undefined}
         onRoleChange={(role) =>
           void navigate({
-            search: {
-              ...search,
-              role,
-              offset: 0,
-            },
+            search: { ...search, role, page: 1 },
           })
         }
-        onCreateClick={() => {
-          setEditingUser(null);
-          form.resetFields();
-          setModalOpen(true);
-        }}
       />
 
       <DataTable<User>
@@ -335,25 +227,6 @@ function UsersPage() {
               sortOrder: nextSortOrder,
             },
           });
-        }}
-      />
-
-      <FormModal
-        open={modalOpen}
-        editingUser={editingUser}
-        form={form}
-        confirmLoading={createMutation.isPending || updateMutation.isPending}
-        onCancel={() => {
-          setModalOpen(false);
-          setEditingUser(null);
-          form.resetFields();
-        }}
-        onFinish={(values) => {
-          if (editingUser) {
-            updateMutation.mutate({ ...values, id: editingUser.id });
-          } else {
-            createMutation.mutate(values);
-          }
         }}
       />
     </Flex>

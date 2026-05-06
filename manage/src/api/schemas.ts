@@ -1,5 +1,99 @@
 import { z } from "zod/v4";
 
+/* ---------- Admin 角色与权限 ---------- */
+
+export const AdminRole = {
+  SUPER_ADMIN: 1,
+  CONTENT_ADMIN: 2,
+  OPERATIONS: 3,
+  REVIEWER: 4,
+} as const;
+
+export type AdminRole = (typeof AdminRole)[keyof typeof AdminRole];
+
+/** 角色 → 前端权限点映射（参考 PRD 权限矩阵） */
+export const ROLE_PERMISSIONS: Record<AdminRole, string[]> = {
+  [AdminRole.SUPER_ADMIN]: [
+    "knowledge:view",
+    "knowledge:create",
+    "knowledge:edit",
+    "knowledge:delete",
+    "knowledge:import",
+    "category:view",
+    "category:create",
+    "category:edit",
+    "category:delete",
+    "correction:view",
+    "correction:review",
+    "user:view",
+    "user:create",
+    "user:edit",
+    "user:delete",
+    "admin:view",
+    "admin:create",
+    "admin:edit",
+    "admin:delete",
+    "config:view",
+    "config:edit",
+    "log:view",
+  ],
+  [AdminRole.CONTENT_ADMIN]: [
+    "knowledge:view",
+    "knowledge:create",
+    "knowledge:edit",
+    "knowledge:delete",
+    "knowledge:import",
+    "category:view",
+    "category:create",
+    "category:edit",
+    "category:delete",
+  ],
+  [AdminRole.OPERATIONS]: [
+    "user:view",
+    "user:create",
+    "user:edit",
+    "user:delete",
+    "config:view",
+    "config:edit",
+    "log:view",
+  ],
+  [AdminRole.REVIEWER]: ["correction:view", "correction:review"],
+};
+
+/** 根据角色 ID 获取权限列表 */
+export function getPermissionsByRole(role: number): string[] {
+  return ROLE_PERMISSIONS[role as AdminRole] ?? [];
+}
+
+/* ---------- Auth Tokens ---------- */
+
+export const AuthTokensSchema = z.object({
+  accessToken: z.string().min(1),
+  refreshToken: z.string().min(1),
+});
+
+export type AuthTokens = z.infer<typeof AuthTokensSchema>;
+
+/* ---------- Admin Schema ---------- */
+
+export const AdminSchema = z.object({
+  id: z.string(),
+  username: z.string(),
+  real_name: z.string().nullable().optional(),
+  role: z.number(),
+});
+
+export type Admin = z.infer<typeof AdminSchema>;
+
+export const AdminLoginResponseSchema = z.object({
+  admin: AdminSchema,
+  tokens: AuthTokensSchema,
+});
+
+export type AdminLoginResponse = z.infer<typeof AdminLoginResponseSchema>;
+
+/* ---------- User（保留兼容） ---------- */
+
 export const UserSchema = z.object({
   id: z.string(),
   username: z.string(),
@@ -14,18 +108,13 @@ export type User = z.infer<typeof UserSchema>;
 export const AuthUserResponseSchema = UserSchema.omit({ permissions: true });
 export type AuthUserResponse = z.infer<typeof AuthUserResponseSchema>;
 
-export const AuthTokensSchema = z.object({
-  accessToken: z.string().min(1),
-  refreshToken: z.string().min(1),
-});
-
-export type AuthTokens = z.infer<typeof AuthTokensSchema>;
-
 export const RefreshTokenRequestSchema = z.object({
   refreshToken: z.string().min(1),
 });
 
 export type RefreshTokenRequest = z.infer<typeof RefreshTokenRequestSchema>;
+
+/* ---------- Login / Register ---------- */
 
 export const LoginRequestSchema = z.object({
   username: z.string().min(1),

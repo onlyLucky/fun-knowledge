@@ -3,7 +3,19 @@ import type { ItemType } from "antd/es/breadcrumb/Breadcrumb";
 import { useLingui } from "@lingui/react/macro";
 import { useSettingsStore, type Locale } from "@/stores/settings";
 import { Link, useLocation, useMatches } from "@tanstack/react-router";
-import { Home, Languages, PanelLeft, ShieldAlert, Users } from "lucide-react";
+import {
+  Home,
+  Languages,
+  PanelLeft,
+  ShieldAlert,
+  Users,
+  BookOpen,
+  FolderTree,
+  MessageSquareWarning,
+  ShieldCheck,
+  SlidersHorizontal,
+  ScrollText,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { Theme } from "@/components/Icon";
@@ -12,7 +24,13 @@ const { Header: AntHeader } = Layout;
 
 const PATH_LABEL: Record<string, string> = {
   "/dashboard": "Dashboard",
+  "/knowledge": "Knowledge",
+  "/category": "Category",
+  "/correction": "Correction",
   "/users": "Users",
+  "/admin": "Admin",
+  "/config": "Config",
+  "/logs": "Logs",
   "/403": "403",
 };
 
@@ -67,17 +85,30 @@ export function Header({ showBreadcrumb: showBreadcrumbProp = true }: HeaderProp
   const firstSegmentPath = segments.length ? `/${segments[0]}` : "/dashboard";
   const leafLabelKey = PATH_LABEL[firstSegmentPath] ?? segments[0] ?? "Dashboard";
 
-  const leafIcon: LucideIcon =
-    firstSegmentPath === "/users" ? Users : firstSegmentPath === "/403" ? ShieldAlert : Home;
+  const ICON_MAP: Record<string, LucideIcon> = {
+    "/users": Users,
+    "/knowledge": BookOpen,
+    "/category": FolderTree,
+    "/correction": MessageSquareWarning,
+    "/admin": ShieldCheck,
+    "/config": SlidersHorizontal,
+    "/logs": ScrollText,
+    "/403": ShieldAlert,
+  };
+  const leafIcon: LucideIcon = ICON_MAP[firstSegmentPath] ?? Home;
 
-  const leafLabel =
-    leafLabelKey === "Dashboard"
-      ? t`Dashboard`
-      : leafLabelKey === "Users"
-        ? t`Users`
-        : leafLabelKey === "403"
-          ? t`403`
-          : leafLabelKey;
+  const LEAF_LABEL_MAP: Record<string, () => string> = {
+    Dashboard: () => t`Dashboard`,
+    Knowledge: () => t`Knowledge`,
+    Category: () => t`Category`,
+    Correction: () => t`Correction`,
+    Users: () => t`Users`,
+    Admin: () => t`Admin`,
+    Config: () => t`Config`,
+    Logs: () => t`Logs`,
+    "403": () => t`403`,
+  };
+  const leafLabel = (LEAF_LABEL_MAP[leafLabelKey] ?? (() => leafLabelKey))();
 
   const breadcrumbItems: ItemType[] = [];
 

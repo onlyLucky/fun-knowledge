@@ -1,6 +1,6 @@
 import { Avatar, Button, Dropdown, Flex, Typography, theme } from "antd";
 import type { MenuProps } from "antd";
-import type { User } from "@/api/schemas";
+import type { Admin } from "@/api/schemas";
 import { MoreVertical } from "lucide-react";
 import "./index.css";
 
@@ -8,33 +8,31 @@ const { Text } = Typography;
 
 interface UserMenuProps {
   collapsed: boolean;
-  user: User | null;
+  admin: Admin | null;
   userMenuItems: MenuProps["items"];
   accountMenuTriggerAriaLabel: string;
 }
 
 export function UserMenu({
   collapsed,
-  user,
+  admin,
   userMenuItems,
   accountMenuTriggerAriaLabel,
 }: UserMenuProps) {
   const { token } = theme.useToken();
 
-  const avatarSrc = (user?.avatar ?? "").trim() || undefined;
   const avatarSize = collapsed ? 32 : token.controlHeight;
 
   const avatar = (
     <Avatar
       size={avatarSize}
-      src={avatarSrc || undefined}
       shape="circle"
       style={{
         flexShrink: 0,
         width: avatarSize,
       }}
     >
-      {user?.username?.[0]?.toUpperCase()}
+      {admin?.username?.[0]?.toUpperCase()}
     </Avatar>
   );
 
@@ -89,7 +87,7 @@ export function UserMenu({
                     maxWidth: "100%",
                   }}
                 >
-                  {user?.username ?? "—"}
+                  {admin?.username ?? "—"}
                 </Text>
                 <Text
                   ellipsis
@@ -101,7 +99,7 @@ export function UserMenu({
                     color: token.colorTextQuaternary,
                   }}
                 >
-                  {user?.email ?? "—"}
+                  {admin?.real_name ?? "—"}
                 </Text>
               </Flex>
               {moreButton}
