@@ -1,1 +1,3 @@
-vp staged
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_DIR" && "$PROJECT_DIR/node_modules/.bin/vp" staged
