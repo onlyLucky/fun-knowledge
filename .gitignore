@@ -35,13 +35,20 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# LinguiJS compiled catalogs
+src/locales/*/messages.js
+
 # Testing
 coverage/
 .nyc_output/
+playwright-report
+test-results
 
 # Misc
 *.tsbuildinfo
 *.local
+.agent
+.tanstack
 
 # Figma imports (generated assets)
 app/src/imports/**/*.png
@@ -52,3 +59,5 @@ app/src/imports/**/*.jpg
 server/node_modules/
 server/dist/
 server/.env
+
+
