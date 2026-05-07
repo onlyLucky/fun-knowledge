@@ -80,6 +80,7 @@ msgstr "Inactive"
 msgid "全部"
 msgstr "All"
 
+#: src/components/Layout/Sidebar/index.tsx
 #: src/routes/_auth/knowledge/-FormModal.tsx
 msgid "内容"
 msgstr "Content"
@@ -110,6 +111,7 @@ msgid "分类"
 msgstr "Category"
 
 #: src/components/Layout/Header/index.tsx
+#: src/components/Layout/Sidebar/index.tsx
 msgid "分类管理"
 msgstr "Category"
 
@@ -240,14 +242,6 @@ msgstr "Published"
 msgid "已有账号？"
 msgstr "Already have an account?"
 
-#: src/components/Layout/Sidebar/index.tsx
-msgid "市场营销"
-msgstr "Sales & Marketing"
-
-#: src/components/Layout/Sidebar/index.tsx
-msgid "平台"
-msgstr "Platform"
-
 #: src/routes/_auth/dashboard/index.tsx
 msgid "当前活跃"
 msgstr "Active Now"
@@ -316,6 +310,7 @@ msgid "操作描述"
 msgstr "Description"
 
 #: src/components/Layout/Header/index.tsx
+#: src/components/Layout/Sidebar/index.tsx
 msgid "操作日志"
 msgstr "Logs"
 
@@ -396,10 +391,6 @@ msgstr "Active"
 msgid "此操作不可撤销。"
 msgstr "This action cannot be undone."
 
-#: src/routes/login/index.tsx
-msgid "注册"
-msgstr "Sign up"
-
 #: src/routes/register/index.tsx
 msgid "注册失败"
 msgstr "Registration failed"
@@ -418,10 +409,6 @@ msgstr "Views"
 msgid "状态"
 msgstr "Status"
 
-#: src/components/Layout/Sidebar/index.tsx
-msgid "用户"
-msgstr "Users"
-
 #: src/routes/_auth/dashboard/index.tsx
 msgid "用户创建高峰已处理，队列已恢复。"
 msgstr "User creation spike handled and queue restored."
@@ -436,6 +423,7 @@ msgid "用户名"
 msgstr "Username"
 
 #: src/components/Layout/Header/index.tsx
+#: src/components/Layout/Sidebar/index.tsx
 msgid "用户管理"
 msgstr "Users"
 
@@ -462,6 +450,7 @@ msgid "知识ID"
 msgstr "Knowledge ID"
 
 #: src/components/Layout/Header/index.tsx
+#: src/components/Layout/Sidebar/index.tsx
 msgid "知识卡片"
 msgstr "Knowledge"
 
@@ -490,6 +479,7 @@ msgid "禁用"
 msgstr "Inactive"
 
 #: src/components/Layout/Header/index.tsx
+#: src/components/Layout/Sidebar/index.tsx
 #: src/routes/_auth/logs/index.tsx
 #: src/routes/_auth/users/-FormModal.tsx
 #: src/routes/_auth/users/-Toolbar.tsx
@@ -505,11 +495,17 @@ msgstr "Admin changed sidebar visibility and permission mapping."
 msgid "类型"
 msgstr "Type"
 
+#: src/components/Layout/Sidebar/index.tsx
+msgid "系统"
+msgstr ""
+
 #: src/components/Layout/Header/index.tsx
+#: src/components/Layout/Sidebar/index.tsx
 msgid "系统配置"
 msgstr "Config"
 
 #: src/components/Layout/Header/index.tsx
+#: src/components/Layout/Sidebar/index.tsx
 msgid "纠错审核"
 msgstr "Correction"
 
@@ -575,10 +571,6 @@ msgstr "Role"
 #: src/routes/_auth/dashboard/index.tsx
 msgid "订阅数"
 msgstr "Subscriptions"
-
-#: src/components/Layout/Sidebar/index.tsx
-msgid "设计工程"
-msgstr "Design Engineering"
 
 #: src/components/DataTable/DataTableEmpty.tsx
 msgid "该列表暂无内容"
@@ -671,10 +663,6 @@ msgstr "Go back"
 msgid "返回首页"
 msgstr "Back to Home"
 
-#: src/routes/login/index.tsx
-msgid "还没有账号？"
-msgstr "Don't have an account?"
-
 #: src/components/Layout/Sidebar/index.tsx
 msgid "退出登录"
 msgstr "Sign Out"
@@ -703,7 +691,3 @@ msgstr "Retry"
 #: src/routes/_auth/dashboard/index.tsx
 msgid "销售额"
 msgstr "Sales"
-
-#: src/components/Layout/Sidebar/index.tsx
-msgid "项目"
-msgstr "Projects"

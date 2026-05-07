@@ -1,4 +1,4 @@
-import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { Form, Input, Button, Card, App, theme, Typography, Flex, Checkbox } from "antd";
 import type { CSSProperties } from "react";
 import { useMutation } from "@tanstack/react-query";
@@ -126,7 +126,7 @@ function LoginPage() {
               onFinish={(values) => {
                 loginMutation.mutate(LoginRequestSchema.parse(values));
               }}
-              initialValues={{ username: "admin", password: "admin", remember: true }}
+              initialValues={{ username: "admin", password: "admin123456", remember: true }}
               requiredMark={false}
             >
               <Form.Item
@@ -186,14 +186,14 @@ function LoginPage() {
                 </Button>
               </Form.Item>
             </Form>
-            <Flex justify="center" style={{ marginTop: token.margin }}>
+            {/* <Flex justify="center" style={{ marginTop: token.margin }}>
               <Typography.Text type="secondary">
                 {t`还没有账号？`}{" "}
                 <Link to="/register" style={{ color: token.colorPrimary }}>
                   {t`注册`}
                 </Link>
               </Typography.Text>
-            </Flex>
+            </Flex> */}
           </Card>
         </Flex>
         <Flex

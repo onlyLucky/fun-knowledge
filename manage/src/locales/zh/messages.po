@@ -80,6 +80,7 @@ msgstr "停用"
 msgid "全部"
 msgstr "全部"
 
+#: src/components/Layout/Sidebar/index.tsx
 #: src/routes/_auth/knowledge/-FormModal.tsx
 msgid "内容"
 msgstr "内容"
@@ -110,6 +111,7 @@ msgid "分类"
 msgstr "分类"
 
 #: src/components/Layout/Header/index.tsx
+#: src/components/Layout/Sidebar/index.tsx
 msgid "分类管理"
 msgstr "分类管理"
 
@@ -240,14 +242,6 @@ msgstr "已发布"
 msgid "已有账号？"
 msgstr "已有账号？"
 
-#: src/components/Layout/Sidebar/index.tsx
-msgid "市场营销"
-msgstr "市场营销"
-
-#: src/components/Layout/Sidebar/index.tsx
-msgid "平台"
-msgstr "平台"
-
 #: src/routes/_auth/dashboard/index.tsx
 msgid "当前活跃"
 msgstr "当前活跃"
@@ -316,6 +310,7 @@ msgid "操作描述"
 msgstr "操作描述"
 
 #: src/components/Layout/Header/index.tsx
+#: src/components/Layout/Sidebar/index.tsx
 msgid "操作日志"
 msgstr "操作日志"
 
@@ -396,10 +391,6 @@ msgstr "正常"
 msgid "此操作不可撤销。"
 msgstr "此操作不可撤销。"
 
-#: src/routes/login/index.tsx
-msgid "注册"
-msgstr "注册"
-
 #: src/routes/register/index.tsx
 msgid "注册失败"
 msgstr "注册失败"
@@ -418,10 +409,6 @@ msgstr "浏览量"
 msgid "状态"
 msgstr "状态"
 
-#: src/components/Layout/Sidebar/index.tsx
-msgid "用户"
-msgstr "用户"
-
 #: src/routes/_auth/dashboard/index.tsx
 msgid "用户创建高峰已处理，队列已恢复。"
 msgstr "用户创建高峰已处理，队列已恢复。"
@@ -436,6 +423,7 @@ msgid "用户名"
 msgstr "用户名"
 
 #: src/components/Layout/Header/index.tsx
+#: src/components/Layout/Sidebar/index.tsx
 msgid "用户管理"
 msgstr "用户管理"
 
@@ -462,6 +450,7 @@ msgid "知识ID"
 msgstr "知识ID"
 
 #: src/components/Layout/Header/index.tsx
+#: src/components/Layout/Sidebar/index.tsx
 msgid "知识卡片"
 msgstr "知识卡片"
 
@@ -490,6 +479,7 @@ msgid "禁用"
 msgstr "禁用"
 
 #: src/components/Layout/Header/index.tsx
+#: src/components/Layout/Sidebar/index.tsx
 #: src/routes/_auth/logs/index.tsx
 #: src/routes/_auth/users/-FormModal.tsx
 #: src/routes/_auth/users/-Toolbar.tsx
@@ -505,11 +495,17 @@ msgstr "管理员修改了侧边栏可见性和权限映射。"
 msgid "类型"
 msgstr "类型"
 
+#: src/components/Layout/Sidebar/index.tsx
+msgid "系统"
+msgstr "系统"
+
 #: src/components/Layout/Header/index.tsx
+#: src/components/Layout/Sidebar/index.tsx
 msgid "系统配置"
 msgstr "系统配置"
 
 #: src/components/Layout/Header/index.tsx
+#: src/components/Layout/Sidebar/index.tsx
 msgid "纠错审核"
 msgstr "纠错审核"
 
@@ -575,10 +571,6 @@ msgstr "角色"
 #: src/routes/_auth/dashboard/index.tsx
 msgid "订阅数"
 msgstr "订阅数"
-
-#: src/components/Layout/Sidebar/index.tsx
-msgid "设计工程"
-msgstr "设计工程"
 
 #: src/components/DataTable/DataTableEmpty.tsx
 msgid "该列表暂无内容"
@@ -671,10 +663,6 @@ msgstr "返回"
 msgid "返回首页"
 msgstr "返回首页"
 
-#: src/routes/login/index.tsx
-msgid "还没有账号？"
-msgstr "还没有账号？"
-
 #: src/components/Layout/Sidebar/index.tsx
 msgid "退出登录"
 msgstr "退出登录"
@@ -703,7 +691,3 @@ msgstr "重试"
 #: src/routes/_auth/dashboard/index.tsx
 msgid "销售额"
 msgstr "销售额"
-
-#: src/components/Layout/Sidebar/index.tsx
-msgid "项目"
-msgstr "项目"

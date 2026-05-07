@@ -7,11 +7,12 @@ import { fetchSessionAndApplyToStore } from "@/utils/session";
 export const Route = createFileRoute("/_auth")({
   beforeLoad: async ({ location }) => {
     const { isAuthenticated, admin, tokens } = useAuthStore.getState();
-    if (!isAuthenticated) {
+    if (!isAuthenticated || !tokens) {
       throw redirect({ to: "/login" });
     }
 
-    if (tokens && !admin) {
+    // admin 已从 localStorage 恢复，跳过 profile 请求
+    if (!admin) {
       try {
         await fetchSessionAndApplyToStore();
       } catch {

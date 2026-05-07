@@ -1,5 +1,6 @@
 import type { AuthTokens, Admin, MenuItem } from "@/api/schemas";
 import { getPermissionsByRole } from "@/api/schemas";
+import { APP_MENU_TREE, filterMenuTreeByPermissions } from "@/utils/appMenu";
 import { createPersistentStore } from "./createPersistentStore";
 
 interface AuthState {
@@ -51,16 +52,23 @@ export const useAuthStore = createPersistentStore<AuthState>(
     name: "auth-storage",
     partialize: (state) => ({
       tokens: state.tokens,
+      admin: state.admin,
       isAuthenticated: state.isAuthenticated,
     }),
     merge: (persistedState, currentState) => {
-      const p = persistedState as Partial<Pick<AuthState, "tokens" | "isAuthenticated">> | null;
+      const p = persistedState as Partial<
+        Pick<AuthState, "tokens" | "admin" | "isAuthenticated">
+      > | null;
+      const admin = p?.admin ?? currentState.admin;
+      const permissions = admin ? getPermissionsByRole(admin.role) : [];
+      const menus =
+        permissions.length > 0 ? filterMenuTreeByPermissions(APP_MENU_TREE, permissions) : [];
       return {
         ...currentState,
         tokens: p?.tokens ?? currentState.tokens,
+        admin,
         isAuthenticated: p?.isAuthenticated ?? currentState.isAuthenticated,
-        admin: null,
-        menus: [],
+        menus,
       };
     },
   },

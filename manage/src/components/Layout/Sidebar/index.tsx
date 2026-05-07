@@ -4,15 +4,15 @@ import { useNavigate, useLocation } from "@tanstack/react-router";
 import { useLingui } from "@lingui/react/macro";
 import { msg } from "@lingui/core/macro";
 import {
-  Book,
-  Briefcase,
+  BookOpen,
   CircleDashed,
-  Folder,
   Home,
+  MessageSquareWarning,
   PanelLeft,
+  ScrollText,
+  ShieldCheck,
   SlidersHorizontal,
-  Star,
-  User,
+  FolderTree,
   Users,
   Zap,
 } from "lucide-react";
@@ -27,12 +27,16 @@ import "./index.css";
 
 const { Sider } = Layout;
 const MENU_LABELS: Record<string, ReturnType<typeof msg>> = {
-  Platform: msg`平台`,
-  Projects: msg`项目`,
+  Content: msg`内容`,
   Dashboard: msg`仪表盘`,
-  Users: msg`用户`,
-  "Design Engineering": msg`设计工程`,
-  "Sales & Marketing": msg`市场营销`,
+  Knowledge: msg`知识卡片`,
+  Category: msg`分类管理`,
+  Correction: msg`纠错审核`,
+  System: msg`系统`,
+  Users: msg`用户管理`,
+  Admin: msg`管理员`,
+  Config: msg`系统配置`,
+  Logs: msg`操作日志`,
 };
 
 type AntMenuItem = Required<MenuProps>["items"][number];
@@ -44,14 +48,14 @@ type BuildMenuResult = {
 
 const MENU_ICON_MAP: Record<string, LucideIcon> = {
   IconLucideLayoutDashboard: Home,
-  IconLucideUsers: User,
-  IconLucideUserList: Users,
-  IconLucideHistory: Users,
-  IconLucideStar: Star,
+  IconLucideBookOpen: BookOpen,
+  IconLucideFolderTree: FolderTree,
+  IconLucideMessageSquareWarning: MessageSquareWarning,
+  IconLucideUsers: Users,
+  IconLucideShieldCheck: ShieldCheck,
+  IconLucideSlidersHorizontal: SlidersHorizontal,
+  IconLucideScrollText: ScrollText,
   IconLucideSettings: SlidersHorizontal,
-  IconLucideBriefcase: Briefcase,
-  IconLucideBookOpen: Book,
-  IconLucideFolderKanban: Folder,
   IconLucideSparkles: Zap,
 };
 
