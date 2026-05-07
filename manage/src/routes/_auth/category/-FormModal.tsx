@@ -26,28 +26,24 @@ export function FormModal({
   return (
     <BaseFormModal<CreateCategoryRequest>
       open={open}
-      title={editing ? t`Edit Category` : t`New Category`}
-      okText={t`OK`}
-      cancelText={t`Cancel`}
+      title={editing ? t`编辑分类` : t`新建分类`}
+      okText={t`确定`}
+      cancelText={t`取消`}
       form={form}
       confirmLoading={confirmLoading}
       onCancel={onCancel}
       onFinish={onFinish}
     >
-      <Form.Item
-        name="name"
-        label={t`Name`}
-        rules={[{ required: true, message: t`Please enter name` }]}
-      >
+      <Form.Item name="name" label={t`名称`} rules={[{ required: true, message: t`请输入名称` }]}>
         <Input />
       </Form.Item>
-      <Form.Item name="description" label={t`Description`}>
+      <Form.Item name="description" label={t`描述`}>
         <Input.TextArea rows={2} />
       </Form.Item>
-      <Form.Item name="icon" label={t`Icon`}>
+      <Form.Item name="icon" label={t`图标`}>
         <Input />
       </Form.Item>
-      <Form.Item name="sort_order" label={t`Sort Order`}>
+      <Form.Item name="sort_order" label={t`排序`}>
         <InputNumber min={0} style={{ width: "100%" }} />
       </Form.Item>
     </BaseFormModal>

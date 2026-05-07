@@ -130,27 +130,27 @@ function DashboardPage() {
   const stats = useMemo(
     () => [
       {
-        title: t`Total Revenue`,
+        title: t`总收入`,
         value: "$45,231.89",
-        description: t`+20.1% from last month`,
+        description: t`较上月 +20.1%`,
         icon: <DollarSign style={{ color: token.colorTextSecondary }} />,
       },
       {
-        title: t`Subscriptions`,
+        title: t`订阅数`,
         value: "+2350",
-        description: t`+180.1% from last month`,
+        description: t`较上月 +180.1%`,
         icon: <Users style={{ color: token.colorTextSecondary }} />,
       },
       {
-        title: t`Sales`,
+        title: t`销售额`,
         value: "+12,234",
-        description: t`+19% from last month`,
+        description: t`较上月 +19%`,
         icon: <CreditCard style={{ color: token.colorTextSecondary }} />,
       },
       {
-        title: t`Active Now`,
+        title: t`当前活跃`,
         value: "+573",
-        description: t`+201 since last hour`,
+        description: t`较上小时 +201`,
         icon: <Activity style={{ color: token.colorTextSecondary }} />,
       },
     ],
@@ -199,10 +199,8 @@ function DashboardPage() {
         color: "green",
         content: (
           <Flex vertical gap={4}>
-            <Text strong>{t`08:30 · Deploy V3.2.0`}</Text>
-            <Text type="secondary">
-              {t`Release branch merged and production rollout completed.`}
-            </Text>
+            <Text strong>{t`08:30 · 部署 V3.2.0`}</Text>
+            <Text type="secondary">{t`发布分支已合并，生产环境上线完成。`}</Text>
           </Flex>
         ),
       },
@@ -210,10 +208,8 @@ function DashboardPage() {
         color: "blue",
         content: (
           <Flex vertical gap={4}>
-            <Text strong>{t`10:10 · Menu policy updated`}</Text>
-            <Text type="secondary">
-              {t`Admin changed sidebar visibility and permission mapping.`}
-            </Text>
+            <Text strong>{t`10:10 · 菜单策略更新`}</Text>
+            <Text type="secondary">{t`管理员修改了侧边栏可见性和权限映射。`}</Text>
           </Flex>
         ),
       },
@@ -221,8 +217,8 @@ function DashboardPage() {
         color: "gold",
         content: (
           <Flex vertical gap={4}>
-            <Text strong>{t`13:20 · Security review`}</Text>
-            <Text type="secondary">{t`Token refresh behavior and 403 routes validated.`}</Text>
+            <Text strong>{t`13:20 · 安全审查`}</Text>
+            <Text type="secondary">{t`Token 刷新行为和 403 路由验证通过。`}</Text>
           </Flex>
         ),
       },
@@ -230,8 +226,8 @@ function DashboardPage() {
         color: "red",
         content: (
           <Flex vertical gap={4}>
-            <Text strong>{t`15:50 · Incident recovery`}</Text>
-            <Text type="secondary">{t`User creation spike handled and queue restored.`}</Text>
+            <Text strong>{t`15:50 · 故障恢复`}</Text>
+            <Text type="secondary">{t`用户创建高峰已处理，队列已恢复。`}</Text>
           </Flex>
         ),
       },
@@ -276,10 +272,10 @@ function DashboardPage() {
             title={
               <Flex align="center" gap={token.marginSM}>
                 <Title level={5} style={{ margin: 0 }}>
-                  {t`Timeline`}
+                  {t`时间线`}
                 </Title>
                 <Tag variant="filled" color="processing">
-                  {t`Today`}
+                  {t`今天`}
                 </Tag>
               </Flex>
             }
@@ -291,7 +287,7 @@ function DashboardPage() {
           <Card
             className="dash-card-interactive"
             style={{ ...cardHoverStyle, height: "100%" }}
-            title={<Title level={5} style={{ margin: 0 }}>{t`Recent Sales`}</Title>}
+            title={<Title level={5} style={{ margin: 0 }}>{t`最近销售`}</Title>}
           >
             <Flex
               vertical

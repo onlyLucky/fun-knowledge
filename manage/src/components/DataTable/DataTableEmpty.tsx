@@ -43,7 +43,7 @@ export function DataTableEmpty(): ReactElement {
             lineHeight: token.lineHeightLG,
           }}
         >
-          {t`No data`}
+          {t`暂无数据`}
         </span>
         <span
           style={{
@@ -53,7 +53,7 @@ export function DataTableEmpty(): ReactElement {
             lineHeight: token.lineHeight,
           }}
         >
-          {t`Nothing to show in this list yet`}
+          {t`该列表暂无内容`}
         </span>
       </Flex>
     </Flex>

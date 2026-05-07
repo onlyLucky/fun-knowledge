@@ -1,8 +1,8 @@
 import { formatter } from "@lingui/format-po";
 
 const config = {
-  locales: ["en", "zh"],
-  sourceLocale: "en",
+  locales: ["zh", "en"],
+  sourceLocale: "zh",
   catalogs: [
     {
       path: "src/locales/{locale}/messages",

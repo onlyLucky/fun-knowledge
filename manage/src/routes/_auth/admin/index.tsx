@@ -92,29 +92,27 @@ function AdminPage() {
   });
 
   const columns = [
-    { title: t`Username`, dataIndex: "username", key: "username" },
-    { title: t`Real Name`, dataIndex: "real_name", key: "real_name" },
+    { title: t`用户名`, dataIndex: "username", key: "username" },
+    { title: t`真实姓名`, dataIndex: "real_name", key: "real_name" },
     {
-      title: t`Role`,
+      title: t`角色`,
       dataIndex: "role",
       key: "role",
       width: 140,
       render: (role: number) => <Tag>{ROLE_MAP[role] ?? String(role)}</Tag>,
     },
     {
-      title: t`Status`,
+      title: t`状态`,
       dataIndex: "status",
       key: "status",
       width: 80,
       render: (status: number) => (
-        <Tag color={status === 0 ? "success" : "default"}>
-          {status === 0 ? t`Active` : t`Inactive`}
-        </Tag>
+        <Tag color={status === 0 ? "success" : "default"}>{status === 0 ? t`正常` : t`禁用`}</Tag>
       ),
     },
-    { title: t`Last Login`, dataIndex: "last_login_time", key: "last_login_time", width: 180 },
+    { title: t`最后登录`, dataIndex: "last_login_time", key: "last_login_time", width: 180 },
     {
-      title: t`Actions`,
+      title: t`操作`,
       key: "actions",
       width: 60,
       align: "right" as const,
@@ -125,7 +123,7 @@ function AdminPage() {
               {
                 key: "edit",
                 icon: <Pencil size={token.fontSize} />,
-                label: t`Edit`,
+                label: t`编辑`,
                 onClick: () => {
                   setEditing(record);
                   form.setFieldsValue(record);
@@ -139,7 +137,7 @@ function AdminPage() {
           <Button
             type="text"
             icon={<MoreVertical size={token.fontSize} />}
-            aria-label={t`Row actions`}
+            aria-label={t`行操作`}
           />
         </Dropdown>
       ),
@@ -167,7 +165,7 @@ function AdminPage() {
             current: search.page,
             pageSize: search.pageSize,
             showSizeChanger: true,
-            showTotal: (total) => t`${total} rows`,
+            showTotal: (total) => t`${total} 条记录`,
             onChange: (page, pageSize) => void navigate({ search: { ...search, page, pageSize } }),
           }
         : false,
@@ -191,7 +189,7 @@ function AdminPage() {
             setModalOpen(true);
           }}
         >
-          {t`Create Admin`}
+          {t`创建管理员`}
         </Button>
       </Flex>
 

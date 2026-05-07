@@ -28,14 +28,14 @@ export function AppFooter() {
             size="small"
             onClick={toggleLocale}
             icon={<Languages size={token.size} />}
-            aria-label={t`Switch language`}
+            aria-label={t`切换语言`}
           />
           <Button
             type="text"
             size="small"
             onClick={toggleDarkMode}
             icon={<Theme size={token.size} />}
-            aria-label={t`Toggle Theme`}
+            aria-label={t`切换主题`}
           />
         </Space>
       </Flex>
@@ -49,7 +49,7 @@ export function AppFooter() {
         }}
       >
         <Typography.Text type="secondary" style={{ fontSize: token.fontSizeSM, marginBottom: 0 }}>
-          {t`Powered by`}
+          {t`技术支持`}
         </Typography.Text>
         <a
           href={ANTD_ADMIN_REPO}

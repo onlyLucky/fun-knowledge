@@ -84,7 +84,7 @@ function UsersPage() {
       sortOrder: search.sortField === "id" ? search.sortOrder : null,
     },
     {
-      title: t`Username`,
+      title: t`用户名`,
       dataIndex: "username",
       key: "username",
       sorter: true,
@@ -110,14 +110,14 @@ function UsersPage() {
       },
     },
     {
-      title: t`Email`,
+      title: t`邮箱`,
       dataIndex: "email",
       key: "email",
       sorter: true,
       sortOrder: search.sortField === "email" ? search.sortOrder : null,
     },
     {
-      title: t`Roles`,
+      title: t`角色`,
       dataIndex: "roles",
       key: "roles",
       sorter: true,
@@ -165,7 +165,7 @@ function UsersPage() {
             current: search.page,
             pageSize: search.pageSize,
             showSizeChanger: true,
-            showTotal: (total) => t`${total} rows`,
+            showTotal: (total) => t`${total} 条记录`,
             onChange: (page, pageSize) => {
               void navigate({
                 search: { ...search, page, pageSize },

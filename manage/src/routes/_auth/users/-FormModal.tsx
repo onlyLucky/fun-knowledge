@@ -26,9 +26,9 @@ export function FormModal({
   return (
     <BaseFormModal<CreateUserRequest>
       open={open}
-      title={editingUser ? t`Edit User` : t`New User`}
-      okText={t`OK`}
-      cancelText={t`Cancel`}
+      title={editingUser ? t`编辑用户` : t`新建用户`}
+      okText={t`确定`}
+      cancelText={t`取消`}
       form={form}
       confirmLoading={confirmLoading}
       onCancel={onCancel}
@@ -36,25 +36,21 @@ export function FormModal({
     >
       <Form.Item
         name="username"
-        label={t`Username`}
-        rules={[{ required: true, message: t`Please enter username` }]}
+        label={t`用户名`}
+        rules={[{ required: true, message: t`请输入用户名` }]}
       >
         <Input />
       </Form.Item>
-      <Form.Item
-        name="roles"
-        label={t`Roles`}
-        rules={[{ required: true, message: t`Please select roles` }]}
-      >
+      <Form.Item name="roles" label={t`角色`} rules={[{ required: true, message: t`请选择角色` }]}>
         <Select
           mode="multiple"
           options={[
-            { label: t`Admin`, value: "admin" },
-            { label: t`Editor`, value: "editor" },
+            { label: t`管理员`, value: "admin" },
+            { label: t`编辑`, value: "editor" },
           ]}
         />
       </Form.Item>
-      <Form.Item name="email" label={t`Email`}>
+      <Form.Item name="email" label={t`邮箱`}>
         <Input />
       </Form.Item>
     </BaseFormModal>

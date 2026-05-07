@@ -98,14 +98,14 @@ export function Header({ showBreadcrumb: showBreadcrumbProp = true }: HeaderProp
   const leafIcon: LucideIcon = ICON_MAP[firstSegmentPath] ?? Home;
 
   const LEAF_LABEL_MAP: Record<string, () => string> = {
-    Dashboard: () => t`Dashboard`,
-    Knowledge: () => t`Knowledge`,
-    Category: () => t`Category`,
-    Correction: () => t`Correction`,
-    Users: () => t`Users`,
-    Admin: () => t`Admin`,
-    Config: () => t`Config`,
-    Logs: () => t`Logs`,
+    Dashboard: () => t`仪表盘`,
+    Knowledge: () => t`知识卡片`,
+    Category: () => t`分类管理`,
+    Correction: () => t`纠错审核`,
+    Users: () => t`用户管理`,
+    Admin: () => t`管理员`,
+    Config: () => t`系统配置`,
+    Logs: () => t`操作日志`,
     "403": () => t`403`,
   };
   const leafLabel = (LEAF_LABEL_MAP[leafLabelKey] ?? (() => leafLabelKey))();
@@ -116,11 +116,11 @@ export function Header({ showBreadcrumb: showBreadcrumbProp = true }: HeaderProp
 
   if (onDashboard) {
     breadcrumbItems.push({
-      title: crumb(Home, t`Dashboard`),
+      title: crumb(Home, t`仪表盘`),
     });
   } else {
     breadcrumbItems.push({
-      title: crumb(Home, t`Dashboard`, "/dashboard"),
+      title: crumb(Home, t`仪表盘`, "/dashboard"),
     });
 
     breadcrumbItems.push({
@@ -162,7 +162,7 @@ export function Header({ showBreadcrumb: showBreadcrumbProp = true }: HeaderProp
             size="small"
             onClick={toggleSidebar}
             icon={<PanelLeft size={token.size} />}
-            aria-label={t`Toggle sidebar`}
+            aria-label={t`切换侧边栏`}
           />
         ) : null}
         {showBreadcrumb ? (
@@ -177,13 +177,13 @@ export function Header({ showBreadcrumb: showBreadcrumbProp = true }: HeaderProp
           type="text"
           onClick={toggleLocale}
           icon={<Languages size={token.size} />}
-          aria-label={t`Switch language`}
+          aria-label={t`切换语言`}
         />
         <Button
           type="text"
           onClick={toggleDarkMode}
           icon={<Theme size={token.size} />}
-          aria-label={t`Toggle Theme`}
+          aria-label={t`切换主题`}
         />
       </Space>
     </AntHeader>

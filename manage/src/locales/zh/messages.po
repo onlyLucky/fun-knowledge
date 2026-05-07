@@ -24,690 +24,406 @@ msgstr "{0}"
 #: src/routes/_auth/knowledge/index.tsx
 #: src/routes/_auth/logs/index.tsx
 #: src/routes/_auth/users/index.tsx
-msgid "{total} rows"
-msgstr "共 {total} 条"
+msgid "{total} 条记录"
+msgstr "{total} 条记录"
 
 #: src/routes/_auth/dashboard/index.tsx
-msgid "+180.1% from last month"
-msgstr "较上月 +180.1%"
-
-#: src/routes/_auth/dashboard/index.tsx
-msgid "+19% from last month"
-msgstr "较上月 +19%"
-
-#: src/routes/_auth/dashboard/index.tsx
-msgid "+20.1% from last month"
-msgstr "较上月 +20.1%"
-
-#: src/routes/_auth/dashboard/index.tsx
-msgid "+201 since last hour"
-msgstr "较上一小时 +201"
-
-#: src/routes/_auth/dashboard/index.tsx
-msgid "08:30 · Deploy V3.2.0"
+msgid "08:30 · 部署 V3.2.0"
 msgstr "08:30 · 部署 V3.2.0"
 
 #: src/routes/_auth/dashboard/index.tsx
-msgid "10:10 · Menu policy updated"
-msgstr "10:10 · 菜单策略已更新"
+msgid "10:10 · 菜单策略更新"
+msgstr "10:10 · 菜单策略更新"
 
 #: src/routes/_auth/dashboard/index.tsx
-msgid "13:20 · Security review"
-msgstr "13:20 · 安全评审"
+msgid "13:20 · 安全审查"
+msgstr "13:20 · 安全审查"
 
 #: src/routes/_auth/dashboard/index.tsx
-msgid "15:50 · Incident recovery"
-msgstr "15:50 · 事故恢复"
+msgid "15:50 · 故障恢复"
+msgstr "15:50 · 故障恢复"
 
 #: src/components/Layout/Header/index.tsx
 msgid "403"
 msgstr "403"
 
-#: src/routes/register/index.tsx
-msgid "Account created successfully"
-msgstr "账户创建成功"
-
 #: src/routes/_auth/logs/index.tsx
-msgid "Action"
-msgstr "操作"
-
-#: src/routes/_auth/admin/index.tsx
-#: src/routes/_auth/category/index.tsx
-#: src/routes/_auth/correction/index.tsx
-#: src/routes/_auth/knowledge/index.tsx
-msgid "Actions"
-msgstr "操作"
-
-#: src/routes/_auth/admin/index.tsx
-#: src/routes/_auth/category/index.tsx
-msgid "Active"
-msgstr "启用"
+msgid "IP地址"
+msgstr "IP地址"
 
 #: src/routes/_auth/dashboard/index.tsx
-msgid "Active Now"
-msgstr "当前在线"
-
-#: src/components/Layout/Header/index.tsx
-#: src/routes/_auth/logs/index.tsx
-#: src/routes/_auth/users/-FormModal.tsx
-#: src/routes/_auth/users/-Toolbar.tsx
-msgid "Admin"
-msgstr "管理员"
-
-#: src/routes/_auth/dashboard/index.tsx
-msgid "Admin changed sidebar visibility and permission mapping."
-msgstr "管理员已调整侧栏可见性与权限映射。"
-
-#: src/routes/_auth/correction/index.tsx
-msgid "All"
-msgstr "全部"
+msgid "Token 刷新行为和 403 路由验证通过。"
+msgstr "Token 刷新行为和 403 路由验证通过。"
 
 #: src/routes/register/index.tsx
-msgid "Already have an account?"
-msgstr "已有账户？"
-
-#: src/routes/_auth/correction/-DetailDrawer.tsx
-msgid "Approve"
-msgstr "通过"
-
-#: src/routes/_auth/admin/index.tsx
-#: src/routes/_auth/category/index.tsx
-#: src/routes/_auth/knowledge/index.tsx
-#: src/routes/_auth/users/index.tsx
-msgid "Are you absolutely sure?"
-msgstr "确定要执行此操作吗？"
-
-#: src/routes/login/index.tsx
-msgid "Auto login"
-msgstr "自动登录"
-
-#: src/components/NotFound/index.tsx
-#: src/routes/_auth/403/index.tsx
-msgid "Back to Home"
-msgstr "返回首页"
-
-#: src/routes/_auth/admin/-FormModal.tsx
-#: src/routes/_auth/admin/index.tsx
-#: src/routes/_auth/category/-FormModal.tsx
-#: src/routes/_auth/category/index.tsx
-#: src/routes/_auth/knowledge/-FormModal.tsx
-#: src/routes/_auth/knowledge/index.tsx
-#: src/routes/_auth/users/-FormModal.tsx
-#: src/routes/_auth/users/index.tsx
-msgid "Cancel"
-msgstr "取消"
-
-#: src/components/Layout/Header/index.tsx
-#: src/routes/_auth/knowledge/-FormModal.tsx
-#: src/routes/_auth/knowledge/index.tsx
-msgid "Category"
-msgstr "分类"
-
-#: src/components/Layout/Header/index.tsx
-msgid "Config"
-msgstr "配置"
-
-#: src/routes/_auth/config/index.tsx
-msgid "Config updated"
-msgstr "配置已更新"
-
-#: src/routes/register/index.tsx
-msgid "Confirm password"
-msgstr "确认密码"
-
-#: src/routes/_auth/knowledge/-FormModal.tsx
-msgid "Content"
-msgstr "内容"
-
-#: src/routes/_auth/admin/-FormModal.tsx
-msgid "Content Admin"
-msgstr "内容管理员"
-
-#: src/components/Layout/Header/index.tsx
-msgid "Correction"
-msgstr "纠错"
-
-#: src/routes/_auth/correction/-DetailDrawer.tsx
-msgid "Correction Detail"
-msgstr "纠错详情"
-
-#: src/routes/register/index.tsx
-msgid "Create account"
-msgstr "创建账户"
-
-#: src/routes/_auth/admin/index.tsx
-msgid "Create Admin"
-msgstr "创建管理员"
-
-#: src/routes/_auth/category/index.tsx
-msgid "Create Category"
-msgstr "创建分类"
-
-#: src/hooks/useCrudToasts.ts
-msgid "Create failed"
-msgstr "创建失败"
-
-#: src/routes/_auth/knowledge/-Toolbar.tsx
-msgid "Create Knowledge"
-msgstr "创建知识"
-
-#: src/routes/_auth/users/-Toolbar.tsx
-msgid "Create User"
-msgstr "创建用户"
-
-#: src/routes/_auth/correction/-DetailDrawer.tsx
-#: src/routes/_auth/correction/index.tsx
-msgid "Created"
-msgstr "创建时间"
-
-#: src/hooks/useCrudToasts.ts
-msgid "Created successfully"
-msgstr "创建成功"
-
-#: src/components/Layout/Header/index.tsx
-#: src/components/Layout/Sidebar/index.tsx
-msgid "Dashboard"
-msgstr "仪表盘"
-
-#: src/routes/_auth/admin/index.tsx
-#: src/routes/_auth/category/index.tsx
-#: src/routes/_auth/knowledge/index.tsx
-#: src/routes/_auth/users/index.tsx
-msgid "Delete"
-msgstr "删除"
-
-#: src/hooks/useCrudToasts.ts
-msgid "Delete failed"
-msgstr "删除失败"
-
-#: src/hooks/useCrudToasts.ts
-msgid "Deleted successfully"
-msgstr "删除成功"
-
-#: src/hooks/useCrudToasts.ts
-msgid "Deleting…"
-msgstr "正在删除…"
-
-#: src/routes/_auth/category/-FormModal.tsx
-#: src/routes/_auth/category/index.tsx
-#: src/routes/_auth/correction/-DetailDrawer.tsx
-#: src/routes/_auth/correction/index.tsx
-#: src/routes/_auth/logs/index.tsx
-msgid "Description"
-msgstr "描述"
-
-#: src/components/Layout/Sidebar/index.tsx
-msgid "Design Engineering"
-msgstr "设计工程"
-
-#: src/routes/login/index.tsx
-msgid "Don't have an account?"
-msgstr "没有账户？"
-
-#: src/routes/_auth/knowledge/-Toolbar.tsx
-#: src/routes/_auth/knowledge/index.tsx
-msgid "Draft"
-msgstr "草稿"
-
-#: src/routes/_auth/logs/index.tsx
-msgid "Duration"
-msgstr "耗时"
-
-#: src/routes/_auth/admin/index.tsx
-#: src/routes/_auth/category/index.tsx
-#: src/routes/_auth/knowledge/index.tsx
-#: src/routes/_auth/users/index.tsx
-msgid "Edit"
-msgstr "编辑"
-
-#: src/routes/_auth/admin/-FormModal.tsx
-msgid "Edit Admin"
-msgstr "编辑管理员"
-
-#: src/routes/_auth/category/-FormModal.tsx
-msgid "Edit Category"
-msgstr "编辑分类"
-
-#: src/routes/_auth/knowledge/-FormModal.tsx
-msgid "Edit Knowledge"
-msgstr "编辑知识"
-
-#: src/routes/_auth/users/-FormModal.tsx
-msgid "Edit User"
-msgstr "编辑用户"
-
-#: src/routes/_auth/users/-FormModal.tsx
-#: src/routes/_auth/users/-Toolbar.tsx
-msgid "Editor"
-msgstr "编辑者"
-
-#: src/routes/_auth/users/-FormModal.tsx
-#: src/routes/_auth/users/index.tsx
-msgid "Email"
-msgstr "邮箱"
-
-#: src/routes/register/index.tsx
-msgid "Email address"
-msgstr "邮箱地址"
-
-#: src/routes/register/index.tsx
-msgid "Enter at least 6 characters"
-msgstr "请输入至少6个字符"
-
-#: src/routes/_auth/knowledge/-FormModal.tsx
-msgid "Enter tags"
-msgstr "输入标签"
-
-#: src/routes/login/index.tsx
-msgid "Forgot password?"
-msgstr "忘记密码？"
-
-#: src/components/NotFound/index.tsx
-msgid "Go back"
-msgstr "返回上一页"
-
-#: src/routes/_auth/category/-FormModal.tsx
-msgid "Icon"
-msgstr "图标"
-
-#: src/routes/_auth/knowledge/-FormModal.tsx
-msgid "Image URL"
-msgstr "图片链接"
-
-#: src/routes/_auth/admin/index.tsx
-#: src/routes/_auth/category/index.tsx
-msgid "Inactive"
-msgstr "停用"
-
-#: src/routes/_auth/logs/index.tsx
-msgid "IP"
-msgstr "IP"
-
-#: src/components/Layout/Header/index.tsx
-#: src/routes/_auth/correction/index.tsx
-msgid "Knowledge"
-msgstr "知识"
-
-#: src/routes/_auth/correction/-DetailDrawer.tsx
-msgid "Knowledge ID"
-msgstr "知识ID"
-
-#: src/routes/_auth/admin/index.tsx
-msgid "Last Login"
-msgstr "最近登录"
-
-#: src/routes/login/index.tsx
-msgid "Login failed"
-msgstr "登录失败"
-
-#: src/routes/login/index.tsx
-msgid "Login successful"
-msgstr "登录成功"
-
-#: src/components/Layout/Header/index.tsx
-msgid "Logs"
-msgstr "日志"
-
-#: src/routes/_auth/logs/index.tsx
-msgid "Module"
-msgstr "模块"
-
-#: src/routes/_auth/knowledge/-Toolbar.tsx
-#: src/routes/_auth/users/-Toolbar.tsx
-msgid "More filters"
-msgstr "更多筛选"
-
-#: src/routes/_auth/category/-FormModal.tsx
-#: src/routes/_auth/category/index.tsx
-msgid "Name"
-msgstr "名称"
-
-#: src/routes/_auth/admin/-FormModal.tsx
-msgid "New Admin"
-msgstr "新建管理员"
-
-#: src/routes/_auth/category/-FormModal.tsx
-msgid "New Category"
-msgstr "新建分类"
-
-#: src/routes/_auth/knowledge/-FormModal.tsx
-msgid "New Knowledge"
-msgstr "新建知识"
-
-#: src/routes/_auth/users/-FormModal.tsx
-msgid "New User"
-msgstr "新建用户"
-
-#: src/components/DataTable/DataTableEmpty.tsx
-msgid "No data"
-msgstr "暂无数据"
-
-#: src/components/DataTable/DataTableEmpty.tsx
-msgid "Nothing to show in this list yet"
-msgstr "当前列表为空，暂无可展示的记录"
-
-#: src/routes/_auth/knowledge/-Toolbar.tsx
-#: src/routes/_auth/knowledge/index.tsx
-msgid "Offline"
-msgstr "下线"
-
-#: src/routes/_auth/admin/-FormModal.tsx
-#: src/routes/_auth/category/-FormModal.tsx
-#: src/routes/_auth/knowledge/-FormModal.tsx
-#: src/routes/_auth/users/-FormModal.tsx
-msgid "OK"
-msgstr "确定"
-
-#: src/components/Layout/Sidebar/index.tsx
-msgid "Open account menu"
-msgstr "打开账户菜单"
-
-#: src/routes/_auth/admin/-FormModal.tsx
-msgid "Operations"
-msgstr "运营"
-
-#: src/routes/_auth/admin/-FormModal.tsx
-#: src/routes/login/index.tsx
-#: src/routes/register/index.tsx
-msgid "Password"
-msgstr "密码"
-
-#: src/routes/register/index.tsx
-msgid "Password must be at least 6 characters long"
-msgstr "密码长度至少为6位"
-
-#: src/routes/register/index.tsx
-msgid "Passwords do not match"
+msgid "两次输入的密码不一致"
 msgstr "两次输入的密码不一致"
 
-#: src/components/Layout/Sidebar/index.tsx
-msgid "Platform"
-msgstr "平台"
-
-#: src/routes/register/index.tsx
-msgid "Please confirm your password"
-msgstr "请确认您的密码"
-
-#: src/routes/register/index.tsx
-msgid "Please enter a valid email address"
-msgstr "请输入有效的邮箱地址"
-
-#: src/routes/_auth/knowledge/-FormModal.tsx
-msgid "Please enter content"
-msgstr "请输入内容"
-
-#: src/routes/_auth/category/-FormModal.tsx
-msgid "Please enter name"
-msgstr "请输入名称"
-
-#: src/routes/_auth/admin/-FormModal.tsx
-#: src/routes/login/index.tsx
-msgid "Please enter password"
-msgstr "请输入密码"
-
-#: src/routes/_auth/knowledge/-FormModal.tsx
-msgid "Please enter title"
-msgstr "请输入标题"
-
-#: src/routes/_auth/admin/-FormModal.tsx
-#: src/routes/_auth/users/-FormModal.tsx
-#: src/routes/login/index.tsx
-msgid "Please enter username"
-msgstr "请输入用户名"
-
-#: src/routes/register/index.tsx
-msgid "Please enter your password"
-msgstr "请输入您的密码"
-
-#: src/routes/register/index.tsx
-msgid "Please enter your username"
-msgstr "请输入您的用户名"
-
-#: src/routes/_auth/knowledge/-FormModal.tsx
-msgid "Please select category"
-msgstr "请选择分类"
-
-#: src/routes/_auth/admin/-FormModal.tsx
-msgid "Please select role"
-msgstr "请选择角色"
-
-#: src/routes/_auth/users/-FormModal.tsx
-msgid "Please select roles"
-msgstr "请选择角色"
-
-#: src/components/RouteError.tsx
-msgid "Please try again or return to the dashboard."
-msgstr "请重试或返回控制台。"
-
-#: src/components/Layout/AppFooter/index.tsx
-msgid "Powered by"
-msgstr "由"
-
-#: src/components/Layout/Sidebar/index.tsx
-msgid "Projects"
-msgstr "项目"
-
-#: src/routes/_auth/knowledge/-Toolbar.tsx
-#: src/routes/_auth/knowledge/index.tsx
-msgid "Published"
-msgstr "已发布"
-
-#: src/routes/register/index.tsx
-msgid "Re-enter your password"
-msgstr "请再次输入您的密码"
-
-#: src/routes/_auth/admin/-FormModal.tsx
-#: src/routes/_auth/admin/index.tsx
-msgid "Real Name"
-msgstr "真实姓名"
-
 #: src/routes/_auth/dashboard/index.tsx
-msgid "Recent Sales"
-msgstr "近期销售"
-
-#: src/routes/register/index.tsx
-msgid "Registration failed"
-msgstr "注册失败"
-
-#: src/routes/_auth/correction/-DetailDrawer.tsx
-msgid "Reject"
-msgstr "拒绝"
-
-#: src/routes/_auth/dashboard/index.tsx
-msgid "Release branch merged and production rollout completed."
-msgstr "发布分支已合并，生产发布已完成。"
-
-#: src/components/RouteError.tsx
-msgid "Retry"
-msgstr "重试"
-
-#: src/routes/_auth/correction/-DetailDrawer.tsx
-msgid "Review failed"
-msgstr "审核失败"
-
-#: src/routes/_auth/correction/-DetailDrawer.tsx
-msgid "Review Remark"
-msgstr "审核备注"
-
-#: src/routes/_auth/correction/-DetailDrawer.tsx
-msgid "Review submitted"
-msgstr "审核已提交"
-
-#: src/routes/_auth/admin/-FormModal.tsx
-msgid "Reviewer"
-msgstr "审核员"
-
-#: src/routes/_auth/admin/-FormModal.tsx
-#: src/routes/_auth/admin/index.tsx
-#: src/routes/_auth/users/-Toolbar.tsx
-msgid "Role"
-msgstr "角色"
-
-#: src/routes/_auth/users/-FormModal.tsx
-#: src/routes/_auth/users/index.tsx
-msgid "Roles"
-msgstr "角色"
-
-#: src/routes/_auth/admin/index.tsx
-#: src/routes/_auth/category/index.tsx
-#: src/routes/_auth/knowledge/index.tsx
-#: src/routes/_auth/users/index.tsx
-msgid "Row actions"
-msgstr "行操作"
-
-#: src/routes/_auth/dashboard/index.tsx
-msgid "Sales"
-msgstr "销售额"
-
-#: src/components/Layout/Sidebar/index.tsx
-msgid "Sales & Marketing"
-msgstr "销售与市场"
-
-#: src/routes/_auth/config/index.tsx
-msgid "Save"
-msgstr "保存"
-
-#: src/routes/_auth/knowledge/-Toolbar.tsx
-msgid "Search knowledge"
-msgstr "搜索知识"
-
-#: src/routes/_auth/users/-Toolbar.tsx
-msgid "Search User"
-msgstr "搜索用户"
-
-#: src/routes/register/index.tsx
-msgid "Sign in"
-msgstr "登录"
-
-#: src/routes/login/index.tsx
-msgid "Sign In"
-msgstr "登录"
-
-#: src/components/Layout/Sidebar/index.tsx
-msgid "Sign Out"
-msgstr "退出登录"
-
-#: src/routes/login/index.tsx
-msgid "Sign up"
-msgstr "注册"
-
-#: src/components/RouteError.tsx
-msgid "Something went wrong"
-msgstr "出了点问题"
-
-#: src/components/NotFound/index.tsx
-msgid "Sorry, the page you visited does not exist."
-msgstr "抱歉，您访问的页面不存在。"
-
-#: src/routes/_auth/403/index.tsx
-msgid "Sorry, you don't have permission to access this page."
-msgstr "抱歉，您没有权限访问此页面。"
-
-#: src/routes/_auth/category/-FormModal.tsx
-#: src/routes/_auth/category/index.tsx
-msgid "Sort Order"
-msgstr "排序"
-
-#: src/routes/_auth/knowledge/-FormModal.tsx
-msgid "Sort Weight"
-msgstr "排序权重"
-
-#: src/routes/_auth/knowledge/-FormModal.tsx
-msgid "Source"
-msgstr "来源"
-
-#: src/routes/_auth/admin/index.tsx
-#: src/routes/_auth/category/index.tsx
-#: src/routes/_auth/correction/-DetailDrawer.tsx
-#: src/routes/_auth/correction/index.tsx
-#: src/routes/_auth/knowledge/-Toolbar.tsx
-#: src/routes/_auth/knowledge/index.tsx
-#: src/routes/_auth/logs/index.tsx
-msgid "Status"
-msgstr "状态"
-
-#: src/routes/_auth/dashboard/index.tsx
-msgid "Subscriptions"
-msgstr "订阅"
-
-#: src/routes/_auth/admin/-FormModal.tsx
-msgid "Super Admin"
-msgstr "超级管理员"
-
-#: src/components/Layout/AppFooter/index.tsx
-#: src/components/Layout/Header/index.tsx
-msgid "Switch language"
-msgstr "切换语言"
-
-#: src/routes/_auth/knowledge/-FormModal.tsx
-msgid "Tags"
-msgstr "标签"
-
-#: src/routes/_auth/admin/index.tsx
-#: src/routes/_auth/category/index.tsx
-#: src/routes/_auth/knowledge/index.tsx
-msgid "This action cannot be undone."
-msgstr "此操作不可撤销。"
-
-#: src/routes/_auth/users/index.tsx
-msgid "This action cannot be undone. This will permanently delete the user."
-msgstr "此操作无法撤销，将永久删除该用户。"
-
-#: src/routes/_auth/logs/index.tsx
-msgid "Time"
-msgstr "时间"
-
-#: src/routes/_auth/dashboard/index.tsx
-msgid "Timeline"
-msgstr "时间线"
-
-#: src/routes/_auth/knowledge/-FormModal.tsx
-#: src/routes/_auth/knowledge/index.tsx
-msgid "Title"
-msgstr "标题"
-
-#: src/routes/_auth/dashboard/index.tsx
-msgid "Today"
+msgid "今天"
 msgstr "今天"
 
 #: src/components/Layout/Header/index.tsx
 #: src/components/Layout/Sidebar/index.tsx
-msgid "Toggle sidebar"
-msgstr "折叠侧栏"
+msgid "仪表盘"
+msgstr "仪表盘"
+
+#: src/routes/_auth/config/index.tsx
+msgid "保存"
+msgstr "保存"
+
+#: src/routes/_auth/category/index.tsx
+msgid "停用"
+msgstr "停用"
+
+#: src/routes/_auth/correction/index.tsx
+msgid "全部"
+msgstr "全部"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "内容"
+msgstr "内容"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+msgid "内容管理员"
+msgstr "内容管理员"
+
+#: src/routes/register/index.tsx
+msgid "再次输入密码"
+msgstr "再次输入密码"
+
+#: src/routes/_auth/admin/index.tsx
+msgid "最后登录"
+msgstr "最后登录"
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "最近销售"
+msgstr "最近销售"
+
+#: src/components/RouteError.tsx
+msgid "出错了"
+msgstr "出错了"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "分类"
+msgstr "分类"
+
+#: src/components/Layout/Header/index.tsx
+msgid "分类管理"
+msgstr "分类管理"
 
 #: src/components/Layout/AppFooter/index.tsx
 #: src/components/Layout/Header/index.tsx
-msgid "Toggle Theme"
+msgid "切换主题"
 msgstr "切换主题"
 
-#: src/routes/_auth/dashboard/index.tsx
-msgid "Token refresh behavior and 403 routes validated."
-msgstr "已验证令牌刷新行为与 403 路由。"
+#: src/components/Layout/Header/index.tsx
+#: src/components/Layout/Sidebar/index.tsx
+msgid "切换侧边栏"
+msgstr "切换侧边栏"
 
-#: src/routes/_auth/dashboard/index.tsx
-msgid "Total Revenue"
-msgstr "总收入"
+#: src/components/Layout/AppFooter/index.tsx
+#: src/components/Layout/Header/index.tsx
+msgid "切换语言"
+msgstr "切换语言"
+
+#: src/routes/_auth/category/index.tsx
+msgid "创建分类"
+msgstr "创建分类"
+
+#: src/hooks/useCrudToasts.ts
+msgid "创建失败"
+msgstr "创建失败"
+
+#: src/hooks/useCrudToasts.ts
+msgid "创建成功"
+msgstr "创建成功"
 
 #: src/routes/_auth/correction/-DetailDrawer.tsx
 #: src/routes/_auth/correction/index.tsx
-msgid "Type"
-msgstr "类型"
+msgid "创建时间"
+msgstr "创建时间"
+
+#: src/routes/_auth/admin/index.tsx
+msgid "创建管理员"
+msgstr "创建管理员"
+
+#: src/routes/register/index.tsx
+msgid "创建账号"
+msgstr "创建账号"
+
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "删除"
+msgstr "删除"
+
+#: src/hooks/useCrudToasts.ts
+msgid "删除中…"
+msgstr "删除中…"
+
+#: src/hooks/useCrudToasts.ts
+msgid "删除失败"
+msgstr "删除失败"
+
+#: src/hooks/useCrudToasts.ts
+msgid "删除成功"
+msgstr "删除成功"
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "发布分支已合并，生产环境上线完成。"
+msgstr "发布分支已合并，生产环境上线完成。"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+#: src/routes/_auth/category/-FormModal.tsx
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/knowledge/-FormModal.tsx
+#: src/routes/_auth/knowledge/index.tsx
+#: src/routes/_auth/users/-FormModal.tsx
+msgid "取消"
+msgstr "取消"
+
+#: src/routes/_auth/category/-FormModal.tsx
+#: src/routes/_auth/category/index.tsx
+msgid "名称"
+msgstr "名称"
+
+#: src/routes/_auth/category/index.tsx
+msgid "启用"
+msgstr "启用"
+
+#: src/routes/_auth/category/-FormModal.tsx
+msgid "图标"
+msgstr "图标"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "图片链接"
+msgstr "图片链接"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+msgid "审核员"
+msgstr "审核员"
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "审核备注"
+msgstr "审核备注"
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "审核失败"
+msgstr "审核失败"
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "审核已提交"
+msgstr "审核已提交"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+#: src/routes/login/index.tsx
+#: src/routes/register/index.tsx
+msgid "密码"
+msgstr "密码"
+
+#: src/routes/register/index.tsx
+msgid "密码至少需要 6 个字符"
+msgstr "密码至少需要 6 个字符"
+
+#: src/routes/_auth/knowledge/-Toolbar.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "已下线"
+msgstr "已下线"
+
+#: src/routes/_auth/knowledge/-Toolbar.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "已发布"
+msgstr "已发布"
+
+#: src/routes/register/index.tsx
+msgid "已有账号？"
+msgstr "已有账号？"
+
+#: src/components/Layout/Sidebar/index.tsx
+msgid "市场营销"
+msgstr "市场营销"
+
+#: src/components/Layout/Sidebar/index.tsx
+msgid "平台"
+msgstr "平台"
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "当前活跃"
+msgstr "当前活跃"
+
+#: src/routes/login/index.tsx
+msgid "忘记密码？"
+msgstr "忘记密码？"
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "总收入"
+msgstr "总收入"
+
+#: src/components/Layout/Sidebar/index.tsx
+msgid "打开账户菜单"
+msgstr "打开账户菜单"
+
+#: src/components/Layout/AppFooter/index.tsx
+msgid "技术支持"
+msgstr "技术支持"
+
+#: src/routes/_auth/403/index.tsx
+msgid "抱歉，您没有权限访问此页面。"
+msgstr "抱歉，您没有权限访问此页面。"
+
+#: src/components/NotFound/index.tsx
+msgid "抱歉，您访问的页面不存在。"
+msgstr "抱歉，您访问的页面不存在。"
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "拒绝"
+msgstr "拒绝"
+
+#: src/routes/_auth/category/-FormModal.tsx
+#: src/routes/_auth/category/index.tsx
+msgid "排序"
+msgstr "排序"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "排序权重"
+msgstr "排序权重"
+
+#: src/routes/_auth/category/-FormModal.tsx
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/correction/index.tsx
+msgid "描述"
+msgstr "描述"
+
+#: src/routes/_auth/users/-Toolbar.tsx
+msgid "搜索用户"
+msgstr "搜索用户"
+
+#: src/routes/_auth/knowledge/-Toolbar.tsx
+msgid "搜索知识"
+msgstr "搜索知识"
+
+#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/correction/index.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "操作"
+msgstr "操作"
+
+#: src/routes/_auth/logs/index.tsx
+msgid "操作描述"
+msgstr "操作描述"
+
+#: src/components/Layout/Header/index.tsx
+msgid "操作日志"
+msgstr "操作日志"
+
+#: src/routes/_auth/logs/index.tsx
+msgid "操作时间"
+msgstr "操作时间"
+
+#: src/routes/_auth/logs/index.tsx
+msgid "操作类型"
+msgstr "操作类型"
+
+#: src/routes/_auth/category/-FormModal.tsx
+msgid "新建分类"
+msgstr "新建分类"
+
+#: src/routes/_auth/users/-FormModal.tsx
+msgid "新建用户"
+msgstr "新建用户"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+#: src/routes/_auth/knowledge/-Toolbar.tsx
+msgid "新建知识"
+msgstr "新建知识"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+msgid "新建管理员"
+msgstr "新建管理员"
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "时间线"
+msgstr "时间线"
+
+#: src/components/DataTable/DataTableEmpty.tsx
+msgid "暂无数据"
+msgstr "暂无数据"
+
+#: src/routes/_auth/knowledge/-Toolbar.tsx
+#: src/routes/_auth/users/-Toolbar.tsx
+msgid "更多筛选"
+msgstr "更多筛选"
+
+#: src/hooks/useCrudToasts.ts
+msgid "更新中…"
+msgstr "更新中…"
 
 #: src/hooks/useCrudToasts.ts
 #: src/routes/_auth/config/index.tsx
-msgid "Update failed"
+msgid "更新失败"
 msgstr "更新失败"
 
 #: src/hooks/useCrudToasts.ts
-msgid "Updated successfully"
+msgid "更新成功"
 msgstr "更新成功"
 
-#: src/hooks/useCrudToasts.ts
-msgid "Updating…"
-msgstr "正在更新…"
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "来源"
+msgstr "来源"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "标签"
+msgstr "标签"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "标题"
+msgstr "标题"
+
+#: src/routes/_auth/logs/index.tsx
+msgid "模块"
+msgstr "模块"
+
+#: src/routes/_auth/admin/index.tsx
+msgid "正常"
+msgstr "正常"
+
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "此操作不可撤销。"
+msgstr "此操作不可撤销。"
+
+#: src/routes/login/index.tsx
+msgid "注册"
+msgstr "注册"
+
+#: src/routes/register/index.tsx
+msgid "注册失败"
+msgstr "注册失败"
+
+#: src/routes/_auth/knowledge/index.tsx
+msgid "浏览量"
+msgstr "浏览量"
+
+#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/correction/index.tsx
+#: src/routes/_auth/knowledge/-Toolbar.tsx
+#: src/routes/_auth/knowledge/index.tsx
+#: src/routes/_auth/logs/index.tsx
+msgid "状态"
+msgstr "状态"
+
+#: src/components/Layout/Sidebar/index.tsx
+msgid "用户"
+msgstr "用户"
 
 #: src/routes/_auth/dashboard/index.tsx
-msgid "User creation spike handled and queue restored."
+msgid "用户创建高峰已处理，队列已恢复。"
 msgstr "用户创建高峰已处理，队列已恢复。"
 
 #: src/routes/_auth/admin/-FormModal.tsx
@@ -716,14 +432,278 @@ msgstr "用户创建高峰已处理，队列已恢复。"
 #: src/routes/_auth/users/index.tsx
 #: src/routes/login/index.tsx
 #: src/routes/register/index.tsx
-msgid "Username"
+msgid "用户名"
 msgstr "用户名"
 
 #: src/components/Layout/Header/index.tsx
-#: src/components/Layout/Sidebar/index.tsx
-msgid "Users"
-msgstr "用户"
+msgid "用户管理"
+msgstr "用户管理"
 
+#: src/routes/login/index.tsx
+#: src/routes/register/index.tsx
+msgid "登录"
+msgstr "登录"
+
+#: src/routes/login/index.tsx
+msgid "登录失败"
+msgstr "登录失败"
+
+#: src/routes/login/index.tsx
+msgid "登录成功"
+msgstr "登录成功"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+#: src/routes/_auth/admin/index.tsx
+msgid "真实姓名"
+msgstr "真实姓名"
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "知识ID"
+msgstr "知识ID"
+
+#: src/components/Layout/Header/index.tsx
+msgid "知识卡片"
+msgstr "知识卡片"
+
+#: src/routes/_auth/correction/index.tsx
+msgid "知识标题"
+msgstr "知识标题"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+#: src/routes/_auth/category/-FormModal.tsx
+#: src/routes/_auth/knowledge/-FormModal.tsx
+#: src/routes/_auth/users/-FormModal.tsx
+msgid "确定"
+msgstr "确定"
+
+#: src/routes/_auth/category/index.tsx
 #: src/routes/_auth/knowledge/index.tsx
-msgid "Views"
-msgstr "浏览量"
+msgid "确定要删除吗？"
+msgstr "确定要删除吗？"
+
+#: src/routes/register/index.tsx
+msgid "确认密码"
+msgstr "确认密码"
+
+#: src/routes/_auth/admin/index.tsx
+msgid "禁用"
+msgstr "禁用"
+
+#: src/components/Layout/Header/index.tsx
+#: src/routes/_auth/logs/index.tsx
+#: src/routes/_auth/users/-FormModal.tsx
+#: src/routes/_auth/users/-Toolbar.tsx
+msgid "管理员"
+msgstr "管理员"
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "管理员修改了侧边栏可见性和权限映射。"
+msgstr "管理员修改了侧边栏可见性和权限映射。"
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/correction/index.tsx
+msgid "类型"
+msgstr "类型"
+
+#: src/components/Layout/Header/index.tsx
+msgid "系统配置"
+msgstr "系统配置"
+
+#: src/components/Layout/Header/index.tsx
+msgid "纠错审核"
+msgstr "纠错审核"
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "纠错详情"
+msgstr "纠错详情"
+
+#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/knowledge/index.tsx
+#: src/routes/_auth/users/-FormModal.tsx
+#: src/routes/_auth/users/-Toolbar.tsx
+msgid "编辑"
+msgstr "编辑"
+
+#: src/routes/_auth/category/-FormModal.tsx
+msgid "编辑分类"
+msgstr "编辑分类"
+
+#: src/routes/_auth/users/-FormModal.tsx
+msgid "编辑用户"
+msgstr "编辑用户"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "编辑知识"
+msgstr "编辑知识"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+msgid "编辑管理员"
+msgstr "编辑管理员"
+
+#: src/routes/_auth/logs/index.tsx
+msgid "耗时"
+msgstr "耗时"
+
+#: src/routes/login/index.tsx
+msgid "自动登录"
+msgstr "自动登录"
+
+#: src/routes/register/index.tsx
+msgid "至少输入 6 个字符"
+msgstr "至少输入 6 个字符"
+
+#: src/routes/_auth/knowledge/-Toolbar.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "草稿"
+msgstr "草稿"
+
+#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "行操作"
+msgstr "行操作"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/users/-FormModal.tsx
+#: src/routes/_auth/users/-Toolbar.tsx
+#: src/routes/_auth/users/index.tsx
+msgid "角色"
+msgstr "角色"
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "订阅数"
+msgstr "订阅数"
+
+#: src/components/Layout/Sidebar/index.tsx
+msgid "设计工程"
+msgstr "设计工程"
+
+#: src/components/DataTable/DataTableEmpty.tsx
+msgid "该列表暂无内容"
+msgstr "该列表暂无内容"
+
+#: src/routes/register/index.tsx
+msgid "请确认密码"
+msgstr "请确认密码"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "请输入内容"
+msgstr "请输入内容"
+
+#: src/routes/_auth/category/-FormModal.tsx
+msgid "请输入名称"
+msgstr "请输入名称"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+#: src/routes/login/index.tsx
+#: src/routes/register/index.tsx
+msgid "请输入密码"
+msgstr "请输入密码"
+
+#: src/routes/register/index.tsx
+msgid "请输入有效的邮箱地址"
+msgstr "请输入有效的邮箱地址"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "请输入标题"
+msgstr "请输入标题"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+#: src/routes/_auth/users/-FormModal.tsx
+#: src/routes/login/index.tsx
+#: src/routes/register/index.tsx
+msgid "请输入用户名"
+msgstr "请输入用户名"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "请选择分类"
+msgstr "请选择分类"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+#: src/routes/_auth/users/-FormModal.tsx
+msgid "请选择角色"
+msgstr "请选择角色"
+
+#: src/components/RouteError.tsx
+msgid "请重试或返回仪表盘。"
+msgstr "请重试或返回仪表盘。"
+
+#: src/routes/register/index.tsx
+msgid "账号创建成功"
+msgstr "账号创建成功"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+msgid "超级管理员"
+msgstr "超级管理员"
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "较上小时 +201"
+msgstr "较上小时 +201"
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "较上月 +180.1%"
+msgstr "较上月 +180.1%"
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "较上月 +19%"
+msgstr "较上月 +19%"
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "较上月 +20.1%"
+msgstr "较上月 +20.1%"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "输入标签"
+msgstr "输入标签"
+
+#: src/routes/_auth/admin/-FormModal.tsx
+msgid "运营"
+msgstr "运营"
+
+#: src/components/NotFound/index.tsx
+msgid "返回"
+msgstr "返回"
+
+#: src/components/NotFound/index.tsx
+#: src/routes/_auth/403/index.tsx
+msgid "返回首页"
+msgstr "返回首页"
+
+#: src/routes/login/index.tsx
+msgid "还没有账号？"
+msgstr "还没有账号？"
+
+#: src/components/Layout/Sidebar/index.tsx
+msgid "退出登录"
+msgstr "退出登录"
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "通过"
+msgstr "通过"
+
+#: src/routes/_auth/users/-FormModal.tsx
+#: src/routes/_auth/users/index.tsx
+msgid "邮箱"
+msgstr "邮箱"
+
+#: src/routes/register/index.tsx
+msgid "邮箱地址"
+msgstr "邮箱地址"
+
+#: src/routes/_auth/config/index.tsx
+msgid "配置已更新"
+msgstr "配置已更新"
+
+#: src/components/RouteError.tsx
+msgid "重试"
+msgstr "重试"
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "销售额"
+msgstr "销售额"
+
+#: src/components/Layout/Sidebar/index.tsx
+msgid "项目"
+msgstr "项目"

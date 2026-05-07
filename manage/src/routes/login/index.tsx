@@ -36,11 +36,11 @@ function LoginPage() {
       await adminLogin(parsed.username, parsed.password);
     },
     onSuccess: () => {
-      message.success(t`Login successful`);
+      message.success(t`登录成功`);
       void navigate({ to: "/dashboard" });
     },
     onError: (err) => {
-      message.error(err instanceof Error ? err.message : t`Login failed`);
+      message.error(err instanceof Error ? err.message : t`登录失败`);
     },
   });
 
@@ -131,12 +131,12 @@ function LoginPage() {
             >
               <Form.Item
                 name="username"
-                label={<span>{t`Username`}</span>}
-                rules={[{ required: true, message: t`Please enter username` }]}
+                label={<span>{t`用户名`}</span>}
+                rules={[{ required: true, message: t`请输入用户名` }]}
               >
                 <Input
                   id="login-username"
-                  aria-label={t`Username`}
+                  aria-label={t`用户名`}
                   placeholder="admin"
                   size="large"
                 />
@@ -144,13 +144,13 @@ function LoginPage() {
 
               <Form.Item
                 name="password"
-                label={<span>{t`Password`}</span>}
-                rules={[{ required: true, message: t`Please enter password` }]}
+                label={<span>{t`密码`}</span>}
+                rules={[{ required: true, message: t`请输入密码` }]}
                 style={{ marginBottom: token.marginLG }}
               >
                 <Input.Password
                   id="login-password"
-                  aria-label={t`Password`}
+                  aria-label={t`密码`}
                   placeholder="admin"
                   size="large"
                 />
@@ -163,14 +163,14 @@ function LoginPage() {
                 wrap="wrap"
               >
                 <Form.Item name="remember" valuePropName="checked" noStyle>
-                  <Checkbox>{t`Auto login`}</Checkbox>
+                  <Checkbox>{t`自动登录`}</Checkbox>
                 </Form.Item>
                 <Typography.Link
                   href="#"
                   onClick={(e) => e.preventDefault()}
                   style={{ fontSize: token.fontSizeSM }}
                 >
-                  {t`Forgot password?`}
+                  {t`忘记密码？`}
                 </Typography.Link>
               </Flex>
 
@@ -182,15 +182,15 @@ function LoginPage() {
                   block
                   size="large"
                 >
-                  {t`Sign In`}
+                  {t`登录`}
                 </Button>
               </Form.Item>
             </Form>
             <Flex justify="center" style={{ marginTop: token.margin }}>
               <Typography.Text type="secondary">
-                {t`Don't have an account?`}{" "}
+                {t`还没有账号？`}{" "}
                 <Link to="/register" style={{ color: token.colorPrimary }}>
-                  {t`Sign up`}
+                  {t`注册`}
                 </Link>
               </Typography.Text>
             </Flex>

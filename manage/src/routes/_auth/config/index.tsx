@@ -33,11 +33,11 @@ function ConfigPage() {
       await httpClient.put(CONFIG_ENDPOINTS.update, { config_key: key, config_value: value });
     },
     onSuccess: () => {
-      message.success(t`Config updated`);
+      message.success(t`配置已更新`);
       void queryClient.invalidateQueries({ queryKey: ["config"] });
     },
     onError: (err) => {
-      message.error(err instanceof Error ? err.message : t`Update failed`);
+      message.error(err instanceof Error ? err.message : t`更新失败`);
     },
   });
 
@@ -84,7 +84,7 @@ function ConfigPage() {
                       loading={updateMutation.isPending}
                       onClick={() => handleSave(item.config_key)}
                     >
-                      {t`Save`}
+                      {t`保存`}
                     </Button>
                   </Flex>
                 </Form.Item>

@@ -30,7 +30,7 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
         children: (
           <Input.Search
             allowClear
-            placeholder={t`Search User`}
+            placeholder={t`搜索用户`}
             style={{ width: FILTER_CONTROL_WIDTH }}
             value={keywordInput}
             onChange={(e) => onKeywordChange(e.target.value)}
@@ -45,14 +45,14 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
         children: (
           <Select
             allowClear
-            placeholder={t`Role`}
+            placeholder={t`角色`}
             style={{ width: FILTER_CONTROL_WIDTH }}
             prefix={<UserRound size={token.fontSize} />}
             value={roleValue}
             onChange={(v) => onRoleChange(v ?? "")}
             options={[
-              { label: t`Admin`, value: "admin" },
-              { label: t`Editor`, value: "editor" },
+              { label: t`管理员`, value: "admin" },
+              { label: t`编辑`, value: "editor" },
             ]}
           />
         ),
@@ -75,8 +75,8 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
       ref={ref}
       slots={slots}
       actions={null}
-      moreFiltersLabel={t`More filters`}
-      moreFiltersTitle={t`More filters`}
+      moreFiltersLabel={t`更多筛选`}
+      moreFiltersTitle={t`更多筛选`}
     />
   );
 });

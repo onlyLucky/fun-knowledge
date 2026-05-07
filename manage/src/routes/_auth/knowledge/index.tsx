@@ -129,33 +129,33 @@ function KnowledgePage() {
 
   const confirmDelete = (record: KnowledgeType) => {
     modal.confirm({
-      title: t`Are you absolutely sure?`,
-      content: t`This action cannot be undone.`,
-      okText: t`Delete`,
+      title: t`确定要删除吗？`,
+      content: t`此操作不可撤销。`,
+      okText: t`删除`,
       okType: "danger",
-      cancelText: t`Cancel`,
+      cancelText: t`取消`,
       onOk: () => deleteMutation.mutate(record.id),
     });
   };
 
   const STATUS_MAP: Record<number, { label: string; color: string }> = {
-    [KnowledgeStatus.DRAFT]: { label: t`Draft`, color: "default" },
-    [KnowledgeStatus.PUBLISHED]: { label: t`Published`, color: "success" },
-    [KnowledgeStatus.OFFLINE]: { label: t`Offline`, color: "error" },
+    [KnowledgeStatus.DRAFT]: { label: t`草稿`, color: "default" },
+    [KnowledgeStatus.PUBLISHED]: { label: t`已发布`, color: "success" },
+    [KnowledgeStatus.OFFLINE]: { label: t`已下线`, color: "error" },
   };
 
   const columns = [
     {
-      title: t`Title`,
+      title: t`标题`,
       dataIndex: "title",
       key: "title",
       sorter: true,
       sortOrder: search.sortField === "title" ? search.sortOrder : null,
       ellipsis: true,
     },
-    { title: t`Category`, dataIndex: "category_id", key: "category_id" },
+    { title: t`分类`, dataIndex: "category_id", key: "category_id" },
     {
-      title: t`Status`,
+      title: t`状态`,
       dataIndex: "status",
       key: "status",
       width: 100,
@@ -165,7 +165,7 @@ function KnowledgePage() {
       },
     },
     {
-      title: t`Views`,
+      title: t`浏览量`,
       dataIndex: "view_count",
       key: "view_count",
       sorter: true,
@@ -173,7 +173,7 @@ function KnowledgePage() {
       width: 80,
     },
     {
-      title: t`Actions`,
+      title: t`操作`,
       key: "actions",
       width: 100,
       align: "right" as const,
@@ -190,7 +190,7 @@ function KnowledgePage() {
                 {
                   key: "edit",
                   icon: <Pencil size={token.fontSize} />,
-                  label: t`Edit`,
+                  label: t`编辑`,
                   onClick: () => {
                     setEditing(record);
                     form.setFieldsValue(record);
@@ -200,7 +200,7 @@ function KnowledgePage() {
                 {
                   key: "delete",
                   icon: <Trash2 size={token.fontSize} />,
-                  label: t`Delete`,
+                  label: t`删除`,
                   danger: true,
                   onClick: () => confirmDelete(record),
                 },
@@ -211,7 +211,7 @@ function KnowledgePage() {
             <Button
               type="text"
               icon={<MoreVertical size={token.fontSize} />}
-              aria-label={t`Row actions`}
+              aria-label={t`行操作`}
             />
           </Dropdown>
         </Space>
@@ -240,7 +240,7 @@ function KnowledgePage() {
             current: search.page,
             pageSize: search.pageSize,
             showSizeChanger: true,
-            showTotal: (total) => t`${total} rows`,
+            showTotal: (total) => t`${total} 条记录`,
             onChange: (page, pageSize) => void navigate({ search: { ...search, page, pageSize } }),
           }
         : false,

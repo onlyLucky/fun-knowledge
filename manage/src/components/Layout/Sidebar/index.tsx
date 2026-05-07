@@ -27,12 +27,12 @@ import "./index.css";
 
 const { Sider } = Layout;
 const MENU_LABELS: Record<string, ReturnType<typeof msg>> = {
-  Platform: msg`Platform`,
-  Projects: msg`Projects`,
-  Dashboard: msg`Dashboard`,
-  Users: msg`Users`,
-  "Design Engineering": msg`Design Engineering`,
-  "Sales & Marketing": msg`Sales & Marketing`,
+  Platform: msg`平台`,
+  Projects: msg`项目`,
+  Dashboard: msg`仪表盘`,
+  Users: msg`用户`,
+  "Design Engineering": msg`设计工程`,
+  "Sales & Marketing": msg`市场营销`,
 };
 
 type AntMenuItem = Required<MenuProps>["items"][number];
@@ -188,7 +188,7 @@ export function Sidebar() {
   const userMenuItems: MenuProps["items"] = [
     {
       key: "logout",
-      label: t`Sign Out`,
+      label: t`退出登录`,
       onClick: () => {
         if (isMobile) {
           setSidebarCollapsed(false);
@@ -260,7 +260,7 @@ export function Sidebar() {
                   className="sidebar-collapsed-brand__toggle"
                   onClick={toggleSidebar}
                   icon={<PanelLeft size={token.size} />}
-                  aria-label={t`Toggle sidebar`}
+                  aria-label={t`切换侧边栏`}
                 />
               </div>
             </div>
@@ -308,7 +308,7 @@ export function Sidebar() {
                   size="small"
                   onClick={toggleSidebar}
                   icon={<PanelLeft size={token.size} />}
-                  aria-label={t`Toggle sidebar`}
+                  aria-label={t`切换侧边栏`}
                   style={{ flexShrink: 0 }}
                 />
               ) : null}
@@ -347,7 +347,7 @@ export function Sidebar() {
         collapsed={isCollapsed}
         admin={admin}
         userMenuItems={userMenuItems}
-        accountMenuTriggerAriaLabel={t`Open account menu`}
+        accountMenuTriggerAriaLabel={t`打开账户菜单`}
       />
     </Flex>
   );

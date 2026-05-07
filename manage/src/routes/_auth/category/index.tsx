@@ -81,32 +81,30 @@ function CategoryPage() {
 
   const confirmDelete = (record: CategoryType) => {
     modal.confirm({
-      title: t`Are you absolutely sure?`,
-      content: t`This action cannot be undone.`,
-      okText: t`Delete`,
+      title: t`确定要删除吗？`,
+      content: t`此操作不可撤销。`,
+      okText: t`删除`,
       okType: "danger",
-      cancelText: t`Cancel`,
+      cancelText: t`取消`,
       onOk: () => deleteMutation.mutate(record.id),
     });
   };
 
   const columns = [
-    { title: t`Name`, dataIndex: "name", key: "name" },
-    { title: t`Description`, dataIndex: "description", key: "description", ellipsis: true },
-    { title: t`Sort Order`, dataIndex: "sort_order", key: "sort_order", width: 100 },
+    { title: t`名称`, dataIndex: "name", key: "name" },
+    { title: t`描述`, dataIndex: "description", key: "description", ellipsis: true },
+    { title: t`排序`, dataIndex: "sort_order", key: "sort_order", width: 100 },
     {
-      title: t`Status`,
+      title: t`状态`,
       dataIndex: "status",
       key: "status",
       width: 80,
       render: (status: number) => (
-        <Tag color={status === 1 ? "success" : "default"}>
-          {status === 1 ? t`Active` : t`Inactive`}
-        </Tag>
+        <Tag color={status === 1 ? "success" : "default"}>{status === 1 ? t`启用` : t`停用`}</Tag>
       ),
     },
     {
-      title: t`Actions`,
+      title: t`操作`,
       key: "actions",
       width: 60,
       align: "right" as const,
@@ -117,7 +115,7 @@ function CategoryPage() {
               {
                 key: "edit",
                 icon: <Pencil size={token.fontSize} />,
-                label: t`Edit`,
+                label: t`编辑`,
                 onClick: () => {
                   setEditing(record);
                   form.setFieldsValue(record);
@@ -127,7 +125,7 @@ function CategoryPage() {
               {
                 key: "delete",
                 icon: <Trash2 size={token.fontSize} />,
-                label: t`Delete`,
+                label: t`删除`,
                 danger: true,
                 onClick: () => confirmDelete(record),
               },
@@ -138,7 +136,7 @@ function CategoryPage() {
           <Button
             type="text"
             icon={<MoreVertical size={token.fontSize} />}
-            aria-label={t`Row actions`}
+            aria-label={t`行操作`}
           />
         </Dropdown>
       ),
@@ -173,7 +171,7 @@ function CategoryPage() {
             setModalOpen(true);
           }}
         >
-          {t`Create Category`}
+          {t`创建分类`}
         </Button>
       </Flex>
 

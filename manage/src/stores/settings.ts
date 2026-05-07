@@ -23,7 +23,7 @@ export const useSettingsStore = createPersistentStore<SettingsState>(
   (set) => ({
     darkMode: getInitialDarkMode(),
     sidebarCollapsed: false,
-    locale: "en",
+    locale: "zh",
     toggleDarkMode: () => set((s) => ({ darkMode: !s.darkMode })),
     toggleSidebar: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
     setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),

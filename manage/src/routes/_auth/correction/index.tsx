@@ -33,16 +33,16 @@ export const Route = createFileRoute("/_auth/correction/")({
 const paginatedSchema = PaginatedResponseSchema(CorrectionSchema);
 
 const TYPE_MAP: Record<number, string> = {
-  [CorrectionType.FACT_ERROR]: "Fact Error",
-  [CorrectionType.TYPO]: "Typo",
-  [CorrectionType.OUTDATED]: "Outdated",
-  [CorrectionType.OTHER]: "Other",
+  [CorrectionType.FACT_ERROR]: "事实错误",
+  [CorrectionType.TYPO]: "错别字",
+  [CorrectionType.OUTDATED]: "内容过时",
+  [CorrectionType.OTHER]: "其他",
 };
 
 const STATUS_MAP: Record<number, { label: string; color: string }> = {
-  [CorrectionStatus.PENDING]: { label: "Pending", color: "warning" },
-  [CorrectionStatus.APPROVED]: { label: "Approved", color: "success" },
-  [CorrectionStatus.REJECTED]: { label: "Rejected", color: "error" },
+  [CorrectionStatus.PENDING]: { label: "待审核", color: "warning" },
+  [CorrectionStatus.APPROVED]: { label: "已通过", color: "success" },
+  [CorrectionStatus.REJECTED]: { label: "已拒绝", color: "error" },
 };
 
 function CorrectionPage() {
@@ -71,17 +71,17 @@ function CorrectionPage() {
   });
 
   const columns = [
-    { title: t`Knowledge`, dataIndex: "knowledge_id", key: "knowledge_id", ellipsis: true },
+    { title: t`知识标题`, dataIndex: "knowledge_id", key: "knowledge_id", ellipsis: true },
     {
-      title: t`Type`,
+      title: t`类型`,
       dataIndex: "type",
       key: "type",
       width: 120,
       render: (type: number) => TYPE_MAP[type] ?? String(type),
     },
-    { title: t`Description`, dataIndex: "description", key: "description", ellipsis: true },
+    { title: t`描述`, dataIndex: "description", key: "description", ellipsis: true },
     {
-      title: t`Status`,
+      title: t`状态`,
       dataIndex: "status",
       key: "status",
       width: 100,
@@ -90,9 +90,9 @@ function CorrectionPage() {
         return <Tag color={s.color}>{t`${s.label}`}</Tag>;
       },
     },
-    { title: t`Created`, dataIndex: "created_at", key: "created_at", width: 180 },
+    { title: t`创建时间`, dataIndex: "created_at", key: "created_at", width: 180 },
     {
-      title: t`Actions`,
+      title: t`操作`,
       key: "actions",
       width: 60,
       align: "right" as const,
@@ -130,7 +130,7 @@ function CorrectionPage() {
             current: search.page,
             pageSize: search.pageSize,
             showSizeChanger: true,
-            showTotal: (total) => t`${total} rows`,
+            showTotal: (total) => t`${total} 条记录`,
             onChange: (page, pageSize) => void navigate({ search: { ...search, page, pageSize } }),
           }
         : false,
@@ -152,7 +152,7 @@ function CorrectionPage() {
               type={search.status === (s ?? "") ? "primary" : "default"}
               onClick={() => void navigate({ search: { ...search, status: s ?? "", page: 1 } })}
             >
-              {s === undefined ? t`All` : (STATUS_MAP[Number(s)]?.label ?? s)}
+              {s === undefined ? t`全部` : (STATUS_MAP[Number(s)]?.label ?? s)}
             </Button>
           ))}
         </Button.Group>

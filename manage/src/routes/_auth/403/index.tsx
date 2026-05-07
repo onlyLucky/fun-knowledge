@@ -29,10 +29,10 @@ function ForbiddenPage() {
           <ShieldAlert size={64} strokeWidth={1.25} color={token.colorTextQuaternary} aria-hidden />
         }
         title="403"
-        subTitle={t`Sorry, you don't have permission to access this page.`}
+        subTitle={t`抱歉，您没有权限访问此页面。`}
         extra={
           <Button type="primary" icon={<Home size={16} aria-hidden />} onClick={goDashboard}>
-            {t`Back to Home`}
+            {t`返回首页`}
           </Button>
         }
       />

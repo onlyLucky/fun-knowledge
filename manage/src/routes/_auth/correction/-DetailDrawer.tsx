@@ -6,16 +6,16 @@ import { CORRECTION_ENDPOINTS, CorrectionStatus, CorrectionType } from "@/api/co
 import type { Correction, ReviewCorrectionRequest } from "@/api/correction";
 
 const TYPE_MAP: Record<number, string> = {
-  [CorrectionType.FACT_ERROR]: "Fact Error",
-  [CorrectionType.TYPO]: "Typo",
-  [CorrectionType.OUTDATED]: "Outdated",
-  [CorrectionType.OTHER]: "Other",
+  [CorrectionType.FACT_ERROR]: "事实错误",
+  [CorrectionType.TYPO]: "错别字",
+  [CorrectionType.OUTDATED]: "内容过时",
+  [CorrectionType.OTHER]: "其他",
 };
 
 const STATUS_MAP: Record<number, { label: string; color: string }> = {
-  [CorrectionStatus.PENDING]: { label: "Pending", color: "warning" },
-  [CorrectionStatus.APPROVED]: { label: "Approved", color: "success" },
-  [CorrectionStatus.REJECTED]: { label: "Rejected", color: "error" },
+  [CorrectionStatus.PENDING]: { label: "待审核", color: "warning" },
+  [CorrectionStatus.APPROVED]: { label: "已通过", color: "success" },
+  [CorrectionStatus.REJECTED]: { label: "已拒绝", color: "error" },
 };
 
 export type DetailDrawerProps = {
@@ -36,12 +36,12 @@ export function DetailDrawer({ open, correction, onClose }: DetailDrawerProps) {
       await httpClient.put(CORRECTION_ENDPOINTS.review(correction.id), values);
     },
     onSuccess: () => {
-      message.success(t`Review submitted`);
+      message.success(t`审核已提交`);
       void queryClient.invalidateQueries({ queryKey: ["correction"] });
       onClose();
     },
     onError: (err) => {
-      message.error(err instanceof Error ? err.message : t`Review failed`);
+      message.error(err instanceof Error ? err.message : t`审核失败`);
     },
   });
 
@@ -50,25 +50,25 @@ export function DetailDrawer({ open, correction, onClose }: DetailDrawerProps) {
   const s = STATUS_MAP[correction.status] ?? { label: String(correction.status), color: "default" };
 
   return (
-    <Drawer title={t`Correction Detail`} open={open} onClose={onClose} width={480}>
+    <Drawer title={t`纠错详情`} open={open} onClose={onClose} width={480}>
       <Descriptions column={1} size="small" bordered>
-        <Descriptions.Item label={t`Knowledge ID`}>{correction.knowledge_id}</Descriptions.Item>
-        <Descriptions.Item label={t`Type`}>
+        <Descriptions.Item label={t`知识ID`}>{correction.knowledge_id}</Descriptions.Item>
+        <Descriptions.Item label={t`类型`}>
           {TYPE_MAP[correction.type] ?? correction.type}
         </Descriptions.Item>
-        <Descriptions.Item label={t`Status`}>
+        <Descriptions.Item label={t`状态`}>
           <Tag color={s.color}>{t`${s.label}`}</Tag>
         </Descriptions.Item>
-        <Descriptions.Item label={t`Description`}>{correction.description}</Descriptions.Item>
-        <Descriptions.Item label={t`Created`}>{correction.created_at}</Descriptions.Item>
+        <Descriptions.Item label={t`描述`}>{correction.description}</Descriptions.Item>
+        <Descriptions.Item label={t`创建时间`}>{correction.created_at}</Descriptions.Item>
         {correction.review_remark && (
-          <Descriptions.Item label={t`Review Remark`}>{correction.review_remark}</Descriptions.Item>
+          <Descriptions.Item label={t`审核备注`}>{correction.review_remark}</Descriptions.Item>
         )}
       </Descriptions>
 
       {correction.status === CorrectionStatus.PENDING && (
         <Form form={form} layout="vertical" style={{ marginTop: 24 }}>
-          <Form.Item name="review_remark" label={t`Review Remark`}>
+          <Form.Item name="review_remark" label={t`审核备注`}>
             <Input.TextArea rows={3} />
           </Form.Item>
           <Space>
@@ -82,7 +82,7 @@ export function DetailDrawer({ open, correction, onClose }: DetailDrawerProps) {
                 })
               }
             >
-              {t`Approve`}
+              {t`通过`}
             </Button>
             <Button
               danger
@@ -94,7 +94,7 @@ export function DetailDrawer({ open, correction, onClose }: DetailDrawerProps) {
                 })
               }
             >
-              {t`Reject`}
+              {t`拒绝`}
             </Button>
           </Space>
         </Form>

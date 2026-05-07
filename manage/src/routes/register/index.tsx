@@ -40,11 +40,11 @@ function RegisterPage() {
       await fetchSessionAndApplyToStore();
     },
     onSuccess: () => {
-      message.success(t`Account created successfully`);
+      message.success(t`账号创建成功`);
       void navigate({ to: "/dashboard" });
     },
     onError: (err) => {
-      message.error(err instanceof Error ? err.message : t`Registration failed`);
+      message.error(err instanceof Error ? err.message : t`注册失败`);
     },
   });
 
@@ -134,48 +134,48 @@ function RegisterPage() {
             >
               <Form.Item
                 name="username"
-                label={<span>{t`Username`}</span>}
-                rules={[{ required: true, message: t`Please enter your username` }]}
+                label={<span>{t`用户名`}</span>}
+                rules={[{ required: true, message: t`请输入用户名` }]}
               >
-                <Input placeholder="new-user" size="large" />
+                <Input placeholder="请输入用户名" size="large" />
               </Form.Item>
 
               <Form.Item
                 name="email"
-                label={<span>{t`Email address`}</span>}
-                rules={[{ type: "email", message: t`Please enter a valid email address` }]}
+                label={<span>{t`邮箱地址`}</span>}
+                rules={[{ type: "email", message: t`请输入有效的邮箱地址` }]}
               >
-                <Input placeholder="you@example.com" size="large" />
+                <Input placeholder="请输入邮箱地址" size="large" />
               </Form.Item>
 
               <Form.Item
                 name="password"
-                label={<span>{t`Password`}</span>}
+                label={<span>{t`密码`}</span>}
                 rules={[
-                  { required: true, message: t`Please enter your password` },
-                  { min: 6, message: t`Password must be at least 6 characters long` },
+                  { required: true, message: t`请输入密码` },
+                  { min: 6, message: t`密码至少需要 6 个字符` },
                 ]}
               >
-                <Input.Password placeholder={t`Enter at least 6 characters`} size="large" />
+                <Input.Password placeholder={t`至少输入 6 个字符`} size="large" />
               </Form.Item>
 
               <Form.Item
                 name="confirmPassword"
-                label={<span>{t`Confirm password`}</span>}
+                label={<span>{t`确认密码`}</span>}
                 dependencies={["password"]}
                 rules={[
-                  { required: true, message: t`Please confirm your password` },
+                  { required: true, message: t`请确认密码` },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
                       if (!value || getFieldValue("password") === value) {
                         return Promise.resolve();
                       }
-                      return Promise.reject(new Error(t`Passwords do not match`));
+                      return Promise.reject(new Error(t`两次输入的密码不一致`));
                     },
                   }),
                 ]}
               >
-                <Input.Password placeholder={t`Re-enter your password`} size="large" />
+                <Input.Password placeholder={t`再次输入密码`} size="large" />
               </Form.Item>
 
               <Form.Item style={{ marginBottom: 0, marginTop: token.marginLG }}>
@@ -186,15 +186,15 @@ function RegisterPage() {
                   block
                   size="large"
                 >
-                  {t`Create account`}
+                  {t`创建账号`}
                 </Button>
               </Form.Item>
 
               <Flex justify="center" style={{ marginTop: token.margin }}>
                 <Typography.Text type="secondary">
-                  {t`Already have an account?`}{" "}
+                  {t`已有账号？`}{" "}
                   <Link to="/login" style={{ color: token.colorPrimary }}>
-                    {t`Sign in`}
+                    {t`登录`}
                   </Link>
                 </Typography.Text>
               </Flex>

@@ -50,14 +50,14 @@ export function NotFound() {
             <SearchX size={64} strokeWidth={1.25} color={token.colorTextQuaternary} aria-hidden />
           }
           title="404"
-          subTitle={t`Sorry, the page you visited does not exist.`}
+          subTitle={t`抱歉，您访问的页面不存在。`}
           extra={
             <Space wrap size="middle">
               <Button type="primary" icon={<Home size={16} aria-hidden />} onClick={goDashboard}>
-                {t`Back to Home`}
+                {t`返回首页`}
               </Button>
               <Button icon={<ArrowLeft size={16} aria-hidden />} onClick={goBack}>
-                {t`Go back`}
+                {t`返回`}
               </Button>
             </Space>
           }

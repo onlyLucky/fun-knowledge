@@ -51,19 +51,19 @@ function LogsPage() {
   });
 
   const columns = [
-    { title: t`Admin`, dataIndex: "admin_username", key: "admin_username", width: 120 },
+    { title: t`管理员`, dataIndex: "admin_username", key: "admin_username", width: 120 },
     {
-      title: t`Module`,
+      title: t`模块`,
       dataIndex: "module",
       key: "module",
       width: 120,
       render: (v: string) => <Tag>{v}</Tag>,
     },
-    { title: t`Action`, dataIndex: "action", key: "action", width: 120 },
-    { title: t`Description`, dataIndex: "description", key: "description", ellipsis: true },
-    { title: t`IP`, dataIndex: "ip", key: "ip", width: 140 },
+    { title: t`操作类型`, dataIndex: "action", key: "action", width: 120 },
+    { title: t`操作描述`, dataIndex: "description", key: "description", ellipsis: true },
+    { title: t`IP地址`, dataIndex: "ip", key: "ip", width: 140 },
     {
-      title: t`Status`,
+      title: t`状态`,
       dataIndex: "status",
       key: "status",
       width: 80,
@@ -72,13 +72,13 @@ function LogsPage() {
       ),
     },
     {
-      title: t`Duration`,
+      title: t`耗时`,
       dataIndex: "duration",
       key: "duration",
       width: 80,
       render: (v: number | null) => (v != null ? `${v}ms` : "—"),
     },
-    { title: t`Time`, dataIndex: "created_at", key: "created_at", width: 180 },
+    { title: t`操作时间`, dataIndex: "created_at", key: "created_at", width: 180 },
   ];
 
   const showPagination = (data?.total ?? 0) > search.pageSize;
@@ -102,7 +102,7 @@ function LogsPage() {
             current: search.page,
             pageSize: search.pageSize,
             showSizeChanger: true,
-            showTotal: (total) => t`${total} rows`,
+            showTotal: (total) => t`${total} 条记录`,
             onChange: (page, pageSize) => void navigate({ search: { ...search, page, pageSize } }),
           }
         : false,

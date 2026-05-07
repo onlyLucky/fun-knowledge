@@ -13,11 +13,11 @@ export function RouteError({ error }: ErrorComponentProps) {
     <div style={{ padding: token.paddingLG, maxWidth: 560, margin: "48px auto" }}>
       <Result
         status="error"
-        title={t`Something went wrong`}
-        subTitle={detail || t`Please try again or return to the dashboard.`}
+        title={t`出错了`}
+        subTitle={detail || t`请重试或返回仪表盘。`}
         extra={
           <Button type="primary" onClick={() => void router.invalidate()}>
-            {t`Retry`}
+            {t`重试`}
           </Button>
         }
       />

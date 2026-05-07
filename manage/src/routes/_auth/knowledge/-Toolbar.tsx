@@ -39,7 +39,7 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
         children: (
           <Input.Search
             allowClear
-            placeholder={t`Search knowledge`}
+            placeholder={t`搜索知识`}
             style={{ width: FILTER_CONTROL_WIDTH }}
             value={keywordInput}
             onChange={(e) => onKeywordChange(e.target.value)}
@@ -54,14 +54,14 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
         children: (
           <Select
             allowClear
-            placeholder={t`Status`}
+            placeholder={t`状态`}
             style={{ width: FILTER_CONTROL_WIDTH }}
             value={statusValue}
             onChange={(v) => onStatusChange(v ?? "")}
             options={[
-              { label: t`Published`, value: "1" },
-              { label: t`Draft`, value: "0" },
-              { label: t`Offline`, value: "2" },
+              { label: t`已发布`, value: "1" },
+              { label: t`草稿`, value: "0" },
+              { label: t`已下线`, value: "2" },
             ]}
           />
         ),
@@ -85,11 +85,11 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
       slots={slots}
       actions={
         <Button type="primary" icon={<Plus size={token.fontSize} />} onClick={onCreateClick}>
-          {t`Create Knowledge`}
+          {t`新建知识`}
         </Button>
       }
-      moreFiltersLabel={t`More filters`}
-      moreFiltersTitle={t`More filters`}
+      moreFiltersLabel={t`更多筛选`}
+      moreFiltersTitle={t`更多筛选`}
     />
   );
 });
