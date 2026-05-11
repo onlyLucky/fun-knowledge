@@ -55,6 +55,7 @@ function KnowledgePage() {
   const middleSectionRef = useRef<HTMLDivElement>(null);
   const tableFrameRef = useRef<HTMLDivElement>(null);
   const [editing, setEditing] = useState<KnowledgeType | null>(null);
+  const [togglingId, setTogglingId] = useState<string | null>(null);
   const [form] = Form.useForm();
 
   const setSearch = (next: Search) => void navigate({ search: next });
@@ -122,12 +123,17 @@ function KnowledgePage() {
   });
 
   const toggleStatus = async (record: KnowledgeType) => {
-    const nextStatus =
-      record.status === KnowledgeStatus.PUBLISHED
-        ? KnowledgeStatus.OFFLINE
-        : KnowledgeStatus.PUBLISHED;
-    await httpClient.put(KNOWLEDGE_ENDPOINTS.toggleStatus(record.id), { status: nextStatus });
-    await queryClient.invalidateQueries({ queryKey: ["knowledge"] });
+    setTogglingId(record.id);
+    try {
+      const nextStatus =
+        record.status === KnowledgeStatus.PUBLISHED
+          ? KnowledgeStatus.OFFLINE
+          : KnowledgeStatus.PUBLISHED;
+      await httpClient.put(KNOWLEDGE_ENDPOINTS.toggleStatus(record.id), { status: nextStatus });
+      await queryClient.invalidateQueries({ queryKey: ["knowledge"] });
+    } finally {
+      setTogglingId(null);
+    }
   };
 
   const confirmDelete = (record: KnowledgeType) => {
@@ -184,6 +190,7 @@ function KnowledgePage() {
         <Space>
           <Switch
             size="small"
+            loading={togglingId === record.id}
             checked={record.status === KnowledgeStatus.PUBLISHED}
             onChange={() => toggleStatus(record)}
           />
@@ -244,13 +251,9 @@ function KnowledgePage() {
             pageSize: search.pageSize,
             showSizeChanger: true,
             showTotal: (total) => t`${total} 条记录`,
-            onChange: (page, pageSize) =>
-              void navigate({
-                search: { ...search, page: pageSize !== search.pageSize ? 1 : page, pageSize },
-              }),
           }
         : false,
-    [showPagination, data?.total, search, navigate, t],
+    [showPagination, data?.total, search.page, search.pageSize, t],
   );
 
   return (
@@ -294,15 +297,20 @@ function KnowledgePage() {
         pagination={tablePagination}
         style={{ flex: 1, minHeight: 0 }}
         scroll={tableScrollY != null ? { x: "max-content", y: tableScrollY } : { x: "max-content" }}
-        onChange={(_pagination, _filters, sorter) => {
-          if (Array.isArray(sorter)) return;
-          void navigate({
-            search: {
-              ...search,
-              sortField: sorter.order ? String(sorter.field) : null,
-              sortOrder: sorter.order ?? null,
-            },
-          });
+        onChange={(pagination, _filters, sorter) => {
+          const next: Search = {
+            ...search,
+            page: pagination.current ?? 1,
+            pageSize: pagination.pageSize ?? 10,
+          };
+          if (!Array.isArray(sorter)) {
+            next.sortField = sorter.order ? String(sorter.field) : null;
+            next.sortOrder = sorter.order ?? null;
+          }
+          if (pagination.pageSize !== search.pageSize) {
+            next.page = 1;
+          }
+          void navigate({ search: next });
         }}
       />
 

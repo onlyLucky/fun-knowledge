@@ -3,27 +3,7 @@ import type { TableProps } from "antd";
 import type { ColumnGroupType, ColumnsType, ColumnType } from "antd/es/table";
 import type { GlobalToken } from "antd/es/theme/interface";
 import type { CSSProperties } from "react";
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
-
-function rowHeight(size: TableProps["size"]): number {
-  if (size === "large") return 56;
-  if (size === "middle") return 48;
-  return 40;
-}
-
-function numericScrollY(scroll: TableProps<object>["scroll"]): number | undefined {
-  const y = scroll?.y;
-  return typeof y === "number" && Number.isFinite(y) && y > 0 ? y : undefined;
-}
-
-function clampRows(bodyHeight: number, rowH: number): number {
-  return Math.max(3, Math.floor(bodyHeight / rowH));
-}
-
-function initialRowCount(scroll: TableProps<object>["scroll"], size: TableProps["size"]): number {
-  const y = numericScrollY(scroll);
-  return y != null ? clampRows(y, rowHeight(size)) : 10;
-}
+import { useMemo } from "react";
 
 export type DataTableSkeletonProps<RecordType extends object> = Pick<
   TableProps<RecordType>,
@@ -182,47 +162,10 @@ export function DataTableSkeleton<RecordType extends object = object>({
   rowCount,
 }: DataTableSkeletonProps<RecordType>) {
   const { token } = theme.useToken();
-  const frameRef = useRef<HTMLDivElement>(null);
-  const [measuredRows, setMeasuredRows] = useState(() => initialRowCount(scroll, size));
 
-  useLayoutEffect(() => {
-    if (rowCount != null) return;
-
-    const y = numericScrollY(scroll);
-    if (y != null) {
-      setMeasuredRows(clampRows(y, rowHeight(size)));
-      return;
-    }
-
-    const el = frameRef.current;
-    if (!el) return;
-
-    const rowH = rowHeight(size);
-    const measure = () => {
-      const thead = el.querySelector<HTMLElement>(".ant-table-thead");
-      const pag = pagination === false ? null : el.querySelector<HTMLElement>(".ant-pagination");
-      const theadH = thead?.offsetHeight ?? 39;
-      const pagH = pag ? pag.offsetHeight + 8 : 0;
-      const bodyH = Math.max(0, el.clientHeight - theadH - pagH - 2);
-      setMeasuredRows((prev) => {
-        const next = clampRows(bodyH, rowH);
-        return prev === next ? prev : next;
-      });
-    };
-
-    const ro = new ResizeObserver(() => requestAnimationFrame(measure));
-    ro.observe(el);
-    let raf = requestAnimationFrame(() => {
-      raf = requestAnimationFrame(measure);
-    });
-
-    return () => {
-      ro.disconnect();
-      cancelAnimationFrame(raf);
-    };
-  }, [rowCount, pagination, scroll?.y, size]);
-
-  const effectiveRowCount = rowCount ?? measuredRows;
+  const paginationPageSize =
+    typeof pagination === "object" && pagination !== null ? pagination.pageSize : undefined;
+  const effectiveRowCount = rowCount ?? paginationPageSize ?? 10;
 
   const skeletonColumns = useMemo(() => {
     if (!columns?.length) return [];
@@ -266,7 +209,6 @@ export function DataTableSkeleton<RecordType extends object = object>({
 
   return (
     <div
-      ref={frameRef}
       style={{
         display: "flex",
         flexDirection: "column",
