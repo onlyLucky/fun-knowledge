@@ -1,5 +1,6 @@
+import { useRef, useEffect } from "react";
 import { Layout, theme, Flex } from "antd";
-import { Outlet } from "@tanstack/react-router";
+import { Outlet, useLocation } from "@tanstack/react-router";
 import { Sidebar } from "../Sidebar";
 import { Header } from "../Header";
 
@@ -7,6 +8,12 @@ const { Content } = Layout;
 
 export function MainLayout() {
   const { token } = theme.useToken();
+  const location = useLocation();
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    contentRef.current?.scrollTo({ top: 0 });
+  }, [location.pathname]);
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -21,6 +28,7 @@ export function MainLayout() {
       >
         <Header />
         <Content
+          ref={contentRef}
           className="main-layout-main"
           style={{
             flex: 1,
