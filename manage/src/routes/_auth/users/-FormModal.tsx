@@ -39,11 +39,12 @@ export function FormModal({
         label={t`用户名`}
         rules={[{ required: true, message: t`请输入用户名` }]}
       >
-        <Input />
+        <Input placeholder={t`请输入用户名`} />
       </Form.Item>
       <Form.Item name="roles" label={t`角色`} rules={[{ required: true, message: t`请选择角色` }]}>
         <Select
           mode="multiple"
+          placeholder={t`请选择角色`}
           options={[
             { label: t`管理员`, value: "admin" },
             { label: t`编辑`, value: "editor" },
@@ -51,7 +52,7 @@ export function FormModal({
         />
       </Form.Item>
       <Form.Item name="email" label={t`邮箱`}>
-        <Input />
+        <Input placeholder={t`请输入邮箱地址`} />
       </Form.Item>
     </BaseFormModal>
   );

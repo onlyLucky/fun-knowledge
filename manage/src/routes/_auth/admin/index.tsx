@@ -16,8 +16,8 @@ import { useCrudToasts } from "@/hooks/useCrudToasts";
 import { FormModal } from "./-FormModal";
 
 const SearchParamsSchema = z.object({
-  page: z.number().int().positive().catch(1),
-  pageSize: z.number().int().positive().catch(10),
+  page: z.coerce.number().int().positive().catch(1),
+  pageSize: z.coerce.number().int().positive().catch(10),
   keyword: z.string().catch(""),
 });
 
@@ -166,7 +166,10 @@ function AdminPage() {
             pageSize: search.pageSize,
             showSizeChanger: true,
             showTotal: (total) => t`${total} 条记录`,
-            onChange: (page, pageSize) => void navigate({ search: { ...search, page, pageSize } }),
+            onChange: (page, pageSize) =>
+              void navigate({
+                search: { ...search, page: pageSize !== search.pageSize ? 1 : page, pageSize },
+              }),
           }
         : false,
     [showPagination, data?.total, search, navigate, t],

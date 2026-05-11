@@ -35,16 +35,22 @@ export function FormModal({
       onFinish={onFinish}
     >
       <Form.Item name="name" label={t`名称`} rules={[{ required: true, message: t`请输入名称` }]}>
-        <Input />
+        <Input placeholder={t`请输入名称`} />
       </Form.Item>
       <Form.Item name="description" label={t`描述`}>
-        <Input.TextArea rows={2} />
+        <Input.TextArea rows={2} placeholder={t`请输入描述`} />
       </Form.Item>
       <Form.Item name="icon" label={t`图标`}>
-        <Input />
+        <Input placeholder={t`请输入图标`} />
       </Form.Item>
-      <Form.Item name="sort_order" label={t`排序`}>
-        <InputNumber min={0} style={{ width: "100%" }} />
+      <Form.Item name="sort_order" label={t`排序`} initialValue={0}>
+        <InputNumber
+          min={0}
+          step={1}
+          precision={0}
+          style={{ width: "100%" }}
+          placeholder={t`请输入排序`}
+        />
       </Form.Item>
     </BaseFormModal>
   );

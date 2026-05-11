@@ -13,8 +13,8 @@ import { DataTable } from "@/components/DataTable";
 import { useTableFitHeight } from "@/hooks/useTableFitHeight";
 
 const SearchParamsSchema = z.object({
-  page: z.number().int().positive().catch(1),
-  pageSize: z.number().int().positive().catch(10),
+  page: z.coerce.number().int().positive().catch(1),
+  pageSize: z.coerce.number().int().positive().catch(10),
   module: z.string().catch(""),
   action: z.string().catch(""),
 });
@@ -103,7 +103,10 @@ function LogsPage() {
             pageSize: search.pageSize,
             showSizeChanger: true,
             showTotal: (total) => t`${total} 条记录`,
-            onChange: (page, pageSize) => void navigate({ search: { ...search, page, pageSize } }),
+            onChange: (page, pageSize) =>
+              void navigate({
+                search: { ...search, page: pageSize !== search.pageSize ? 1 : page, pageSize },
+              }),
           }
         : false,
     [showPagination, data?.total, search, navigate, t],

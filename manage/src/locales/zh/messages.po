@@ -588,11 +588,23 @@ msgstr "请输入内容"
 msgid "请输入名称"
 msgstr "请输入名称"
 
+#: src/routes/_auth/category/-FormModal.tsx
+msgid "请输入图标"
+msgstr "请输入图标"
+
 #: src/routes/_auth/admin/-FormModal.tsx
 #: src/routes/login/index.tsx
 #: src/routes/register/index.tsx
 msgid "请输入密码"
 msgstr "请输入密码"
+
+#: src/routes/_auth/category/-FormModal.tsx
+msgid "请输入排序"
+msgstr "请输入排序"
+
+#: src/routes/_auth/category/-FormModal.tsx
+msgid "请输入描述"
+msgstr "请输入描述"
 
 #: src/routes/register/index.tsx
 msgid "请输入有效的邮箱地址"
@@ -608,6 +620,10 @@ msgstr "请输入标题"
 #: src/routes/register/index.tsx
 msgid "请输入用户名"
 msgstr "请输入用户名"
+
+#: src/routes/_auth/users/-FormModal.tsx
+msgid "请输入邮箱地址"
+msgstr "请输入邮箱地址"
 
 #: src/routes/_auth/knowledge/-FormModal.tsx
 msgid "请选择分类"

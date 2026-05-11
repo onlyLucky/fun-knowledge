@@ -40,7 +40,7 @@ export function FormModal({
         label={t`用户名`}
         rules={[{ required: true, message: t`请输入用户名` }]}
       >
-        <Input disabled={!!editing} />
+        <Input disabled={!!editing} placeholder={t`请输入用户名`} />
       </Form.Item>
       {!editing && (
         <Form.Item
@@ -48,14 +48,15 @@ export function FormModal({
           label={t`密码`}
           rules={[{ required: true, message: t`请输入密码` }]}
         >
-          <Input.Password />
+          <Input.Password placeholder={t`请输入密码`} />
         </Form.Item>
       )}
       <Form.Item name="real_name" label={t`真实姓名`}>
-        <Input />
+        <Input placeholder={t`真实姓名`} />
       </Form.Item>
       <Form.Item name="role" label={t`角色`} rules={[{ required: true, message: t`请选择角色` }]}>
         <Select
+          placeholder={t`请选择角色`}
           options={[
             { label: t`超级管理员`, value: AdminRole.SUPER_ADMIN },
             { label: t`内容管理员`, value: AdminRole.CONTENT_ADMIN },

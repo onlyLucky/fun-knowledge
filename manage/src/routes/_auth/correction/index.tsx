@@ -20,8 +20,8 @@ import { useTableFitHeight } from "@/hooks/useTableFitHeight";
 import { DetailDrawer } from "./-DetailDrawer";
 
 const SearchParamsSchema = z.object({
-  page: z.number().int().positive().catch(1),
-  pageSize: z.number().int().positive().catch(10),
+  page: z.coerce.number().int().positive().catch(1),
+  pageSize: z.coerce.number().int().positive().catch(10),
   status: z.string().catch(""),
 });
 
@@ -131,7 +131,10 @@ function CorrectionPage() {
             pageSize: search.pageSize,
             showSizeChanger: true,
             showTotal: (total) => t`${total} 条记录`,
-            onChange: (page, pageSize) => void navigate({ search: { ...search, page, pageSize } }),
+            onChange: (page, pageSize) =>
+              void navigate({
+                search: { ...search, page: pageSize !== search.pageSize ? 1 : page, pageSize },
+              }),
           }
         : false,
     [showPagination, data?.total, search, navigate, t],
@@ -150,6 +153,7 @@ function CorrectionPage() {
             <Button
               key={s ?? "all"}
               type={search.status === (s ?? "") ? "primary" : "default"}
+              loading={isLoading && search.status === (s ?? "")}
               onClick={() => void navigate({ search: { ...search, status: s ?? "", page: 1 } })}
             >
               {s === undefined ? t`全部` : (STATUS_MAP[Number(s)]?.label ?? s)}

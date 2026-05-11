@@ -7,6 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { formatDateTime } from '../utils/date.util';
 
 /**
  * 全局 HTTP 异常过滤器
@@ -47,7 +48,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       code: status,
       message,
       data: null,
-      timestamp: new Date().toISOString(),
+      timestamp: formatDateTime(new Date()),
       path: request.url,
     });
   }

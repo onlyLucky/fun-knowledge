@@ -3,6 +3,7 @@ import { Button, Form, App, Dropdown, theme, Tag, Flex, Space, Switch } from "an
 import type { TablePaginationConfig } from "antd/es/table/interface";
 import { useLingui } from "@lingui/react/macro";
 import { useMemo, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { httpClient } from "@/utils/http";
 import {
   KNOWLEDGE_ENDPOINTS,
@@ -23,8 +24,8 @@ import { Toolbar } from "./-Toolbar";
 import { FormModal } from "./-FormModal";
 
 const SearchParamsSchema = z.object({
-  page: z.number().int().positive().catch(1),
-  pageSize: z.number().int().positive().catch(10),
+  page: z.coerce.number().int().positive().catch(1),
+  pageSize: z.coerce.number().int().positive().catch(10),
   sortField: z.string().nullable().catch(null),
   sortOrder: z.enum(["ascend", "descend"]).nullable().catch(null),
   keyword: z.string().catch(""),
@@ -46,6 +47,7 @@ function KnowledgePage() {
   const navigate = useNavigate({ from: Route.fullPath });
   const { message, modal } = App.useApp();
   const { t } = useLingui();
+  const queryClient = useQueryClient();
   const { token } = theme.useToken();
   const [modalOpen, setModalOpen] = useState(false);
   const pageShellRef = useRef<HTMLDivElement>(null);
@@ -119,12 +121,13 @@ function KnowledgePage() {
     },
   });
 
-  const toggleStatus = (record: KnowledgeType) => {
+  const toggleStatus = async (record: KnowledgeType) => {
     const nextStatus =
       record.status === KnowledgeStatus.PUBLISHED
         ? KnowledgeStatus.OFFLINE
         : KnowledgeStatus.PUBLISHED;
-    void httpClient.put(KNOWLEDGE_ENDPOINTS.toggleStatus(record.id), { status: nextStatus });
+    await httpClient.put(KNOWLEDGE_ENDPOINTS.toggleStatus(record.id), { status: nextStatus });
+    await queryClient.invalidateQueries({ queryKey: ["knowledge"] });
   };
 
   const confirmDelete = (record: KnowledgeType) => {
@@ -241,7 +244,10 @@ function KnowledgePage() {
             pageSize: search.pageSize,
             showSizeChanger: true,
             showTotal: (total) => t`${total} 条记录`,
-            onChange: (page, pageSize) => void navigate({ search: { ...search, page, pageSize } }),
+            onChange: (page, pageSize) =>
+              void navigate({
+                search: { ...search, page: pageSize !== search.pageSize ? 1 : page, pageSize },
+              }),
           }
         : false,
     [showPagination, data?.total, search, navigate, t],

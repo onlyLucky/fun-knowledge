@@ -1,7 +1,7 @@
 import { Flex, Table, theme } from "antd";
 import type { TableProps } from "antd";
 import type { CSSProperties, ReactElement, ReactNode, Ref } from "react";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { DataTableEmpty } from "./DataTableEmpty";
 import { DataTableSkeleton } from "./DataTableSkeleton";
 import "./index.css";
@@ -33,6 +33,10 @@ export function DataTable<RecordType extends object = object>(
   } = props;
 
   const { token } = theme.useToken();
+  const stableHeightRef = useRef<number | undefined>(undefined);
+  if (frameHeight != null) {
+    stableHeightRef.current = frameHeight;
+  }
 
   const { loading, ...restTableProps } = tableProps;
   const spinLoading =
@@ -41,13 +45,15 @@ export function DataTable<RecordType extends object = object>(
       loading !== null &&
       (loading as { spinning?: boolean }).spinning !== false);
 
+  const effectiveHeight = lockScrollHeight ? frameHeight : stableHeightRef.current;
+
   const outerStyle: CSSProperties = {
     flexGrow: 0,
     flexShrink: lockScrollHeight ? 0 : 1,
     flexBasis: "auto",
     minHeight: 0,
     maxHeight,
-    ...(lockScrollHeight && frameHeight != null ? { height: frameHeight } : {}),
+    ...(effectiveHeight != null ? { height: effectiveHeight } : {}),
     alignSelf: "stretch",
     border: `1px solid ${token.colorBorderSecondary}`,
     borderRadius: token.borderRadiusLG,

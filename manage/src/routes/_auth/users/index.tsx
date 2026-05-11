@@ -15,8 +15,8 @@ import { useUrlSearchState } from "@/hooks/useUrlSearchState";
 import { Toolbar } from "./-Toolbar";
 
 const UserSearchParamsSchema = z.object({
-  page: z.number().int().positive().catch(1),
-  pageSize: z.number().int().positive().catch(10),
+  page: z.coerce.number().int().positive().catch(1),
+  pageSize: z.coerce.number().int().positive().catch(10),
   sortField: z.string().nullable().catch(null),
   sortOrder: z.enum(["ascend", "descend"]).nullable().catch(null),
   keyword: z.string().catch(""),
@@ -166,11 +166,10 @@ function UsersPage() {
             pageSize: search.pageSize,
             showSizeChanger: true,
             showTotal: (total) => t`${total} 条记录`,
-            onChange: (page, pageSize) => {
+            onChange: (page, pageSize) =>
               void navigate({
-                search: { ...search, page, pageSize },
-              });
-            },
+                search: { ...search, page: pageSize !== search.pageSize ? 1 : page, pageSize },
+              }),
           }
         : false,
     [showPagination, data?.total, search, navigate, t],

@@ -497,7 +497,7 @@ msgstr "Type"
 
 #: src/components/Layout/Sidebar/index.tsx
 msgid "系统"
-msgstr ""
+msgstr "System"
 
 #: src/components/Layout/Header/index.tsx
 #: src/components/Layout/Sidebar/index.tsx
@@ -588,11 +588,23 @@ msgstr "Please enter content"
 msgid "请输入名称"
 msgstr "Please enter name"
 
+#: src/routes/_auth/category/-FormModal.tsx
+msgid "请输入图标"
+msgstr "Please enter icon"
+
 #: src/routes/_auth/admin/-FormModal.tsx
 #: src/routes/login/index.tsx
 #: src/routes/register/index.tsx
 msgid "请输入密码"
 msgstr "Please enter password"
+
+#: src/routes/_auth/category/-FormModal.tsx
+msgid "请输入排序"
+msgstr "Please enter sort order"
+
+#: src/routes/_auth/category/-FormModal.tsx
+msgid "请输入描述"
+msgstr "Please enter description"
 
 #: src/routes/register/index.tsx
 msgid "请输入有效的邮箱地址"
@@ -608,6 +620,10 @@ msgstr "Please enter title"
 #: src/routes/register/index.tsx
 msgid "请输入用户名"
 msgstr "Please enter username"
+
+#: src/routes/_auth/users/-FormModal.tsx
+msgid "请输入邮箱地址"
+msgstr "Please enter email address"
 
 #: src/routes/_auth/knowledge/-FormModal.tsx
 msgid "请选择分类"

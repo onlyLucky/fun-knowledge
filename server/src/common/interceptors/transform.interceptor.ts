@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { formatDates } from '../utils/date.util';
 
 /**
  * 统一响应格式拦截器
@@ -17,14 +18,14 @@ export class TransformInterceptor<T> implements NestInterceptor<T, any> {
       map((data) => {
         // 如果已经是标准格式，直接返回
         if (data && typeof data === 'object' && 'code' in data && 'data' in data) {
-          return data;
+          return formatDates(data) as any;
         }
 
-        return {
+        return formatDates({
           code: 200,
           message: 'success',
           data,
-        };
+        }) as any;
       }),
     );
   }
