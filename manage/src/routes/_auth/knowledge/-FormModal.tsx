@@ -1,12 +1,14 @@
-import { Form, Input, Select, InputNumber, Upload, Button, App } from "antd";
+import { Form, Input, Select, InputNumber, Upload, Button, App, Space, Spin } from "antd";
 import type { FormInstance } from "antd/es/form";
-import { UploadIcon } from "lucide-react";
+import { UploadIcon, XIcon } from "lucide-react";
 import { useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
 import type { CreateKnowledgeRequest, Knowledge } from "@/api/knowledge";
 import { CATEGORY_ENDPOINTS, CategorySchema } from "@/api/category";
 import type { Category } from "@/api/category";
 import { httpClient } from "@/utils/http";
+import { API_BASE_URL } from "@/utils/constants";
 import { uploadFile } from "@/api/upload";
 import { BaseFormModal } from "@/components/FormModal";
 import { z } from "zod/v4";
@@ -30,6 +32,23 @@ const RESOURCE_TYPE_OPTIONS = [
   { label: "网页", value: "webpage" },
 ];
 
+const IMAGE_EXTS = /\.(jpg|jpeg|png|gif|webp|svg|bmp|ico)(\?.*)?$/i;
+const VIDEO_EXTS = /\.(mp4|webm|ogg|mov|avi|mkv)(\?.*)?$/i;
+
+function guessResourceType(url: string): string | undefined {
+  if (!url) return undefined;
+  if (IMAGE_EXTS.test(url)) return "image";
+  if (VIDEO_EXTS.test(url)) return "video";
+  return undefined;
+}
+
+function resolvePreviewUrl(url: string): string {
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
+  const base = API_BASE_URL || window.location.origin;
+  return `${base}${url.startsWith("/") ? "" : "/"}${url}`;
+}
+
 export function FormModal({
   open,
   editing,
@@ -40,15 +59,33 @@ export function FormModal({
 }: FormModalProps) {
   const { t } = useLingui();
   const { message } = App.useApp();
+  const [uploading, setUploading] = useState(false);
+  const [imgLoading, setImgLoading] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   const { data: categories = [] } = useQuery<Category[]>({
     queryKey: ["categories", "all"],
     queryFn: () => httpClient.get(CATEGORY_ENDPOINTS.list),
     select: (raw) => categoryListSchema.parse(raw),
-    enabled: open,
+    staleTime: 5 * 60 * 1000,
   });
 
+  const resourceUrl = Form.useWatch("resource_url", form) as string | undefined;
+  const resourceType = Form.useWatch("resource_type", form) as string | undefined;
+
+  const previewType = useMemo(() => {
+    if (resourceType === "image" || resourceType === "video") return resourceType;
+    if (resourceUrl) return guessResourceType(resourceUrl);
+    return undefined;
+  }, [resourceUrl, resourceType]);
+
+  useEffect(() => {
+    setImgError(false);
+    setImgLoading(!!resourceUrl);
+  }, [resourceUrl]);
+
   const handleUpload = async (file: File) => {
+    setUploading(true);
     try {
       const result = await uploadFile(file, "knowledge");
       form.setFieldsValue({
@@ -58,8 +95,22 @@ export function FormModal({
       message.success(t`上传成功`);
     } catch {
       message.error(t`上传失败`);
+    } finally {
+      setUploading(false);
     }
-    return false; // 阻止 antd 默认上传行为
+    return false;
+  };
+
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const url = e.target.value;
+    const detected = guessResourceType(url);
+    if (detected && !form.getFieldValue("resource_type")) {
+      form.setFieldValue("resource_type", detected);
+    }
+  };
+
+  const handleClearResource = () => {
+    form.setFieldsValue({ resource_url: undefined, resource_type: undefined });
   };
 
   return (
@@ -93,17 +144,87 @@ export function FormModal({
           options={categories.map((c) => ({ label: c.name, value: c.id }))}
         />
       </Form.Item>
-      <Form.Item label={t`资源文件`}>
-        <Upload
-          beforeUpload={handleUpload}
-          showUploadList={false}
-          accept="image/*,video/*,audio/*,.glb,.gltf,.fbx,.obj"
-        >
-          <Button icon={<UploadIcon size={16} />}>{t`选择文件`}</Button>
-        </Upload>
-      </Form.Item>
-      <Form.Item name="resource_url" label={t`资源链接`}>
-        <Input placeholder={t`资源链接（上传后自动填入，也可手动输入）`} />
+      <Form.Item label={t`资源`}>
+        <Space direction="vertical" style={{ width: "100%" }} size="small">
+          <Form.Item name="resource_url" noStyle>
+            <Input
+              placeholder={t`输入图片或视频链接`}
+              onChange={handleUrlChange}
+              addonAfter={
+                <Upload
+                  beforeUpload={handleUpload}
+                  showUploadList={false}
+                  accept="image/*,video/*"
+                  disabled={uploading}
+                >
+                  <Button
+                    type="text"
+                    size="small"
+                    icon={<UploadIcon size={14} />}
+                    loading={uploading}
+                    style={{ margin: -4 }}
+                  />
+                </Upload>
+              }
+            />
+          </Form.Item>
+          {resourceUrl && (
+            <div style={{ position: "relative" }}>
+              <Button
+                type="text"
+                size="small"
+                icon={<XIcon size={14} />}
+                onClick={handleClearResource}
+                style={{ position: "absolute", top: 4, right: 4, zIndex: 1 }}
+              />
+              {previewType === "image" &&
+                (imgError ? (
+                  <div
+                    style={{
+                      maxHeight: 200,
+                      borderRadius: 8,
+                      border: "1px dashed #d9d9d9",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: 16,
+                      color: "#999",
+                      fontSize: 12,
+                    }}
+                  >
+                    {t`图片加载失败`}
+                  </div>
+                ) : (
+                  <Spin spinning={imgLoading}>
+                    <img
+                      crossOrigin="anonymous"
+                      src={resolvePreviewUrl(resourceUrl)}
+                      alt={resourceUrl}
+                      onLoad={() => setImgLoading(false)}
+                      onError={() => {
+                        setImgError(true);
+                        setImgLoading(false);
+                      }}
+                      style={{
+                        maxHeight: 200,
+                        borderRadius: 8,
+                        objectFit: "contain",
+                        display: "block",
+                        maxWidth: "100%",
+                      }}
+                    />
+                  </Spin>
+                ))}
+              {previewType === "video" && (
+                <video
+                  src={resolvePreviewUrl(resourceUrl)}
+                  controls
+                  style={{ maxHeight: 200, borderRadius: 8, width: "100%" }}
+                />
+              )}
+            </div>
+          )}
+        </Space>
       </Form.Item>
       <Form.Item name="resource_type" label={t`资源类型`}>
         <Select placeholder={t`选择资源类型`} options={RESOURCE_TYPE_OPTIONS} allowClear />

@@ -40,6 +40,9 @@ export function BaseFormModal<TValues>({
       styles={{
         body: {
           paddingTop: token.padding,
+          maxHeight: "calc(100vh - 200px)",
+          overflowY: "auto",
+          paddingRight: token.paddingLG,
         },
       }}
     >

@@ -59,5 +59,7 @@ app/src/imports/**/*.jpg
 server/node_modules/
 server/dist/
 server/.env
+server/uploads/
+
 
 
