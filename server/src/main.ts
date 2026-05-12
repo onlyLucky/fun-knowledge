@@ -1,14 +1,20 @@
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { ValidationPipe, Logger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
+import { join } from 'path';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
+
+  // 静态文件服务（本地上传文件）
+  const uploadPath = configService.get<string>('storage.localPath', './uploads');
+  app.useStaticAssets(join(__dirname, '..', uploadPath), { prefix: '/uploads' });
   const logger = new Logger('Bootstrap');
 
   // 全局前缀
@@ -69,6 +75,8 @@ async function bootstrap() {
     .addTag('管理端-类目', '类目管理接口')
     .addTag('管理端-纠错', '纠错管理接口')
     .addTag('管理端-配置', '系统配置管理接口')
+    .addTag('文件上传', '客户端文件上传接口')
+    .addTag('管理端-文件上传', '管理端文件上传接口')
     .addTag('管理端-日志', '操作日志接口')
     .build();
 

@@ -1,4 +1,4 @@
-import { createElement, useState } from 'react';
+import { createElement, useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   SlidersHorizontal, CheckCircle2, Check,
@@ -127,12 +127,14 @@ export function Home() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [hasCheckedIn, setHasCheckedIn] = useState(false);
+  const [checkInDismissed, setCheckInDismissed] = useState(false);
   const [viewedCount, setViewedCount] = useState(0);
 
   const [isAISheetOpen, setIsAISheetOpen] = useState(false);
   const [activeCardTitle, setActiveCardTitle] = useState('');
 
   const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const filteredCards =
     activeCategory === 'all'
@@ -155,13 +157,31 @@ export function Home() {
   };
 
   const handleCheckIn = () => {
-    if (viewedCount >= 3 && !hasCheckedIn) setHasCheckedIn(true);
+    if (viewedCount >= 3 && !hasCheckedIn) {
+      setHasCheckedIn(true);
+      setTimeout(() => setCheckInDismissed(true), 3000);
+    }
   };
 
   const openAISheet = (title: string) => {
     setActiveCardTitle(title);
     setIsAISheetOpen(true);
   };
+
+  const handleSave = () => {
+    if (exitTimerRef.current) {
+      clearTimeout(exitTimerRef.current);
+    }
+    exitTimerRef.current = setTimeout(() => {
+      handleSwipeUp();
+    }, 3000);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
+    };
+  }, []);
 
   const handleSelectCategory = (id: string) => {
     setActiveCategory(id);
@@ -211,7 +231,7 @@ export function Home() {
 
       {/* Check-in toast banner */}
       <AnimatePresence>
-        {viewedCount >= 3 && (
+        {viewedCount >= 3 && !checkInDismissed && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 40, opacity: 1 }}
@@ -247,6 +267,7 @@ export function Home() {
                   onSwipeUp={handleSwipeUp}
                   onSwipeDown={handleSwipeDown}
                   onAIOpen={openAISheet}
+                  onSave={handleSave}
                   zIndex={filteredCards.length - index}
                 />
               );

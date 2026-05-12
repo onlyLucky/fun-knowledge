@@ -165,6 +165,53 @@ async function request<T>(
   return (envelope.data !== undefined ? envelope.data : json) as T;
 }
 
+async function requestUpload<T>(
+  path: string,
+  formData: FormData,
+  options?: RequestOptions,
+  isAfterRefresh = false,
+): Promise<T> {
+  const url = buildUrl(path, options?.params);
+  const headers: Record<string, string> = {
+    ...getAuthHeaders(),
+    ...(options?.headers as Record<string, string>),
+  };
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers,
+    body: formData,
+    ...options,
+  });
+
+  if (res.status === 401 && !isAfterRefresh && path !== AUTH_ENDPOINTS.refresh) {
+    const refreshed = await refreshSessionTokens();
+    if (refreshed) {
+      return requestUpload<T>(path, formData, options, true);
+    }
+    throw new HttpError(401, "Unauthorized");
+  }
+
+  if (res.status === 403) {
+    navigateTo403();
+    throw new HttpError(403, "Forbidden");
+  }
+
+  if (!res.ok) {
+    throw new HttpError(res.status, `HTTP ${res.status}: ${res.statusText}`);
+  }
+
+  const json: unknown = await res.json();
+  const envelope = json as { code?: number; data?: unknown; message?: string };
+
+  const isSuccess = envelope.code === 200 || envelope.code === 0;
+  if (envelope.code !== undefined && !isSuccess) {
+    throw new ApiError(envelope.code, envelope.message ?? "Unknown error");
+  }
+
+  return (envelope.data !== undefined ? envelope.data : json) as T;
+}
+
 export const httpClient = {
   get: <T>(path: string, options?: RequestOptions) => request<T>("GET", path, undefined, options),
   post: <T>(path: string, body?: unknown, options?: RequestOptions) =>
@@ -173,4 +220,6 @@ export const httpClient = {
     request<T>("PUT", path, body, options),
   delete: <T>(path: string, options?: RequestOptions) =>
     request<T>("DELETE", path, undefined, options),
+  upload: <T>(path: string, formData: FormData, options?: RequestOptions) =>
+    requestUpload<T>(path, formData, options),
 };

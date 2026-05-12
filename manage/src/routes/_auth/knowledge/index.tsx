@@ -191,6 +191,7 @@ function KnowledgePage() {
           <Switch
             size="small"
             loading={togglingId === record.id}
+            disabled={togglingId === record.id}
             checked={record.status === KnowledgeStatus.PUBLISHED}
             onChange={() => toggleStatus(record)}
           />

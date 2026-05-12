@@ -12,6 +12,7 @@ import { databaseConfig } from './config/database.config';
 import { jwtConfig } from './config/jwt.config';
 import { redisConfig } from './config/redis.config';
 import { elasticsearchConfig } from './config/elasticsearch.config';
+import { storageConfig } from './config/storage.config';
 
 // 业务模块
 import { AuthModule } from './modules/auth/auth.module';
@@ -27,13 +28,14 @@ import { AdminModule } from './modules/admin/admin.module';
 import { ConfigModule as AppConfigModule } from './modules/config/config.module';
 import { ImportModule } from './modules/import/import.module';
 import { LogModule } from './modules/log/log.module';
+import { UploadModule } from './modules/upload/upload.module';
 
 @Module({
   imports: [
     // 环境配置
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [appConfig, databaseConfig, jwtConfig, redisConfig, elasticsearchConfig],
+      load: [appConfig, databaseConfig, jwtConfig, redisConfig, elasticsearchConfig, storageConfig],
       envFilePath: '.env',
     }),
 
@@ -115,6 +117,7 @@ import { LogModule } from './modules/log/log.module';
     AdminModule,
     AppConfigModule,
     ImportModule,
+    UploadModule,
     LogModule,
   ],
   providers: [

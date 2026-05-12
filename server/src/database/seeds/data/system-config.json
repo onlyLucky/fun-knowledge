@@ -76,5 +76,11 @@
     "config_value": "image/jpeg,image/png,image/gif,image/webp",
     "description": "允许上传的文件类型",
     "group": "upload"
+  },
+  {
+    "config_key": "upload_limits",
+    "config_value": "{\"image\": 3145728, \"video\": 52428800, \"model_3d\": 31457280, \"audio\": 10485760}",
+    "description": "各类型文件上传大小限制（字节）：image 3MB, video 50MB, model_3d 30MB, audio 10MB",
+    "group": "upload"
   }
 ]

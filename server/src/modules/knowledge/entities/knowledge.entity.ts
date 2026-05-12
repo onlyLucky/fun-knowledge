@@ -31,9 +31,13 @@ export class Knowledge {
   @Column({ type: 'text', comment: '内容描述' })
   content: string;
 
-  @ApiProperty({ description: '图片 URL' })
-  @Column({ type: 'varchar', length: 500, nullable: true, comment: '图片 URL' })
-  image_url: string;
+  @ApiProperty({ description: '资源 URL' })
+  @Column({ type: 'varchar', length: 500, nullable: true, comment: '资源 URL' })
+  resource_url: string;
+
+  @ApiProperty({ description: '资源类型', enum: ['image', 'video', 'audio', 'model_3d', 'webpage'] })
+  @Column({ type: 'varchar', length: 20, nullable: true, comment: '资源类型：image/video/audio/model_3d/webpage' })
+  resource_type: string;
 
   @ApiProperty({ description: '类目 ID' })
   @Column({ type: 'uuid', comment: '类目 ID' })

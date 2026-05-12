@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsOptional, IsArray, IsInt, IsIn, MaxLength } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsArray, IsInt, IsIn, IsEnum, MaxLength } from 'class-validator';
+import { ResourceType } from '../../../common/enums/resource-type.enum';
 
 /**
  * 创建知识卡片 DTO
@@ -16,11 +17,16 @@ export class CreateKnowledgeDto {
   @IsNotEmpty()
   content: string;
 
-  @ApiPropertyOptional({ description: '图片 URL', maxLength: 500 })
+  @ApiPropertyOptional({ description: '资源 URL', maxLength: 500 })
   @IsOptional()
   @IsString()
   @MaxLength(500)
-  image_url?: string;
+  resource_url?: string;
+
+  @ApiPropertyOptional({ description: '资源类型', enum: ResourceType })
+  @IsOptional()
+  @IsEnum(ResourceType)
+  resource_type?: ResourceType;
 
   @ApiProperty({ description: '类目 ID' })
   @IsString()

@@ -23,11 +23,22 @@ export const KnowledgeStatus = {
 
 export type KnowledgeStatus = (typeof KnowledgeStatus)[keyof typeof KnowledgeStatus];
 
+export const ResourceType = {
+  IMAGE: "image",
+  VIDEO: "video",
+  AUDIO: "audio",
+  MODEL_3D: "model_3d",
+  WEBPAGE: "webpage",
+} as const;
+
+export type ResourceType = (typeof ResourceType)[keyof typeof ResourceType];
+
 export const KnowledgeSchema = z.object({
   id: z.string(),
   title: z.string(),
   content: z.string(),
-  image_url: z.string().nullable().optional(),
+  resource_url: z.string().nullable().optional(),
+  resource_type: z.string().nullable().optional(),
   category_id: z.string(),
   tags: z.array(z.string()).nullable().optional(),
   source: z.string().nullable().optional(),
@@ -47,7 +58,8 @@ export type Knowledge = z.infer<typeof KnowledgeSchema>;
 export const CreateKnowledgeRequestSchema = z.object({
   title: z.string().min(1),
   content: z.string().min(1),
-  image_url: z.string().nullable().optional(),
+  resource_url: z.string().nullable().optional(),
+  resource_type: z.string().nullable().optional(),
   category_id: z.string().min(1),
   tags: z.array(z.string()).nullable().optional(),
   source: z.string().nullable().optional(),

@@ -84,7 +84,7 @@ export class ImportProcessor {
         const knowledge = new Knowledge();
           knowledge.title = row.title;
           knowledge.content = row.content;
-          knowledge.image_url = row.image_name || '';
+          knowledge.resource_url = row.image_name || '';
           knowledge.category_id = category.id;
           knowledge.tags = tags;
           knowledge.source = row.source || '';

@@ -12,41 +12,62 @@ interface KnowledgeCardProps {
   onSwipeUp: () => void;
   onSwipeDown: () => void;
   onAIOpen: (title: string) => void;
+  onSave?: () => void;
   zIndex: number;
 }
 
-export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen, zIndex }: KnowledgeCardProps) {
+export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen, onSave, zIndex }: KnowledgeCardProps) {
   const [isSaved, setIsSaved] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const dragConstraintsRef = useRef(null);
   const navigate = useNavigate();
 
-  // Track drag distance to distinguish tap from swipe
-  const dragStartY = useRef(0);
-  const didDrag = useRef(false);
+  // Track drag state to distinguish tap from swipe
+  const isDragging = useRef(false);
+  const dragStartTime = useRef(0);
+  const dragStartPos = useRef({ x: 0, y: 0 });
 
   const handleDragStart = (_e: any, info: any) => {
-    dragStartY.current = info.point.y;
-    didDrag.current = false;
+    isDragging.current = true;
+    dragStartTime.current = Date.now();
+    dragStartPos.current = { x: info.point.x, y: info.point.y };
   };
 
   const handleDragEnd = (_event: any, info: any) => {
     const swipeThreshold = 50;
     const velocityThreshold = 400;
+    const distanceThreshold = 10;
+    const timeThreshold = 200; // ms
 
-    if (Math.abs(info.offset.y) > 10) didDrag.current = true;
+    const dragDuration = Date.now() - dragStartTime.current;
+    const dragDistance = Math.abs(info.offset.y);
 
+    // Mark as dragged if moved significantly or took time
+    if (dragDistance > distanceThreshold || dragDuration > timeThreshold) {
+      isDragging.current = true;
+    }
+
+    // Handle swipe actions
     if (info.offset.y < -swipeThreshold || info.velocity.y < -velocityThreshold) {
       onSwipeUp();
     } else if (info.offset.y > swipeThreshold || info.velocity.y > velocityThreshold) {
       onSwipeDown();
     }
+
+    // Reset after a small delay to prevent click from firing
+    setTimeout(() => {
+      isDragging.current = false;
+    }, 50);
   };
 
-  const handleContentClick = () => {
-    if (!didDrag.current) {
-      navigate(`/card/${card.id}`);
+  const handleContentClick = (e: React.MouseEvent) => {
+    // Prevent navigation if we just finished dragging
+    if (isDragging.current) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
     }
+    navigate(`/card/${card.id}`);
   };
 
   return (
@@ -123,7 +144,12 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
           {/* Save */}
           <motion.button
             whileTap={{ scale: 0.78 }}
-            onClick={() => setIsSaved(!isSaved)}
+            onClick={() => {
+              if (!isSaved) {
+                setIsSaved(true);
+                onSave?.();
+              }
+            }}
             className="w-[40px] h-[40px] rounded-[100px] border border-[#DFDEDE] flex items-center justify-center"
           >
             <Star
