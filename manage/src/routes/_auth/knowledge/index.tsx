@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Button, Form, App, Dropdown, theme, Tag, Flex, Space, Switch } from "antd";
-import type { TablePaginationConfig } from "antd/es/table/interface";
+import type { TablePaginationConfig, Key } from "antd/es/table/interface";
 import { useLingui } from "@lingui/react/macro";
 import { useMemo, useRef, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { httpClient } from "@/utils/http";
 import {
   KNOWLEDGE_ENDPOINTS,
@@ -56,6 +56,7 @@ function KnowledgePage() {
   const tableFrameRef = useRef<HTMLDivElement>(null);
   const [editing, setEditing] = useState<KnowledgeType | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const [form] = Form.useForm();
 
   const setSearch = (next: Search) => void navigate({ search: next });
@@ -63,6 +64,27 @@ function KnowledgePage() {
   const { keywordInput, setKeywordInput, applyKeyword } = useUrlSearchState({ search, setSearch });
 
   const crudToasts = useCrudToasts({ message, resourceKey: "knowledge" });
+
+  const batchDeleteMutation = useMutation({
+    mutationFn: (ids: string[]) => httpClient.delete(KNOWLEDGE_ENDPOINTS.batchDelete, { ids }),
+    onSuccess: () => {
+      message.success(t`删除成功`);
+      setSelectedRowKeys([]);
+      void queryClient.invalidateQueries({ queryKey: ["knowledge"] });
+    },
+    onError: () => message.error(t`删除失败`),
+  });
+
+  const confirmBatchDelete = () => {
+    modal.confirm({
+      title: t`确定删除选中的 ${selectedRowKeys.length} 条记录？`,
+      content: t`此操作不可撤销。`,
+      okText: t`删除`,
+      okType: "danger",
+      cancelText: t`取消`,
+      onOk: () => batchDeleteMutation.mutate(selectedRowKeys as string[]),
+    });
+  };
 
   const { data, isLoading, createMutation, updateMutation, deleteMutation } = useResourceCRUD<
     { list: KnowledgeType[]; total: number },
@@ -230,7 +252,7 @@ function KnowledgePage() {
     },
   ];
 
-  const showPagination = (data?.total ?? 0) > search.pageSize;
+  const showPagination = true;
 
   const { tableAreaMaxHeight, tableScrollY, lockScrollHeight } = useTableFitHeight({
     pageShellRef,
@@ -280,6 +302,8 @@ function KnowledgePage() {
           form.resetFields();
           setModalOpen(true);
         }}
+        selectedCount={selectedRowKeys.length}
+        onBatchDelete={confirmBatchDelete}
       />
 
       <DataTable<KnowledgeType>
@@ -296,6 +320,10 @@ function KnowledgePage() {
         dataSource={data?.list ?? []}
         loading={isLoading}
         pagination={tablePagination}
+        rowSelection={{
+          selectedRowKeys,
+          onChange: (keys) => setSelectedRowKeys(keys),
+        }}
         style={{ flex: 1, minHeight: 0 }}
         scroll={tableScrollY != null ? { x: "max-content", y: tableScrollY } : { x: "max-content" }}
         onChange={(pagination, _filters, sorter) => {
@@ -311,6 +339,7 @@ function KnowledgePage() {
           if (pagination.pageSize !== search.pageSize) {
             next.page = 1;
           }
+          setSelectedRowKeys([]);
           void navigate({ search: next });
         }}
       />

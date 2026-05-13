@@ -1,6 +1,6 @@
 import { Button, Input, Select, theme } from "antd";
 import { useLingui } from "@lingui/react/macro";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { forwardRef, useMemo } from "react";
 import { FilterToolbar } from "@/components/FilterToolbar";
 
@@ -14,6 +14,8 @@ export type ToolbarProps = {
   statusValue: string | undefined;
   onStatusChange: (status: string) => void;
   onCreateClick: () => void;
+  selectedCount?: number;
+  onBatchDelete?: () => void;
 };
 
 export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(
@@ -25,6 +27,8 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
     statusValue,
     onStatusChange,
     onCreateClick,
+    selectedCount = 0,
+    onBatchDelete,
   },
   ref,
 ) {
@@ -84,9 +88,16 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
       ref={ref}
       slots={slots}
       actions={
-        <Button type="primary" icon={<Plus size={token.fontSize} />} onClick={onCreateClick}>
-          {t`新建知识`}
-        </Button>
+        <>
+          {selectedCount > 0 && onBatchDelete && (
+            <Button danger icon={<Trash2 size={token.fontSize} />} onClick={onBatchDelete}>
+              {t`批量删除`} ({selectedCount})
+            </Button>
+          )}
+          <Button type="primary" icon={<Plus size={token.fontSize} />} onClick={onCreateClick}>
+            {t`新建知识`}
+          </Button>
+        </>
       }
       moreFiltersLabel={t`更多筛选`}
       moreFiltersTitle={t`更多筛选`}

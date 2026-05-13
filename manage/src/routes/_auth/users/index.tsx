@@ -144,7 +144,7 @@ function UsersPage() {
     },
   ];
 
-  const showPagination = (data?.total ?? 0) > search.pageSize;
+  const showPagination = true;
 
   const { tableAreaMaxHeight, tableScrollY, lockScrollHeight } = useTableFitHeight({
     pageShellRef,

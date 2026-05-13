@@ -4,6 +4,8 @@ import { z } from "zod/v4";
 
 export const LOG_ENDPOINTS = {
   list: "/api/admin/v1/log/list",
+  delete: (id: string) => `/api/admin/v1/log/${id}`,
+  batchDelete: "/api/admin/v1/log/batch-delete",
 } as const;
 
 /* ---------- Schemas ---------- */

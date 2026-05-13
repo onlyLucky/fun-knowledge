@@ -8,6 +8,7 @@ export const KNOWLEDGE_ENDPOINTS = {
   detail: (id: string) => `/api/admin/v1/knowledge/${id}`,
   update: (id: string) => `/api/admin/v1/knowledge/${id}`,
   delete: (id: string) => `/api/admin/v1/knowledge/${id}`,
+  batchDelete: "/api/admin/v1/knowledge/batch-delete",
   toggleStatus: (id: string) => `/api/admin/v1/knowledge/${id}/status`,
   import: "/api/admin/v1/knowledge/import",
   template: "/api/admin/v1/knowledge/template",

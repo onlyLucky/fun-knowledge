@@ -197,7 +197,6 @@ export function FormModal({
                 ) : (
                   <Spin spinning={imgLoading}>
                     <img
-                      crossOrigin="anonymous"
                       src={resolvePreviewUrl(resourceUrl)}
                       alt={resourceUrl}
                       onLoad={() => setImgLoading(false)}

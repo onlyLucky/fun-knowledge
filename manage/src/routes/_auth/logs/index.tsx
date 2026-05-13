@@ -1,13 +1,16 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { theme, Tag, Flex } from "antd";
-import type { TablePaginationConfig } from "antd/es/table/interface";
+import { Button, App, theme, Tag, Flex, Descriptions, Drawer, Dropdown } from "antd";
+import type { Key, TablePaginationConfig } from "antd/es/table/interface";
 import { useLingui } from "@lingui/react/macro";
-import { useMemo, useRef } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMemo, useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { MoreVertical, Eye, Trash2 } from "lucide-react";
 import { httpClient } from "@/utils/http";
 import { LOG_ENDPOINTS, OperationLogSchema } from "@/api/log";
 import { PaginatedResponseSchema } from "@/api/schemas";
 import type { OperationLog } from "@/api/log";
+import { AdminRole } from "@/api/schemas";
+import { useAuthStore } from "@/stores/auth";
 import { z } from "zod/v4";
 import { DataTable } from "@/components/DataTable";
 import { useTableFitHeight } from "@/hooks/useTableFitHeight";
@@ -29,12 +32,18 @@ const paginatedSchema = PaginatedResponseSchema(OperationLogSchema);
 function LogsPage() {
   const search = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
+  const { message, modal } = App.useApp();
   const { t } = useLingui();
   const { token } = theme.useToken();
+  const queryClient = useQueryClient();
+  const admin = useAuthStore((s) => s.admin);
+  const canDelete = admin?.role === AdminRole.SUPER_ADMIN;
   const pageShellRef = useRef<HTMLDivElement>(null);
   const toolbarRowRef = useRef<HTMLDivElement>(null);
   const middleSectionRef = useRef<HTMLDivElement>(null);
   const tableFrameRef = useRef<HTMLDivElement>(null);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
+  const [detailRecord, setDetailRecord] = useState<OperationLog | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["logs", search.page, search.pageSize, search.module, search.action],
@@ -47,8 +56,59 @@ function LogsPage() {
           action: search.action || undefined,
         },
       }),
-    select: (raw) => paginatedSchema.shape.data.parse(raw),
+    select: (raw) => {
+      const envelope = raw as { list?: unknown[]; total?: number };
+      const normalized = {
+        ...envelope,
+        list: (envelope.list ?? []).map((item) => {
+          const r = item as Record<string, unknown>;
+          return { ...r, id: r.id ?? r._id };
+        }),
+      };
+      return paginatedSchema.shape.data.parse(normalized);
+    },
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => httpClient.delete(LOG_ENDPOINTS.delete(id)),
+    onSuccess: () => {
+      message.success(t`删除成功`);
+      void queryClient.invalidateQueries({ queryKey: ["logs"] });
+    },
+    onError: () => message.error(t`删除失败`),
+  });
+
+  const batchDeleteMutation = useMutation({
+    mutationFn: (ids: string[]) => httpClient.delete(LOG_ENDPOINTS.batchDelete, { ids }),
+    onSuccess: () => {
+      message.success(t`删除成功`);
+      setSelectedRowKeys([]);
+      void queryClient.invalidateQueries({ queryKey: ["logs"] });
+    },
+    onError: () => message.error(t`删除失败`),
+  });
+
+  const confirmDelete = (record: OperationLog) => {
+    modal.confirm({
+      title: t`确定要删除吗？`,
+      content: t`此操作不可撤销。`,
+      okText: t`删除`,
+      okType: "danger",
+      cancelText: t`取消`,
+      onOk: () => deleteMutation.mutate(record.id),
+    });
+  };
+
+  const confirmBatchDelete = () => {
+    modal.confirm({
+      title: t`确定删除选中的 ${selectedRowKeys.length} 条记录？`,
+      content: t`此操作不可撤销。`,
+      okText: t`删除`,
+      okType: "danger",
+      cancelText: t`取消`,
+      onOk: () => batchDeleteMutation.mutate(selectedRowKeys as string[]),
+    });
+  };
 
   const columns = [
     { title: t`管理员`, dataIndex: "admin_username", key: "admin_username", width: 120 },
@@ -79,9 +139,47 @@ function LogsPage() {
       render: (v: number | null) => (v != null ? `${v}ms` : "—"),
     },
     { title: t`操作时间`, dataIndex: "created_at", key: "created_at", width: 180 },
+    {
+      title: t`操作`,
+      key: "actions",
+      width: 80,
+      align: "right" as const,
+      render: (_: unknown, record: OperationLog) => (
+        <Dropdown
+          menu={{
+            items: [
+              {
+                key: "detail",
+                icon: <Eye size={token.fontSize} />,
+                label: t`查看详情`,
+                onClick: () => setDetailRecord(record),
+              },
+              ...(canDelete
+                ? [
+                    {
+                      key: "delete",
+                      icon: <Trash2 size={token.fontSize} />,
+                      label: t`删除`,
+                      danger: true,
+                      onClick: () => confirmDelete(record),
+                    },
+                  ]
+                : []),
+            ],
+          }}
+          placement="bottomRight"
+        >
+          <Button
+            type="text"
+            icon={<MoreVertical size={token.fontSize} />}
+            aria-label={t`行操作`}
+          />
+        </Dropdown>
+      ),
+    },
   ];
 
-  const showPagination = (data?.total ?? 0) > search.pageSize;
+  const showPagination = true;
 
   const { tableAreaMaxHeight, tableScrollY, lockScrollHeight } = useTableFitHeight({
     pageShellRef,
@@ -103,13 +201,9 @@ function LogsPage() {
             pageSize: search.pageSize,
             showSizeChanger: true,
             showTotal: (total) => t`${total} 条记录`,
-            onChange: (page, pageSize) =>
-              void navigate({
-                search: { ...search, page: pageSize !== search.pageSize ? 1 : page, pageSize },
-              }),
           }
         : false,
-    [showPagination, data?.total, search, navigate, t],
+    [showPagination, data?.total, search.page, search.pageSize, t],
   );
 
   return (
@@ -119,7 +213,20 @@ function LogsPage() {
       gap={token.marginMD}
       style={{ flex: "1 1 0%", minHeight: 0, overflow: "hidden" }}
     >
-      <div ref={toolbarRowRef} />
+      <div ref={toolbarRowRef}>
+        {canDelete && selectedRowKeys.length > 0 && (
+          <Flex justify="flex-end" style={{ marginBottom: token.marginSM }}>
+            <Button
+              danger
+              icon={<Trash2 size={token.fontSize} />}
+              onClick={confirmBatchDelete}
+              loading={batchDeleteMutation.isPending}
+            >
+              {t`批量删除`} ({selectedRowKeys.length})
+            </Button>
+          </Flex>
+        )}
+      </div>
 
       <DataTable<OperationLog>
         layoutRef={middleSectionRef}
@@ -135,9 +242,61 @@ function LogsPage() {
         dataSource={data?.list ?? []}
         loading={isLoading}
         pagination={tablePagination}
+        rowSelection={
+          canDelete
+            ? {
+                selectedRowKeys,
+                onChange: (keys) => setSelectedRowKeys(keys),
+              }
+            : undefined
+        }
         style={{ flex: 1, minHeight: 0 }}
         scroll={tableScrollY != null ? { x: "max-content", y: tableScrollY } : { x: "max-content" }}
+        onChange={(pagination, _filters, _sorter) => {
+          setSelectedRowKeys([]);
+          void navigate({
+            search: {
+              ...search,
+              page: pagination.current ?? 1,
+              pageSize: pagination.pageSize ?? 10,
+            },
+          });
+        }}
       />
+
+      <Drawer
+        title={t`操作日志详情`}
+        open={!!detailRecord}
+        onClose={() => setDetailRecord(null)}
+        width={520}
+      >
+        {detailRecord && (
+          <Descriptions column={1} bordered size="small">
+            <Descriptions.Item label={t`管理员`}>{detailRecord.admin_username}</Descriptions.Item>
+            <Descriptions.Item label={t`模块`}>{detailRecord.module}</Descriptions.Item>
+            <Descriptions.Item label={t`操作类型`}>{detailRecord.action}</Descriptions.Item>
+            <Descriptions.Item label={t`操作描述`}>
+              {detailRecord.description ?? "—"}
+            </Descriptions.Item>
+            <Descriptions.Item label={t`目标ID`}>{detailRecord.target_id ?? "—"}</Descriptions.Item>
+            <Descriptions.Item label={t`IP地址`}>{detailRecord.ip ?? "—"}</Descriptions.Item>
+            <Descriptions.Item label={t`状态`}>
+              <Tag color={detailRecord.status === 1 ? "success" : "error"}>
+                {detailRecord.status === 1 ? "OK" : "FAIL"}
+              </Tag>
+            </Descriptions.Item>
+            <Descriptions.Item label={t`耗时`}>
+              {detailRecord.duration != null ? `${detailRecord.duration}ms` : "—"}
+            </Descriptions.Item>
+            <Descriptions.Item label={t`错误信息`}>
+              {detailRecord.error_message ?? "—"}
+            </Descriptions.Item>
+            <Descriptions.Item label={t`操作时间`}>
+              {detailRecord.created_at ?? "—"}
+            </Descriptions.Item>
+          </Descriptions>
+        )}
+      </Drawer>
     </Flex>
   );
 }
