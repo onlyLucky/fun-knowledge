@@ -232,7 +232,11 @@ export function FormModal({
         <Input placeholder={t`来源`} />
       </Form.Item>
       <Form.Item name="tags" label={t`标签`}>
-        <Select mode="tags" placeholder={t`输入标签`} />
+        <Select
+          mode="tags"
+          placeholder={t`输入标签，多个标签用顿号分隔`}
+          tokenSeparators={["、"]}
+        />
       </Form.Item>
       <Form.Item name="sort_weight" label={t`排序权重`} initialValue={0}>
         <InputNumber

@@ -14,7 +14,7 @@ import {
 import { PaginatedResponseSchema } from "@/api/schemas";
 import type { Knowledge as KnowledgeType, CreateKnowledgeRequest } from "@/api/knowledge";
 import { z } from "zod/v4";
-import { MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { MoreVertical, Pencil, Trash2, Eye } from "lucide-react";
 import { DataTable } from "@/components/DataTable";
 import { useResourceCRUD } from "@/hooks/useResourceCRUD";
 import { useTableFitHeight } from "@/hooks/useTableFitHeight";
@@ -22,6 +22,7 @@ import { useCrudToasts } from "@/hooks/useCrudToasts";
 import { useUrlSearchState } from "@/hooks/useUrlSearchState";
 import { Toolbar } from "./-Toolbar";
 import { FormModal } from "./-FormModal";
+import { DetailDrawer } from "./-DetailDrawer";
 
 const SearchParamsSchema = z.object({
   page: z.coerce.number().int().positive().catch(1),
@@ -55,6 +56,7 @@ function KnowledgePage() {
   const middleSectionRef = useRef<HTMLDivElement>(null);
   const tableFrameRef = useRef<HTMLDivElement>(null);
   const [editing, setEditing] = useState<KnowledgeType | null>(null);
+  const [viewing, setViewing] = useState<KnowledgeType | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const [form] = Form.useForm();
@@ -184,7 +186,24 @@ function KnowledgePage() {
       sortOrder: search.sortField === "title" ? search.sortOrder : null,
       ellipsis: true,
     },
-    { title: t`分类`, dataIndex: "category_id", key: "category_id" },
+    {
+      title: t`分类`,
+      key: "category_id",
+      render: (_: unknown, record: KnowledgeType) => record.category?.name ?? record.category_id,
+    },
+    {
+      title: t`标签`,
+      key: "tags",
+      width: 200,
+      render: (_: unknown, record: KnowledgeType) =>
+        record.tags && record.tags.length > 0
+          ? record.tags.map((tag) => (
+              <Tag key={tag} style={{ marginBottom: 2 }}>
+                {tag}
+              </Tag>
+            ))
+          : "—",
+    },
     {
       title: t`状态`,
       dataIndex: "status",
@@ -220,6 +239,12 @@ function KnowledgePage() {
           <Dropdown
             menu={{
               items: [
+                {
+                  key: "view",
+                  icon: <Eye size={token.fontSize} />,
+                  label: t`查看`,
+                  onClick: () => setViewing(record),
+                },
                 {
                   key: "edit",
                   icon: <Pencil size={token.fontSize} />,
@@ -325,6 +350,13 @@ function KnowledgePage() {
           onChange: (keys) => setSelectedRowKeys(keys),
         }}
         style={{ flex: 1, minHeight: 0 }}
+        onRow={(record) => ({
+          onClick: (e) => {
+            if ((e.target as HTMLElement).closest(".ant-switch, .ant-dropdown, .ant-btn")) return;
+            setViewing(record);
+          },
+          style: { cursor: "pointer" },
+        })}
         scroll={tableScrollY != null ? { x: "max-content", y: tableScrollY } : { x: "max-content" }}
         onChange={(pagination, _filters, sorter) => {
           const next: Search = {
@@ -362,6 +394,8 @@ function KnowledgePage() {
           }
         }}
       />
+
+      <DetailDrawer open={!!viewing} knowledge={viewing} onClose={() => setViewing(null)} />
     </Flex>
   );
 }

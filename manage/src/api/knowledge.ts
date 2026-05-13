@@ -41,6 +41,7 @@ export const KnowledgeSchema = z.object({
   resource_url: z.string().nullable().optional(),
   resource_type: z.string().nullable().optional(),
   category_id: z.string(),
+  category: z.object({ id: z.string(), name: z.string() }).nullable().optional(),
   tags: z.array(z.string()).nullable().optional(),
   source: z.string().nullable().optional(),
   status: z.number(),
