@@ -4,9 +4,10 @@ import { Category } from './entities/category.entity';
 import { CategoryController } from './category.controller';
 import { CategoryAdminController } from './category-admin.controller';
 import { CategoryService } from './category.service';
+import { LogModule } from '../log/log.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Category])],
+  imports: [TypeOrmModule.forFeature([Category]), LogModule],
   controllers: [CategoryController, CategoryAdminController],
   providers: [CategoryService],
   exports: [CategoryService],

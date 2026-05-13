@@ -56,7 +56,13 @@ export class LogService {
       .sort({ created_at: -1 })
       .skip((page - 1) * pageSize)
       .limit(pageSize)
-      .lean();
+      .lean()
+      .then((docs) =>
+        docs.map((doc) => ({
+          ...doc,
+          _id: doc._id?.toString(),
+        })),
+      );
 
     return new PaginatedResponseDto(list, total, page, pageSize);
   }

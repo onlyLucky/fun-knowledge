@@ -7,15 +7,18 @@ import {
   Param,
   Body,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import { Request } from 'express';
 import { AdminAuthGuard } from '../../common/guards/admin-auth.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
-import { LogOperation } from '../../common/decorators/log-operation.decorator';
 import { AdminRole } from '../../common/enums/user-role.enum';
 import { KnowledgeAdminService } from './knowledge-admin.service';
+import { LogService } from '../log/log.service';
+import { recordOperationLog } from '../../common/utils/operation-log.util';
 import { CreateKnowledgeDto } from './dto/create-knowledge.dto';
 import { UpdateKnowledgeDto } from './dto/update-knowledge.dto';
 import { QueryKnowledgeDto } from './dto/query-knowledge.dto';
@@ -27,7 +30,10 @@ import { RequestAdmin } from '../../common/interfaces/request.interface';
 @UseGuards(AdminAuthGuard)
 @Controller('admin/v1/knowledge')
 export class KnowledgeAdminController {
-  constructor(private readonly knowledgeAdminService: KnowledgeAdminService) {}
+  constructor(
+    private readonly knowledgeAdminService: KnowledgeAdminService,
+    private readonly logService: LogService,
+  ) {}
 
   @Get('list')
   @Roles(AdminRole.SUPER_ADMIN, AdminRole.CONTENT_ADMIN, AdminRole.OPERATIONS)
@@ -38,47 +44,86 @@ export class KnowledgeAdminController {
 
   @Post('create')
   @Roles(AdminRole.SUPER_ADMIN, AdminRole.CONTENT_ADMIN)
-  @LogOperation({ module: 'knowledge', action: 'create', description: '创建知识卡片' })
   @ApiOperation({ summary: '创建知识卡片' })
-  async create(@Body() dto: CreateKnowledgeDto, @CurrentUser() admin: RequestAdmin) {
-    return this.knowledgeAdminService.create(dto, admin.id);
+  async create(
+    @Body() dto: CreateKnowledgeDto,
+    @CurrentUser() admin: RequestAdmin,
+    @Req() request: Request,
+  ) {
+    const result = await this.knowledgeAdminService.create(dto, admin.id);
+    recordOperationLog(this.logService, request, {
+      module: 'knowledge',
+      action: 'create',
+      description: '创建知识卡片',
+      targetId: result.id,
+    });
+    return result;
   }
 
   @Put(':id')
   @Roles(AdminRole.SUPER_ADMIN, AdminRole.CONTENT_ADMIN)
-  @LogOperation({ module: 'knowledge', action: 'update', description: '更新知识卡片' })
   @ApiOperation({ summary: '更新知识卡片' })
   @ApiParam({ name: 'id', description: '知识卡片 UUID' })
   async update(
     @Param('id') id: string,
     @Body() dto: UpdateKnowledgeDto,
     @CurrentUser() admin: RequestAdmin,
+    @Req() request: Request,
   ) {
-    return this.knowledgeAdminService.update(id, dto, admin.id);
-  }
-
-  @Delete(':id')
-  @Roles(AdminRole.SUPER_ADMIN, AdminRole.CONTENT_ADMIN)
-  @LogOperation({ module: 'knowledge', action: 'delete', description: '删除知识卡片' })
-  @ApiOperation({ summary: '删除知识卡片' })
-  @ApiParam({ name: 'id', description: '知识卡片 UUID' })
-  async remove(@Param('id') id: string) {
-    return this.knowledgeAdminService.remove(id);
+    const result = await this.knowledgeAdminService.update(id, dto, admin.id);
+    recordOperationLog(this.logService, request, {
+      module: 'knowledge',
+      action: 'update',
+      description: '更新知识卡片',
+      targetId: id,
+    });
+    return result;
   }
 
   @Delete('batch-delete')
   @Roles(AdminRole.SUPER_ADMIN, AdminRole.CONTENT_ADMIN)
-  @LogOperation({ module: 'knowledge', action: 'batch_delete', description: '批量删除知识卡片' })
   @ApiOperation({ summary: '批量删除知识卡片' })
-  async removeMany(@Body() dto: BatchDeleteDto) {
-    return this.knowledgeAdminService.removeMany(dto.ids);
+  async removeMany(@Body() dto: BatchDeleteDto, @Req() request: Request) {
+    const result = await this.knowledgeAdminService.removeMany(dto.ids);
+    recordOperationLog(this.logService, request, {
+      module: 'knowledge',
+      action: 'batch_delete',
+      description: `批量删除知识卡片 ${result.success} 条`,
+    });
+    return result;
+  }
+
+  @Delete(':id')
+  @Roles(AdminRole.SUPER_ADMIN, AdminRole.CONTENT_ADMIN)
+  @ApiOperation({ summary: '删除知识卡片' })
+  @ApiParam({ name: 'id', description: '知识卡片 UUID' })
+  async remove(@Param('id') id: string, @Req() request: Request) {
+    await this.knowledgeAdminService.remove(id);
+    recordOperationLog(this.logService, request, {
+      module: 'knowledge',
+      action: 'delete',
+      description: '删除知识卡片',
+      targetId: id,
+    });
+    return { success: true };
   }
 
   @Put(':id/status')
   @Roles(AdminRole.SUPER_ADMIN, AdminRole.CONTENT_ADMIN)
   @ApiOperation({ summary: '切换知识卡片状态（上架/下架）' })
   @ApiParam({ name: 'id', description: '知识卡片 UUID' })
-  async toggleStatus(@Param('id') id: string, @CurrentUser() admin: RequestAdmin) {
-    return this.knowledgeAdminService.toggleStatus(id, admin.id);
+  async toggleStatus(
+    @Param('id') id: string,
+    @CurrentUser() admin: RequestAdmin,
+    @Req() request: Request,
+  ) {
+    const result = await this.knowledgeAdminService.toggleStatus(id, admin.id);
+    recordOperationLog(this.logService, request, {
+      module: 'knowledge',
+      action: 'update_status',
+      description: '切换知识卡片状态',
+      targetId: id,
+    });
+    return result;
   }
 }

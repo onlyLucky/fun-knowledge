@@ -21,6 +21,13 @@ export class LogController {
     return this.logService.findAll(query);
   }
 
+  @Delete('batch-delete')
+  @Roles(AdminRole.SUPER_ADMIN)
+  @ApiOperation({ summary: '批量删除操作日志（仅超管）' })
+  async removeMany(@Body() dto: BatchDeleteDto) {
+    return this.logService.removeMany(dto.ids);
+  }
+
   @Delete(':id')
   @Roles(AdminRole.SUPER_ADMIN)
   @ApiOperation({ summary: '删除操作日志（仅超管）' })
@@ -28,12 +35,5 @@ export class LogController {
   async remove(@Param('id') id: string) {
     await this.logService.remove(id);
     return { success: true };
-  }
-
-  @Delete('batch-delete')
-  @Roles(AdminRole.SUPER_ADMIN)
-  @ApiOperation({ summary: '批量删除操作日志（仅超管）' })
-  async removeMany(@Body() dto: BatchDeleteDto) {
-    return this.logService.removeMany(dto.ids);
   }
 }

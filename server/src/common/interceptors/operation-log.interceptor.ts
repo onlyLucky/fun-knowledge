@@ -31,6 +31,8 @@ export class OperationLogInterceptor implements NestInterceptor {
       return next.handle();
     }
 
+    this.logger.debug(`[操作日志] 拦截到 ${options.module}/${options.action}`);
+
     const request = context.switchToHttp().getRequest();
     const admin = request.user;
     const ip = request.ip || request.headers['x-forwarded-for'] || '';
@@ -59,10 +61,12 @@ export class OperationLogInterceptor implements NestInterceptor {
               status: 1,
               duration,
             })
-            .catch((err) => this.logger.error('记录操作日志失败', err));
+            .then(() => this.logger.debug(`[操作日志] 写入成功: ${options.module}/${options.action}`))
+            .catch((err) => this.logger.error('[操作日志] 写入失败', err));
         },
         error: (err) => {
           const duration = Date.now() - startTime;
+          this.logger.debug(`[操作日志] 接口异常: ${options.module}/${options.action}`, err.message);
           this.logService
             .create({
               admin_id: admin?.id || '',
@@ -77,7 +81,7 @@ export class OperationLogInterceptor implements NestInterceptor {
               error_message: err.message,
               duration,
             })
-            .catch((logErr) => this.logger.error('记录操作日志失败', logErr));
+            .catch((logErr) => this.logger.error('[操作日志] 写入失败', logErr));
         },
       }),
     );
