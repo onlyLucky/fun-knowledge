@@ -16,6 +16,7 @@ import {
 } from '@nestjs/swagger';
 import { AdminAuthGuard } from '../../common/guards/admin-auth.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { LogOperation } from '../../common/decorators/log-operation.decorator';
 import { AdminRole } from '../../common/enums/user-role.enum';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
@@ -38,6 +39,7 @@ export class AdminController {
 
   @Post('create')
   @Roles(AdminRole.SUPER_ADMIN)
+  @LogOperation({ module: 'admin', action: 'create', description: '创建管理员' })
   @ApiOperation({ summary: '创建管理员（仅超管）' })
   async create(@Body() dto: CreateAdminDto) {
     return this.adminService.create(dto);
@@ -45,6 +47,7 @@ export class AdminController {
 
   @Put(':id')
   @Roles(AdminRole.SUPER_ADMIN)
+  @LogOperation({ module: 'admin', action: 'update', description: '更新管理员' })
   @ApiOperation({ summary: '更新管理员（仅超管）' })
   @ApiParam({ name: 'id', description: '管理员 UUID' })
   async update(@Param('id') id: string, @Body() dto: UpdateAdminDto) {
@@ -53,6 +56,7 @@ export class AdminController {
 
   @Put(':id/status')
   @Roles(AdminRole.SUPER_ADMIN)
+  @LogOperation({ module: 'admin', action: 'update', description: '更新管理员状态' })
   @ApiOperation({ summary: '更新管理员状态（仅超管）' })
   @ApiParam({ name: 'id', description: '管理员 UUID' })
   async updateStatus(

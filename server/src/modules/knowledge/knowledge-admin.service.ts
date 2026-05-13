@@ -104,6 +104,25 @@ export class KnowledgeAdminService {
   }
 
   /**
+   * 批量删除知识卡片（软删除）
+   */
+  async removeMany(ids: string[]): Promise<{ success: number; failed: number }> {
+    let success = 0;
+    let failed = 0;
+
+    for (const id of ids) {
+      try {
+        await this.remove(id);
+        success++;
+      } catch {
+        failed++;
+      }
+    }
+
+    return { success, failed };
+  }
+
+  /**
    * 切换知识卡片状态（上架/下架）
    */
   async toggleStatus(id: string, adminId: string): Promise<Knowledge> {

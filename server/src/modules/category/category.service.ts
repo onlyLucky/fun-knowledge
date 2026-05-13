@@ -58,6 +58,25 @@ export class CategoryService {
   }
 
   /**
+   * 批量删除类目（软删除）
+   */
+  async removeMany(ids: string[]): Promise<{ success: number; failed: number }> {
+    let success = 0;
+    let failed = 0;
+
+    for (const id of ids) {
+      try {
+        await this.remove(id);
+        success++;
+      } catch {
+        failed++;
+      }
+    }
+
+    return { success, failed };
+  }
+
+  /**
    * 批量更新排序
    */
   async updateSort(dto: UpdateSortDto): Promise<void> {

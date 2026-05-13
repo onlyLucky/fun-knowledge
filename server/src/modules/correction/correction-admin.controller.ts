@@ -11,6 +11,7 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiParam } from '@nestjs/swagger'
 import { AdminAuthGuard } from '../../common/guards/admin-auth.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { LogOperation } from '../../common/decorators/log-operation.decorator';
 import { AdminRole } from '../../common/enums/user-role.enum';
 import { CorrectionAdminService } from './correction-admin.service';
 import { QueryCorrectionDto } from './dto/query-correction.dto';
@@ -41,6 +42,7 @@ export class CorrectionAdminController {
 
   @Put(':id/review')
   @Roles(AdminRole.SUPER_ADMIN, AdminRole.CONTENT_ADMIN, AdminRole.REVIEWER)
+  @LogOperation({ module: 'correction', action: 'review', description: '审核纠错' })
   @ApiOperation({ summary: '审核纠错' })
   @ApiParam({ name: 'id', description: '纠错 UUID' })
   async review(

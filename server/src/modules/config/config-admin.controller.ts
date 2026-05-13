@@ -12,6 +12,7 @@ import {
 } from '@nestjs/swagger';
 import { AdminAuthGuard } from '../../common/guards/admin-auth.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { LogOperation } from '../../common/decorators/log-operation.decorator';
 import { AdminRole } from '../../common/enums/user-role.enum';
 import { ConfigService } from './config.service';
 import { UpdateConfigDto } from './dto/update-config.dto';
@@ -32,6 +33,7 @@ export class ConfigAdminController {
 
   @Put('update')
   @Roles(AdminRole.SUPER_ADMIN)
+  @LogOperation({ module: 'config', action: 'update', description: '更新系统配置' })
   @ApiOperation({ summary: '更新系统配置' })
   async update(@Body() dto: UpdateConfigDto) {
     return this.configService.update(dto.config_key, dto.config_value, dto.description);

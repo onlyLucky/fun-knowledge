@@ -2,6 +2,7 @@ import { Controller, Get, Put, Param, Body, Query, UseGuards } from '@nestjs/com
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { AdminAuthGuard } from '../../common/guards/admin-auth.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { LogOperation } from '../../common/decorators/log-operation.decorator';
 import { AdminRole } from '../../common/enums/user-role.enum';
 import { UserService } from './user.service';
 import { QueryUserDto } from './dto/query-user.dto';
@@ -31,6 +32,7 @@ export class UserController {
 
   @Put(':id/status')
   @Roles(AdminRole.SUPER_ADMIN)
+  @LogOperation({ module: 'user', action: 'update', description: '更新用户状态' })
   @ApiOperation({ summary: '更新用户状态' })
   @ApiParam({ name: 'id', description: '用户 UUID' })
   async updateStatus(

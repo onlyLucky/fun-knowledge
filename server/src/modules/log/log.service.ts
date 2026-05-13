@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { OperationLog, OperationLogDocument } from './schemas/operation-log.schema';
@@ -59,5 +59,23 @@ export class LogService {
       .lean();
 
     return new PaginatedResponseDto(list, total, page, pageSize);
+  }
+
+  /**
+   * 删除单条操作日志
+   */
+  async remove(id: string): Promise<void> {
+    const result = await this.operationLogModel.findByIdAndDelete(id);
+    if (!result) {
+      throw new NotFoundException('操作日志不存在');
+    }
+  }
+
+  /**
+   * 批量删除操作日志
+   */
+  async removeMany(ids: string[]): Promise<{ success: number; failed: number }> {
+    const result = await this.operationLogModel.deleteMany({ _id: { $in: ids } });
+    return { success: result.deletedCount, failed: ids.length - result.deletedCount };
   }
 }
