@@ -20,7 +20,7 @@ export class KnowledgeService {
    * 获取知识卡片列表（客户端）
    */
   async findAll(query: QueryKnowledgeDto): Promise<PaginatedResponseDto<Knowledge>> {
-    const { page = 1, pageSize = 10, title, category_id, tag } = query;
+    const { page = 1, pageSize = 10, title, category_id, tag, sortField, sortOrder } = query;
 
     const qb = this.knowledgeRepo
       .createQueryBuilder('k')
@@ -40,8 +40,17 @@ export class KnowledgeService {
       qb.andWhere('k.tags @> :tag', { tag: JSON.stringify([tag]) });
     }
 
-    qb.orderBy('k.sort_weight', 'DESC');
-    qb.addOrderBy('k.created_at', 'DESC');
+    // 动态排序
+    if (sortField && sortOrder) {
+      const direction = sortOrder === 'ascend' ? 'ASC' : 'DESC';
+      qb.orderBy(`k.${sortField}`, direction);
+      if (sortField !== 'sort_weight') {
+        qb.addOrderBy('k.sort_weight', 'DESC');
+      }
+    } else {
+      qb.orderBy('k.sort_weight', 'DESC');
+      qb.addOrderBy('k.created_at', 'DESC');
+    }
 
     const total = await qb.getCount();
     const list = await qb

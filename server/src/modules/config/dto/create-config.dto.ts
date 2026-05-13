@@ -2,16 +2,13 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsOptional, IsEnum, MaxLength } from 'class-validator';
 import { ConfigType } from '../../../common/enums/config-type.enum';
 
-/**
- * 更新系统配置 DTO
- */
-export class UpdateConfigDto {
-  @ApiProperty({ description: '配置键', maxLength: 100 })
+export class CreateConfigDto {
+  @ApiProperty({ description: '配置键', maxLength: 100, example: 'app_name' })
   @IsString()
   @MaxLength(100)
   config_key: string;
 
-  @ApiProperty({ description: '配置值' })
+  @ApiProperty({ description: '配置值', example: '冷知识星球' })
   @IsString()
   config_value: string;
 
@@ -21,7 +18,13 @@ export class UpdateConfigDto {
   @MaxLength(200)
   description?: string;
 
-  @ApiPropertyOptional({ description: '配置类型', enum: ConfigType })
+  @ApiPropertyOptional({ description: '配置分组', maxLength: 50, example: 'basic' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(50)
+  group?: string;
+
+  @ApiPropertyOptional({ description: '配置类型', enum: ConfigType, default: ConfigType.INPUT })
   @IsOptional()
   @IsEnum(ConfigType)
   config_type?: ConfigType;

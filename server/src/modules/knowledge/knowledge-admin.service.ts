@@ -22,7 +22,7 @@ export class KnowledgeAdminService {
    * 获取知识卡片列表（管理端）
    */
   async findAll(query: QueryKnowledgeDto): Promise<PaginatedResponseDto<Knowledge>> {
-    const { page = 1, pageSize = 10, title, category_id, status } = query;
+    const { page = 1, pageSize = 10, title, category_id, status, sortField, sortOrder } = query;
 
     const qb = this.knowledgeRepo
       .createQueryBuilder('k')
@@ -41,8 +41,17 @@ export class KnowledgeAdminService {
       qb.andWhere('k.status = :status', { status });
     }
 
-    qb.orderBy('k.sort_weight', 'DESC');
-    qb.addOrderBy('k.created_at', 'DESC');
+    // 动态排序：前端指定时使用前端排序，否则默认按 sort_weight + created_at 降序
+    if (sortField && sortOrder) {
+      const direction = sortOrder === 'ascend' ? 'ASC' : 'DESC';
+      qb.orderBy(`k.${sortField}`, direction);
+      if (sortField !== 'sort_weight') {
+        qb.addOrderBy('k.sort_weight', 'DESC');
+      }
+    } else {
+      qb.orderBy('k.sort_weight', 'DESC');
+      qb.addOrderBy('k.created_at', 'DESC');
+    }
 
     const total = await qb.getCount();
     const list = await qb
