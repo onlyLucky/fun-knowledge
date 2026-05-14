@@ -8,27 +8,23 @@ import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Job } from 'bull';
+import * as path from 'path';
 import { ImportTask } from './entities/import-task.entity';
 import { Knowledge } from '../knowledge/entities/knowledge.entity';
 import { Category } from '../category/entities/category.entity';
+import { UploadService } from '../upload/upload.service';
+import { UploadType } from '../upload/dto/upload.dto';
 import { ImportStatus } from '../../common/enums/status.enum';
+import type { ImportJobData, ExcelRow } from './import.service';
 
-/** 导入任务 Job 数据接口 */
-interface ImportJobData {
-  taskId: string;
-  rows: ImportRow[];
-}
-
-/** Excel 行数据接口 */
-interface ImportRow {
-  title: string;
-  content: string;
-  image_name?: string;
-  category_name: string;
-  tags?: string;
-  source?: string;
-  admin_id: string;
-}
+/** 扩展名 → resource_type 映射 */
+const EXT_TO_RESOURCE_TYPE: Record<string, string> = {
+  '.jpg': 'image', '.jpeg': 'image', '.png': 'image',
+  '.gif': 'image', '.webp': 'image', '.svg': 'image',
+  '.mp4': 'video', '.webm': 'video', '.mov': 'video',
+  '.mp3': 'audio', '.wav': 'audio', '.ogg': 'audio',
+  '.glb': 'model_3d', '.gltf': 'model_3d',
+};
 
 /**
  * 导入任务队列处理器
@@ -44,6 +40,7 @@ export class ImportProcessor {
     private readonly knowledgeRepo: Repository<Knowledge>,
     @InjectRepository(Category)
     private readonly categoryRepo: Repository<Category>,
+    private readonly uploadService: UploadService,
   ) {}
 
   /**
@@ -51,7 +48,7 @@ export class ImportProcessor {
    */
   @Process('import')
   async handleImport(job: Job<ImportJobData>): Promise<void> {
-    const { taskId, rows } = job.data;
+    const { taskId, rows, resourceMap } = job.data;
     this.logger.log(`开始处理导入任务: ${taskId}，共 ${rows.length} 条`);
 
     const task = await this.importTaskRepo.findOne({ where: { id: taskId } });
@@ -76,21 +73,81 @@ export class ImportProcessor {
           throw new Error(`类目不存在: ${row.category_name}`);
         }
 
+        // 查重：同一类目下标题不能重复
+        const existing = await this.knowledgeRepo.findOne({
+          where: { title: row.title, category_id: category.id },
+        });
+        if (existing) {
+          throw new Error('该类目下已存在相同标题的知识卡片');
+        }
+
         // 解析标签
         const tags = row.tags
           ? row.tags.split(',').map((t) => t.trim()).filter(Boolean)
           : [];
 
+        // 处理资源
+        let resourceUrl = '';
+        let resourceType = row.resource_type || '';
+
+        if (row.resource_url) {
+          if (row.resource_url.startsWith('http://') || row.resource_url.startsWith('https://')) {
+            // 在线 URL：直接使用
+            resourceUrl = row.resource_url;
+            if (!resourceType) {
+              resourceType = 'webpage';
+            }
+          } else if (resourceMap && resourceMap[row.resource_url]) {
+            // ZIP 内文件：上传到存储（Bull 序列化会将 Buffer 变为普通对象，需转回）
+            const raw = resourceMap[row.resource_url];
+            const buffer = Buffer.isBuffer(raw) ? raw : Buffer.from(raw);
+            const ext = path.extname(row.resource_url).toLowerCase();
+            const mimeMap: Record<string, string> = {
+              '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png',
+              '.gif': 'image/gif', '.webp': 'image/webp',
+              '.mp4': 'video/mp4', '.mp3': 'audio/mpeg', '.wav': 'audio/wav',
+              '.glb': 'model/gltf-binary', '.gltf': 'model/gltf+json',
+            };
+            const fakeFile: Express.Multer.File = {
+              buffer,
+              originalname: row.resource_url,
+              mimetype: mimeMap[ext] || 'application/octet-stream',
+              size: buffer.length,
+              fieldname: 'file',
+              encoding: '7bit',
+              destination: '',
+              filename: row.resource_url,
+              path: '',
+              stream: null as any,
+            };
+            const result = await this.uploadService.upload(fakeFile, UploadType.KNOWLEDGE);
+            resourceUrl = result.url;
+            if (!resourceType && result.resource_type) {
+              resourceType = result.resource_type;
+            }
+          } else {
+            // 文件名在 ZIP 中不存在
+            throw new Error(`资源文件不存在: ${row.resource_url}`);
+          }
+        }
+
+        // 自动推断 resource_type
+        if (!resourceType && resourceUrl) {
+          const ext = path.extname(resourceUrl).toLowerCase();
+          resourceType = EXT_TO_RESOURCE_TYPE[ext] || 'webpage';
+        }
+
         const knowledge = new Knowledge();
-          knowledge.title = row.title;
-          knowledge.content = row.content;
-          knowledge.resource_url = row.image_name || '';
-          knowledge.category_id = category.id;
-          knowledge.tags = tags;
-          knowledge.source = row.source || '';
-          knowledge.created_by = row.admin_id;
-          knowledge.updated_by = row.admin_id;
-          knowledge.status = 1; // 默认上架
+        knowledge.title = row.title;
+        knowledge.content = row.content;
+        knowledge.resource_url = resourceUrl;
+        knowledge.resource_type = resourceType;
+        knowledge.category_id = category.id;
+        knowledge.tags = tags;
+        knowledge.source = row.source || '';
+        knowledge.created_by = row.admin_id;
+        knowledge.updated_by = row.admin_id;
+        knowledge.status = row.status ?? 1;
 
         await this.knowledgeRepo.save(knowledge);
         successCount++;

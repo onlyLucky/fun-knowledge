@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Knowledge } from './entities/knowledge.entity';
@@ -66,6 +66,13 @@ export class KnowledgeAdminService {
    * 创建知识卡片
    */
   async create(dto: CreateKnowledgeDto, adminId: string): Promise<Knowledge> {
+    const existing = await this.knowledgeRepo.findOne({
+      where: { title: dto.title, category_id: dto.category_id },
+    });
+    if (existing) {
+      throw new ConflictException('该类目下已存在相同标题的知识卡片');
+    }
+
     const knowledge = this.knowledgeRepo.create({
       ...dto,
       created_by: adminId,

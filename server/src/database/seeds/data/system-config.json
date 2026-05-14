@@ -97,5 +97,26 @@
     "description": "各类型文件上传大小限制（字节）：image 3MB, video 50MB, model_3d 30MB, audio 10MB",
     "group": "upload",
     "config_type": "json"
+  },
+  {
+    "config_key": "import_max_zip_size",
+    "config_value": "52428800",
+    "description": "批量导入 ZIP 最大体积（字节），默认 50MB",
+    "group": "upload",
+    "config_type": "number"
+  },
+  {
+    "config_key": "import_max_resources",
+    "config_value": "500",
+    "description": "批量上传最大资源文件个数",
+    "group": "upload",
+    "config_type": "number"
+  },
+  {
+    "config_key": "import_allowed_resource_types",
+    "config_value": "image/jpeg,image/png,image/gif,image/webp,video/mp4,audio/mpeg,audio/wav,model/gltf-binary",
+    "description": "批量上传允许的资源 MIME 类型",
+    "group": "upload",
+    "config_type": "textarea"
   }
 ]

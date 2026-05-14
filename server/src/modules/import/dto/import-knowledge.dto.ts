@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsOptional, IsArray, IsUUID, MaxLength } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsInt, IsIn, MaxLength } from 'class-validator';
 
 /**
  * 导入知识 DTO - 对应 Excel 每一行
@@ -16,11 +16,23 @@ export class ImportKnowledgeDto {
   @IsNotEmpty()
   content: string;
 
-  @ApiPropertyOptional({ description: '图片文件名（对应压缩包内图片）' })
+  @ApiPropertyOptional({ description: '状态：0-下架，1-上架', enum: [0, 1], default: 1 })
+  @IsOptional()
+  @IsInt()
+  @IsIn([0, 1])
+  status?: number;
+
+  @ApiPropertyOptional({ description: '资源类型：image/video/audio/model_3d/webpage' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  resource_type?: string;
+
+  @ApiPropertyOptional({ description: '资源 URL（文件名或 http/https 在线地址）' })
   @IsOptional()
   @IsString()
   @MaxLength(500)
-  image_name?: string;
+  resource_url?: string;
 
   @ApiProperty({ description: '类目名称' })
   @IsString()

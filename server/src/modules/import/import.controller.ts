@@ -18,6 +18,7 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Throttle } from '@nestjs/throttler';
 import { Response } from 'express';
 import { AdminAuthGuard } from '../../common/guards/admin-auth.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -34,8 +35,9 @@ export class ImportController {
   constructor(private readonly importService: ImportService) {}
 
   @Post('import')
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Roles(AdminRole.SUPER_ADMIN, AdminRole.CONTENT_ADMIN)
-  @ApiOperation({ summary: '批量导入知识（上传 Excel 文件）' })
+  @ApiOperation({ summary: '批量导入知识（上传 ZIP 压缩包）' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -44,18 +46,27 @@ export class ImportController {
         file: {
           type: 'string',
           format: 'binary',
-          description: 'Excel 文件（.xlsx）',
+          description: 'ZIP 压缩包（内含 Excel + resources/ 文件夹）',
         },
       },
     },
   })
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: { fileSize: 50 * 1024 * 1024 }, // 50MB
+    }),
+  )
   async startImport(
     @CurrentUser() admin: RequestAdmin,
     @UploadedFile() file: Express.Multer.File,
   ) {
     if (!file) {
-      throw new BadRequestException('请上传 Excel 文件');
+      throw new BadRequestException('请上传 ZIP 压缩包');
+    }
+    // 校验 MIME 类型
+    const allowedMimes = ['application/zip', 'application/x-zip-compressed', 'application/octet-stream'];
+    if (!allowedMimes.includes(file.mimetype)) {
+      throw new BadRequestException('仅支持 ZIP 格式的压缩包');
     }
     return this.importService.startImport(admin.id, file);
   }
@@ -66,8 +77,8 @@ export class ImportController {
   async getTemplate(@Res() res: Response) {
     const buffer = this.importService.getTemplate();
     res.set({
-      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'Content-Disposition': 'attachment; filename=import-template.xlsx',
+      'Content-Type': 'application/zip',
+      'Content-Disposition': 'attachment; filename=import-template.zip',
     });
     res.send(buffer);
   }

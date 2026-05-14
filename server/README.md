@@ -121,64 +121,108 @@ server/
 
 ## API 接口
 
+> 状态码说明：**200** = 成功，**201** = 创建成功，**400** = 参数错误，**401** = 未认证，**403** = 无权限，**404** = 资源不存在，**409** = 冲突（重复），**500** = 服务端错误
+
 ### 客户端接口（/api/v1/）
 
-| 模块 | 接口 | 说明 |
-|------|------|------|
-| 认证 | POST /v1/auth/login | 登录（微信/多平台） |
-| 认证 | GET /v1/auth/profile | 获取用户信息 |
-| 认证 | PUT /v1/auth/profile | 更新用户信息 |
-| 认证 | POST /v1/auth/bind/:platform | 绑定平台账号 |
-| 认证 | DELETE /v1/auth/unbind/:platform | 解绑平台账号 |
-| 知识 | GET /v1/knowledge/list | 卡片列表 |
-| 知识 | GET /v1/knowledge/:id | 卡片详情 |
-| 知识 | GET /v1/knowledge/recommend | 推荐卡片 |
-| 知识 | POST /v1/knowledge/recommend/feedback | 推荐反馈 |
-| 类目 | GET /v1/category/list | 类目列表 |
-| 收藏 | POST /v1/favorite | 添加收藏 |
-| 收藏 | DELETE /v1/favorite/:knowledge_id | 取消收藏 |
-| 收藏 | GET /v1/favorite/list | 收藏列表 |
-| 纠错 | POST /v1/correction | 提交纠错 |
-| 纠错 | GET /v1/correction/list | 我的纠错 |
-| 打卡 | POST /v1/check-in | 每日打卡 |
-| 打卡 | GET /v1/check-in/status | 打卡状态 |
-| 打卡 | GET /v1/check-in/history | 打卡历史 |
-| AI | POST /v1/ai/extend | AI 延伸解读 |
-| AI | POST /v1/ai/image-recognize | AI 图片识别 |
-| 配置 | GET /v1/config | 获取系统配置 |
+| 模块 | 接口 | 说明 | 状态码 |
+|------|------|------|--------|
+| 认证 | POST /v1/auth/login | 登录（微信/多平台） | 200 |
+| 认证 | GET /v1/auth/profile | 获取用户信息 | 200 |
+| 认证 | PUT /v1/auth/profile | 更新用户信息 | 200 |
+| 认证 | POST /v1/auth/bind/:platform | 绑定平台账号 | 200 |
+| 认证 | DELETE /v1/auth/unbind/:platform | 解绑平台账号 | 200 |
+| 知识 | GET /v1/knowledge/list | 卡片列表 | 200 |
+| 知识 | GET /v1/knowledge/:id | 卡片详情 | 200 |
+| 知识 | GET /v1/knowledge/recommend | 推荐卡片 | 200 |
+| 知识 | POST /v1/knowledge/recommend/feedback | 推荐反馈 | 201 |
+| 类目 | GET /v1/category/list | 类目列表 | 200 |
+| 收藏 | POST /v1/favorite | 添加收藏 | 201 |
+| 收藏 | DELETE /v1/favorite/:knowledge_id | 取消收藏 | 200 |
+| 收藏 | GET /v1/favorite/list | 收藏列表 | 200 |
+| 纠错 | POST /v1/correction | 提交纠错 | 201 |
+| 纠错 | GET /v1/correction/list | 我的纠错 | 200 |
+| 打卡 | POST /v1/check-in | 每日打卡 | 201 |
+| 打卡 | GET /v1/check-in/status | 打卡状态 | 200 |
+| 打卡 | GET /v1/check-in/history | 打卡历史 | 200 |
+| AI | POST /v1/ai/extend | AI 延伸解读 | 201 |
+| AI | POST /v1/ai/image-recognize | AI 图片识别 | 201 |
+| 上传 | POST /v1/upload?type=avatar | 上传文件 | 201 |
+| 配置 | GET /v1/config | 获取系统配置 | 200 |
 
 ### 管理端接口（/api/admin/v1/）
 
-| 模块 | 接口 | 说明 |
-|------|------|------|
-| 认证 | POST /admin/v1/auth/login | 管理员登录 |
-| 认证 | POST /admin/v1/auth/logout | 管理员登出 |
-| 知识 | GET /admin/v1/knowledge/list | 卡片列表 |
-| 知识 | POST /admin/v1/knowledge/create | 创建卡片 |
-| 知识 | PUT /admin/v1/knowledge/:id | 更新卡片 |
-| 知识 | DELETE /admin/v1/knowledge/:id | 删除卡片 |
-| 知识 | PUT /admin/v1/knowledge/:id/status | 上架/下架 |
-| 知识 | POST /admin/v1/knowledge/import | 批量导入 |
-| 知识 | GET /admin/v1/knowledge/template | 下载模板 |
-| 知识 | GET /admin/v1/knowledge/import/:id | 导入状态 |
-| 用户 | GET /admin/v1/user/list | 用户列表 |
-| 用户 | GET /admin/v1/user/:id | 用户详情 |
-| 用户 | PUT /admin/v1/user/:id/status | 用户状态 |
-| 类目 | GET /admin/v1/category/list | 类目列表 |
-| 类目 | POST /admin/v1/category/create | 创建类目 |
-| 类目 | PUT /admin/v1/category/:id | 更新类目 |
-| 类目 | DELETE /admin/v1/category/:id | 删除类目 |
-| 类目 | PUT /admin/v1/category/sort | 更新排序 |
-| 纠错 | GET /admin/v1/correction/list | 纠错列表 |
-| 纠错 | GET /admin/v1/correction/:id | 纠错详情 |
-| 纠错 | PUT /admin/v1/correction/:id/review | 审核纠错 |
-| 管理员 | GET /admin/v1/admin/list | 管理员列表 |
-| 管理员 | POST /admin/v1/admin/create | 创建管理员 |
-| 管理员 | PUT /admin/v1/admin/:id | 更新管理员 |
-| 管理员 | PUT /admin/v1/admin/:id/status | 管理员状态 |
-| 配置 | GET /admin/v1/config/list | 配置列表 |
-| 配置 | PUT /admin/v1/config/update | 更新配置 |
-| 日志 | GET /admin/v1/log/list | 操作日志 |
+| 模块 | 接口 | 说明 | 状态码 |
+|------|------|------|--------|
+| 认证 | POST /admin/v1/auth/login | 管理员登录 | 200 |
+| 认证 | POST /admin/v1/auth/logout | 管理员登出 | 200 |
+| 知识 | GET /admin/v1/knowledge/list | 卡片列表 | 200 |
+| 知识 | POST /admin/v1/knowledge/create | 创建卡片 | 201 |
+| 知识 | PUT /admin/v1/knowledge/:id | 更新卡片 | 200 |
+| 知识 | DELETE /admin/v1/knowledge/:id | 删除卡片 | 200 |
+| 知识 | DELETE /admin/v1/knowledge/batch-delete | 批量删除卡片 | 200 |
+| 知识 | PUT /admin/v1/knowledge/:id/status | 上架/下架 | 200 |
+| 知识 | POST /admin/v1/knowledge/import | 批量导入 | 201 |
+| 知识 | GET /admin/v1/knowledge/template | 下载模板 | 200 |
+| 知识 | GET /admin/v1/knowledge/import/:id | 导入状态 | 200 |
+| 用户 | GET /admin/v1/user/list | 用户列表 | 200 |
+| 用户 | GET /admin/v1/user/:id | 用户详情 | 200 |
+| 用户 | PUT /admin/v1/user/:id/status | 用户状态 | 200 |
+| 类目 | GET /admin/v1/category/list | 类目列表 | 200 |
+| 类目 | POST /admin/v1/category/create | 创建类目 | 201 |
+| 类目 | PUT /admin/v1/category/:id | 更新类目 | 200 |
+| 类目 | DELETE /admin/v1/category/:id | 删除类目 | 200 |
+| 类目 | DELETE /admin/v1/category/batch-delete | 批量删除类目 | 200 |
+| 类目 | PUT /admin/v1/category/sort | 更新排序 | 200 |
+| 纠错 | GET /admin/v1/correction/list | 纠错列表 | 200 |
+| 纠错 | GET /admin/v1/correction/:id | 纠错详情 | 200 |
+| 纠错 | PUT /admin/v1/correction/:id/review | 审核纠错 | 200 |
+| 管理员 | GET /admin/v1/admin/list | 管理员列表 | 200 |
+| 管理员 | POST /admin/v1/admin/create | 创建管理员 | 201 |
+| 管理员 | PUT /admin/v1/admin/:id | 更新管理员 | 200 |
+| 管理员 | PUT /admin/v1/admin/:id/status | 管理员状态 | 200 |
+| 配置 | GET /admin/v1/config/list | 配置列表 | 200 |
+| 配置 | POST /admin/v1/config/create | 创建配置项 | 201 |
+| 配置 | PUT /admin/v1/config/update | 更新配置 | 200 |
+| 配置 | DELETE /admin/v1/config/:id | 删除配置项 | 200 |
+| 配置 | DELETE /admin/v1/config/batch-delete | 批量删除配置项 | 200 |
+| 配置 | GET /admin/v1/config/groups | 获取配置分组 | 200 |
+| 上传 | POST /admin/v1/upload?type=avatar\|knowledge | 上传文件 | 201 |
+| 日志 | GET /admin/v1/log/list | 操作日志 | 200 |
+| 日志 | GET /admin/v1/log/:id | 日志详情 | 200 |
+| 日志 | DELETE /admin/v1/log/:id | 删除日志 | 200 |
+| 日志 | DELETE /admin/v1/log/batch-delete | 批量删除日志 | 200 |
+
+### 通用错误响应
+
+所有接口在出错时返回统一格式：
+
+```json
+{
+  "code": 400,
+  "message": "错误信息",
+  "data": null,
+  "timestamp": "2026-05-14 09:00:00",
+  "path": "/api/v1/xxx"
+}
+```
+
+| 状态码 | 说明 | 常见场景 |
+|--------|------|----------|
+| 400 | 参数校验失败 | DTO 验证不通过、类型错误 |
+| 401 | 未认证 | Token 缺失、过期、无效 |
+| 403 | 无权限 | 角色权限不足 |
+| 404 | 资源不存在 | ID 不存在、已删除 |
+| 409 | 资源冲突 | 创建重复数据（如重复的配置键） |
+| 500 | 服务端错误 | 未捕获异常 |
+
+### 端口占用
+
+如果端口 3000 被占用，可以使用以下命令杀死占用该端口的进程：
+
+```bash
+lsof -ti:3000 | xargs kill -9 2>/dev/null; echo "done"
+
 
 ## 开发规范
 

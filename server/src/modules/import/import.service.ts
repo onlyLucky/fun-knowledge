@@ -1,21 +1,49 @@
-import { Injectable, NotFoundException, Logger } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import * as XLSX from 'xlsx';
+import * as AdmZip from 'adm-zip';
+import * as path from 'path';
 import { ImportTask } from './entities/import-task.entity';
 import { ImportStatus } from '../../common/enums/status.enum';
+import { ConfigService as AppConfigService } from '../config/config.service';
 
 /** Excel 行数据接口 */
-interface ExcelRow {
+export interface ExcelRow {
   title: string;
   content: string;
-  image_name?: string;
+  status?: number;
+  resource_type?: string;
+  resource_url?: string;
   category_name: string;
   tags?: string;
   source?: string;
 }
+
+/** Bull 队列 Job 数据 */
+export interface ImportJobData {
+  taskId: string;
+  rows: Array<ExcelRow & { admin_id: string }>;
+  resourceMap?: Record<string, Buffer>;
+}
+
+/** 可执行/脚本文件扩展名黑名单 */
+const DANGEROUS_EXTENSIONS = new Set([
+  '.php', '.asp', '.aspx', '.jsp', '.jspx',
+  '.sh', '.bash', '.bat', '.cmd', '.ps1',
+  '.exe', '.dll', '.so', '.dylib',
+  '.js', '.mjs', '.cjs',
+  '.html', '.htm', '.xhtml',
+  '.svg', '.xml',
+]);
+
+/** ZIP 安全常量 */
+const MAX_SINGLE_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_TOTAL_EXTRACT_SIZE = 200 * 1024 * 1024; // 200MB
+const DEFAULT_MAX_RESOURCES = 500;
+const DEFAULT_MAX_ZIP_SIZE = 50 * 1024 * 1024; // 50MB
 
 /**
  * 导入服务
@@ -29,70 +57,253 @@ export class ImportService {
     private readonly importTaskRepo: Repository<ImportTask>,
     @InjectQueue('knowledge-import')
     private readonly importQueue: Queue,
+    private readonly appConfigService: AppConfigService,
   ) {}
 
   /**
-   * 启动批量导入
+   * 启动批量导入（ZIP 压缩包）
    */
   async startImport(adminId: string, file: Express.Multer.File): Promise<ImportTask> {
-    // 创建导入任务记录
+    // 读取系统配置
+    const maxZipSize = await this.getConfigNumber('import_max_zip_size', DEFAULT_MAX_ZIP_SIZE);
+    const maxResources = await this.getConfigNumber('import_max_resources', DEFAULT_MAX_RESOURCES);
+
+    // 1. ZIP 大小校验
+    if (file.size > maxZipSize) {
+      throw new BadRequestException(`ZIP 文件大小不能超过 ${Math.round(maxZipSize / 1024 / 1024)}MB`);
+    }
+
+    // 2. 解析 ZIP
+    let zip: AdmZip;
+    try {
+      zip = new AdmZip(file.buffer);
+    } catch {
+      throw new BadRequestException('无法解析 ZIP 文件，请确认文件格式正确');
+    }
+
+    const entries = zip.getEntries();
+
+    // 3. 安全校验
+    let totalExtractSize = 0;
+    let resourceCount = 0;
+    const resourceMap: Record<string, Buffer> = {};
+    let xlsxEntry: AdmZip.IZipEntry | null = null;
+
+    for (const entry of entries) {
+      // 跳过目录和 macOS 元数据文件
+      if (entry.isDirectory) continue;
+      if (entry.entryName.startsWith('__MACOSX/') || path.basename(entry.entryName).startsWith('._')) continue;
+
+      // 路径穿越检查
+      if (entry.entryName.includes('..') || /^[A-Za-z]:\\/.test(entry.entryName) || entry.entryName.startsWith('/')) {
+        throw new BadRequestException(`ZIP 内存在不安全的路径: ${entry.entryName}`);
+      }
+
+      // 扩展名黑名单
+      const ext = path.extname(entry.entryName).toLowerCase();
+      if (DANGEROUS_EXTENSIONS.has(ext)) {
+        throw new BadRequestException(`ZIP 内包含不允许的文件类型: ${entry.entryName}`);
+      }
+
+      // 单文件大小限制
+      if (entry.header.size > MAX_SINGLE_FILE_SIZE) {
+        throw new BadRequestException(`文件 ${entry.entryName} 大小超过 10MB 限制`);
+      }
+
+      // 累计解压大小
+      totalExtractSize += entry.header.size;
+      if (totalExtractSize > MAX_TOTAL_EXTRACT_SIZE) {
+        throw new BadRequestException('ZIP 解压后总大小超过 200MB 限制');
+      }
+
+      // 文件数量限制
+      const extLower = ext.toLowerCase();
+      if (extLower === '.xlsx') {
+        if (xlsxEntry) {
+          throw new BadRequestException('ZIP 内只能包含一个 .xlsx 文件');
+        }
+        xlsxEntry = entry;
+      } else {
+        resourceCount++;
+        if (resourceCount > maxResources) {
+          throw new BadRequestException(`资源文件数量超过 ${maxResources} 个限制`);
+        }
+        // 用 basename 作为 key，方便 Excel 中按文件名引用
+        const basename = path.basename(entry.entryName);
+        resourceMap[basename] = entry.getData();
+      }
+    }
+
+    if (!xlsxEntry) {
+      throw new BadRequestException('ZIP 内未找到 .xlsx 文件');
+    }
+
+    // 4. 解析 Excel
+    const workbook = XLSX.read(xlsxEntry.getData(), { type: 'buffer' });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const rawRows: Record<string, unknown>[] = XLSX.utils.sheet_to_json(worksheet);
+
+    if (rawRows.length === 0) {
+      throw new BadRequestException('Excel 文件为空');
+    }
+
+    // 5. 解析并清洗行数据
+    const rows: ExcelRow[] = rawRows.map((raw, idx) => this.parseRow(raw, idx + 2));
+
+    // 6. 创建导入任务记录
     const task = this.importTaskRepo.create({
       admin_id: adminId,
-      file_url: file.path || file.originalname,
-      total_count: 0,
+      file_url: file.originalname,
+      total_count: rows.length,
       success_count: 0,
       fail_count: 0,
       status: ImportStatus.PROCESSING,
     });
     await this.importTaskRepo.save(task);
 
-    // 解析 Excel 文件
-    const workbook = XLSX.read(file.buffer, { type: 'buffer' });
-    const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
-    const rows: ExcelRow[] = XLSX.utils.sheet_to_json(worksheet);
-
-    // 更新任务总行数
-    task.total_count = rows.length;
-    await this.importTaskRepo.save(task);
-
-    if (rows.length === 0) {
-      task.status = ImportStatus.FAILED;
-      task.error_log = 'Excel 文件为空';
-      task.completed_at = new Date();
-      await this.importTaskRepo.save(task);
-      return task;
-    }
-
-    // 将行数据与 adminId 关联后推入队列
-    const importRows = rows.map((row) => ({
-      ...row,
-      admin_id: adminId,
-    }));
-
-    await this.importQueue.add('import', {
+    // 7. 推入队列（含资源文件 Map）
+    const importRows = rows.map((row) => ({ ...row, admin_id: adminId }));
+    const jobData: ImportJobData = {
       taskId: task.id,
       rows: importRows,
-    });
+      resourceMap: Object.keys(resourceMap).length > 0 ? resourceMap : undefined,
+    };
+    await this.importQueue.add('import', jobData);
 
-    this.logger.log(`导入任务已创建: ${task.id}，共 ${rows.length} 条数据`);
+    this.logger.log(`导入任务已创建: ${task.id}，共 ${rows.length} 条数据，${resourceCount} 个资源文件`);
     return task;
   }
 
   /**
-   * 生成导入模板
+   * 解析并清洗单行数据
+   */
+  private parseRow(raw: Record<string, unknown>, rowNum: number): ExcelRow {
+    const title = this.sanitizeText(String(raw['标题'] || ''), 200);
+    const content = this.sanitizeText(String(raw['内容'] || ''));
+
+    if (!title) {
+      throw new BadRequestException(`第 ${rowNum} 行：标题不能为空`);
+    }
+    if (!content) {
+      throw new BadRequestException(`第 ${rowNum} 行：内容不能为空`);
+    }
+
+    const categoryName = this.sanitizeText(String(raw['类目名称'] || ''), 50);
+    if (!categoryName) {
+      throw new BadRequestException(`第 ${rowNum} 行：类目名称不能为空`);
+    }
+
+    // 状态：0 或 1
+    let status: number | undefined;
+    const rawStatus = raw['状态'];
+    if (rawStatus !== undefined && rawStatus !== '') {
+      status = Number(rawStatus);
+      if (status !== 0 && status !== 1) {
+        throw new BadRequestException(`第 ${rowNum} 行：状态必须为 0 或 1`);
+      }
+    }
+
+    // 资源类型
+    const resourceType = raw['资源类型'] ? this.sanitizeText(String(raw['资源类型']), 20) : undefined;
+
+    // 资源 URL：文件名或 http/https 在线地址
+    let resourceUrl: string | undefined;
+    const rawUrl = raw['资源URL'] ? String(raw['资源URL']).trim() : '';
+    if (rawUrl) {
+      if (rawUrl.startsWith('http://') || rawUrl.startsWith('https://')) {
+        resourceUrl = this.sanitizeUrl(rawUrl);
+      } else {
+        // 文件名：仅允许安全字符
+        const basename = path.basename(rawUrl);
+        if (basename.includes('..') || DANGEROUS_EXTENSIONS.has(path.extname(basename).toLowerCase())) {
+          throw new BadRequestException(`第 ${rowNum} 行：资源文件名不安全`);
+        }
+        resourceUrl = basename;
+      }
+    }
+
+    const tags = raw['标签（逗号分隔）'] ? this.sanitizeText(String(raw['标签（逗号分隔）']), 500) : undefined;
+    const source = raw['来源'] ? this.sanitizeText(String(raw['来源']), 200) : undefined;
+
+    return {
+      title,
+      content,
+      status,
+      resource_type: resourceType,
+      resource_url: resourceUrl,
+      category_name: categoryName,
+      tags,
+      source,
+    };
+  }
+
+  /**
+   * 清洗文本内容 — 防 XSS
+   */
+  private sanitizeText(text: string, maxLength?: number): string {
+    let cleaned = text
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // 移除 script 标签
+      .replace(/javascript:/gi, '') // 移除 javascript: 协议
+      .replace(/on\w+\s*=/gi, '') // 移除事件处理器
+      .trim();
+
+    if (maxLength && cleaned.length > maxLength) {
+      cleaned = cleaned.substring(0, maxLength);
+    }
+    return cleaned;
+  }
+
+  /**
+   * 清洗 URL — 仅允许 http/https
+   */
+  private sanitizeUrl(url: string): string {
+    const cleaned = url.trim();
+    if (!/^https?:\/\//i.test(cleaned)) {
+      throw new BadRequestException('在线资源 URL 必须以 http:// 或 https:// 开头');
+    }
+    // 长度限制
+    if (cleaned.length > 500) {
+      throw new BadRequestException('资源 URL 长度不能超过 500');
+    }
+    return cleaned;
+  }
+
+  /**
+   * 读取系统配置（数字类型）
+   */
+  private async getConfigNumber(key: string, defaultValue: number): Promise<number> {
+    try {
+      const config = await this.appConfigService.findByKey(key);
+      return Number(config.config_value) || defaultValue;
+    } catch {
+      return defaultValue;
+    }
+  }
+
+  /**
+   * 生成导入模板（ZIP 格式）
    */
   getTemplate(): Buffer {
-    const headers = ['标题', '内容', '图片文件名', '类目名称', '标签（逗号分隔）', '来源'];
-    const exampleRow = ['太阳为什么是圆的', '引力使物质均匀分布...', 'sun.jpg', '科学', '天文,物理', '维基百科'];
+    const headers = ['标题', '内容', '状态', '资源类型', '资源URL', '类目名称', '标签（逗号分隔）', '来源'];
+    const exampleRow = [
+      '太阳为什么是圆的',
+      '引力使物质均匀分布...',
+      '1',
+      'image',
+      'sun.jpg',
+      '科学',
+      '天文,物理',
+      '维基百科',
+    ];
 
     const worksheet = XLSX.utils.aoa_to_sheet([headers, exampleRow]);
-
-    // 设置列宽
     worksheet['!cols'] = [
       { wch: 30 }, // 标题
       { wch: 60 }, // 内容
-      { wch: 20 }, // 图片文件名
+      { wch: 8 },  // 状态
+      { wch: 12 }, // 资源类型
+      { wch: 25 }, // 资源URL
       { wch: 15 }, // 类目名称
       { wch: 25 }, // 标签
       { wch: 20 }, // 来源
@@ -100,8 +311,13 @@ export class ImportService {
 
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, '导入模板');
+    const xlsxBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
 
-    return XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+    // 打包为 ZIP（含 Excel + resources/ 空文件夹）
+    const zip = new AdmZip();
+    zip.addFile('导入模板.xlsx', xlsxBuffer);
+    zip.addFile('resources/', Buffer.alloc(0));
+    return zip.toBuffer();
   }
 
   /**
