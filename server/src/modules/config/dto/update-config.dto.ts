@@ -21,6 +21,12 @@ export class UpdateConfigDto {
   @MaxLength(200)
   description?: string;
 
+  @ApiPropertyOptional({ description: '配置分组', maxLength: 50, example: 'basic' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(50)
+  group?: string;
+
   @ApiPropertyOptional({ description: '配置类型', enum: ConfigType })
   @IsOptional()
   @IsEnum(ConfigType)

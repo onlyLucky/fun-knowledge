@@ -51,6 +51,7 @@ export class ConfigAdminController {
       dto.config_key,
       dto.config_value,
       dto.description,
+      dto.group,
       dto.config_type,
       dto.options,
     );

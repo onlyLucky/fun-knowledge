@@ -7,4 +7,5 @@ export enum ConfigType {
   COLOR = 'color',
   DATE = 'date',
   JSON = 'json',
+  STORAGE = 'storage',
 }

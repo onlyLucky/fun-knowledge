@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsInt, IsIn } from 'class-validator';
+import { IsOptional, IsInt, IsIn, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PaginationDto } from '../../../common/dto/pagination.dto';
 
@@ -13,4 +13,9 @@ export class QueryCorrectionDto extends PaginationDto {
   @Type(() => Number)
   @IsIn([0, 1, 2])
   status?: number;
+
+  @ApiPropertyOptional({ description: '关键词（搜索知识标题或纠错描述）' })
+  @IsOptional()
+  @IsString()
+  keyword?: string;
 }

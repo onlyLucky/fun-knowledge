@@ -24,7 +24,7 @@ export class CorrectionAdminService {
    * 获取所有纠错列表（管理端）
    */
   async findAll(query: QueryCorrectionDto): Promise<PaginatedResponseDto<Correction>> {
-    const { page = 1, pageSize = 10, status } = query;
+    const { page = 1, pageSize = 10, status, keyword } = query;
 
     const qb = this.correctionRepo
       .createQueryBuilder('c')
@@ -33,6 +33,10 @@ export class CorrectionAdminService {
 
     if (status !== undefined) {
       qb.andWhere('c.status = :status', { status });
+    }
+
+    if (keyword) {
+      qb.andWhere('(k.title LIKE :kw OR c.description LIKE :kw)', { kw: `%${keyword}%` });
     }
 
     qb.orderBy('c.created_at', 'DESC');

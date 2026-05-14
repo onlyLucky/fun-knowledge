@@ -73,6 +73,7 @@ export class ConfigService {
     key: string,
     value: string,
     description?: string,
+    group?: string,
     configType?: string,
     options?: string,
   ): Promise<SystemConfig> {
@@ -87,6 +88,9 @@ export class ConfigService {
     config.config_value = value;
     if (description !== undefined) {
       config.description = description;
+    }
+    if (group !== undefined) {
+      config.group = group;
     }
     if (configType !== undefined) {
       config.config_type = configType as any;
