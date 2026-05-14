@@ -64,8 +64,8 @@ export function FormModal({
   const [imgError, setImgError] = useState(false);
 
   const { data: categories = [] } = useQuery<Category[]>({
-    queryKey: ["categories", "all"],
-    queryFn: () => httpClient.get(CATEGORY_ENDPOINTS.list),
+    queryKey: ["categories", "enabled"],
+    queryFn: () => httpClient.get(CATEGORY_ENDPOINTS.enabled),
     select: (raw) => categoryListSchema.parse(raw),
     staleTime: 5 * 60 * 1000,
   });
@@ -145,28 +145,23 @@ export function FormModal({
         />
       </Form.Item>
       <Form.Item label={t`资源`}>
-        <Space direction="vertical" style={{ width: "100%" }} size="small">
+        <Space orientation="vertical" style={{ width: "100%" }} size="small">
           <Form.Item name="resource_url" noStyle>
-            <Input
-              placeholder={t`输入图片或视频链接`}
-              onChange={handleUrlChange}
-              addonAfter={
-                <Upload
-                  beforeUpload={handleUpload}
-                  showUploadList={false}
-                  accept="image/*,video/*"
-                  disabled={uploading}
-                >
-                  <Button
-                    type="text"
-                    size="small"
-                    icon={<UploadIcon size={14} />}
-                    loading={uploading}
-                    style={{ margin: -4 }}
-                  />
-                </Upload>
-              }
-            />
+            <Space.Compact style={{ width: "100%" }}>
+              <Input
+                placeholder={t`输入图片或视频链接`}
+                onChange={handleUrlChange}
+                style={{ flex: 1 }}
+              />
+              <Upload
+                beforeUpload={handleUpload}
+                showUploadList={false}
+                accept="image/*,video/*"
+                disabled={uploading}
+              >
+                <Button icon={<UploadIcon size={14} />} loading={uploading} />
+              </Upload>
+            </Space.Compact>
           </Form.Item>
           {resourceUrl && (
             <div style={{ position: "relative" }}>

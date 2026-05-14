@@ -156,8 +156,8 @@ export function useResourceCRUD<
       options.deleteLifecycle?.onMutate?.(id);
       return { snapshot: applied ? previous : undefined };
     },
-    onSuccess: (_data, id) => {
-      void queryClient.invalidateQueries({ queryKey: invalidateKey });
+    onSuccess: async (_data, id) => {
+      await queryClient.invalidateQueries({ queryKey: invalidateKey });
       options.deleteLifecycle?.onSuccess?.(id);
     },
     onError: (_error, id, context) => {

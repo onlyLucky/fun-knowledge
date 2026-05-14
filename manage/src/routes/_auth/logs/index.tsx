@@ -45,8 +45,20 @@ function LogsPage() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const [detailRecord, setDetailRecord] = useState<OperationLog | null>(null);
 
+  const queryKey = ["logs", search.page, search.pageSize, search.module, search.action] as const;
+
+  const correctPageAfterDelete = () => {
+    const currentData = queryClient.getQueryData<{
+      list: OperationLog[];
+      total: number;
+    }>([...queryKey]);
+    if (currentData && currentData.list.length === 0 && search.page > 1) {
+      void navigate({ search: { ...search, page: search.page - 1 } });
+    }
+  };
+
   const { data, isLoading } = useQuery({
-    queryKey: ["logs", search.page, search.pageSize, search.module, search.action],
+    queryKey,
     queryFn: () =>
       httpClient.get(LOG_ENDPOINTS.list, {
         params: {
@@ -71,19 +83,21 @@ function LogsPage() {
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => httpClient.delete(LOG_ENDPOINTS.delete(id)),
-    onSuccess: () => {
+    onSuccess: async () => {
       message.success(t`删除成功`);
-      void queryClient.invalidateQueries({ queryKey: ["logs"] });
+      await queryClient.invalidateQueries({ queryKey: ["logs"] });
+      correctPageAfterDelete();
     },
     onError: () => message.error(t`删除失败`),
   });
 
   const batchDeleteMutation = useMutation({
     mutationFn: (ids: string[]) => httpClient.delete(LOG_ENDPOINTS.batchDelete, { ids }),
-    onSuccess: () => {
+    onSuccess: async () => {
       message.success(t`删除成功`);
       setSelectedRowKeys([]);
-      void queryClient.invalidateQueries({ queryKey: ["logs"] });
+      await queryClient.invalidateQueries({ queryKey: ["logs"] });
+      correctPageAfterDelete();
     },
     onError: () => message.error(t`删除失败`),
   });

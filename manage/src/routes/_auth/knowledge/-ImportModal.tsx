@@ -136,10 +136,10 @@ export function ImportModal({ open, onClose }: ImportModalProps) {
         ) : null
       }
       width={520}
-      destroyOnClose
+      destroyOnHidden
     >
       {!task ? (
-        <Space direction="vertical" size="large" style={{ width: "100%" }}>
+        <Space orientation="vertical" size="large" style={{ width: "100%" }}>
           <div>
             <Typography.Text type="secondary">
               {t`上传 ZIP 压缩包（内含 Excel 表格 + resources/ 资源文件夹）批量导入知识卡片，请先下载模板。`}
@@ -170,7 +170,7 @@ export function ImportModal({ open, onClose }: ImportModalProps) {
           </Upload>
         </Space>
       ) : (
-        <Space direction="vertical" size="middle" style={{ width: "100%" }}>
+        <Space orientation="vertical" size="middle" style={{ width: "100%" }}>
           {isProcessing && (
             <>
               <div style={{ display: "flex", alignItems: "center", gap: token.marginSM }}>
@@ -192,7 +192,7 @@ export function ImportModal({ open, onClose }: ImportModalProps) {
               icon={<CheckCircle size={48} />}
               title={t`导入完成`}
               subTitle={
-                <Space direction="vertical" size="small">
+                <Space orientation="vertical" size="small">
                   <Typography.Text>
                     {t`总计 ${task.total_count} 条，成功 ${task.success_count} 条`}
                     {task.fail_count > 0 && t`，失败 ${task.fail_count} 条`}

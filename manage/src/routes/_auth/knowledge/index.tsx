@@ -69,12 +69,34 @@ function KnowledgePage() {
 
   const crudToasts = useCrudToasts({ message, resourceKey: "knowledge" });
 
+  const queryKey = [
+    "knowledge",
+    search.page,
+    search.pageSize,
+    search.keyword,
+    search.category_id,
+    search.status,
+    search.sortField,
+    search.sortOrder,
+  ] as const;
+
+  const correctPageAfterDelete = () => {
+    const currentData = queryClient.getQueryData<{
+      list: KnowledgeType[];
+      total: number;
+    }>([...queryKey]);
+    if (currentData && currentData.list.length === 0 && search.page > 1) {
+      void navigate({ search: { ...search, page: search.page - 1 } });
+    }
+  };
+
   const batchDeleteMutation = useMutation({
     mutationFn: (ids: string[]) => httpClient.delete(KNOWLEDGE_ENDPOINTS.batchDelete, { ids }),
-    onSuccess: () => {
+    onSuccess: async () => {
       message.success(t`删除成功`);
       setSelectedRowKeys([]);
-      void queryClient.invalidateQueries({ queryKey: ["knowledge"] });
+      await queryClient.invalidateQueries({ queryKey: ["knowledge"] });
+      correctPageAfterDelete();
     },
     onError: () => message.error(t`删除失败`),
   });
@@ -95,16 +117,7 @@ function KnowledgePage() {
     CreateKnowledgeRequest,
     CreateKnowledgeRequest & { id: string }
   >({
-    queryKey: [
-      "knowledge",
-      search.page,
-      search.pageSize,
-      search.keyword,
-      search.category_id,
-      search.status,
-      search.sortField,
-      search.sortOrder,
-    ],
+    queryKey,
     queryFn: () =>
       httpClient.get(KNOWLEDGE_ENDPOINTS.list, {
         params: {
@@ -143,7 +156,10 @@ function KnowledgePage() {
     },
     deleteLifecycle: {
       onMutate: crudToasts.deleteLifecycle?.onMutate,
-      onSuccess: crudToasts.deleteLifecycle?.onSuccess,
+      onSuccess: (id) => {
+        crudToasts.deleteLifecycle?.onSuccess?.(id);
+        correctPageAfterDelete();
+      },
       onError: crudToasts.deleteLifecycle?.onError,
     },
   });
@@ -155,6 +171,9 @@ function KnowledgePage() {
         record.status === KnowledgeStatus.ONLINE ? KnowledgeStatus.OFFLINE : KnowledgeStatus.ONLINE;
       await httpClient.put(KNOWLEDGE_ENDPOINTS.toggleStatus(record.id), { status: nextStatus });
       await queryClient.invalidateQueries({ queryKey: ["knowledge"] });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : t`操作失败`;
+      message.error(msg);
     } finally {
       setTogglingId(null);
     }

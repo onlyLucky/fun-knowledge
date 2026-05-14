@@ -4,10 +4,12 @@ import { z } from "zod/v4";
 
 export const CATEGORY_ENDPOINTS = {
   list: "/api/admin/v1/category/list",
+  enabled: "/api/admin/v1/category/enabled",
   create: "/api/admin/v1/category/create",
   detail: (id: string) => `/api/admin/v1/category/${id}`,
   update: (id: string) => `/api/admin/v1/category/${id}`,
   delete: (id: string) => `/api/admin/v1/category/${id}`,
+  toggleStatus: (id: string) => `/api/admin/v1/category/${id}/toggle-status`,
   sort: "/api/admin/v1/category/sort",
 } as const;
 
