@@ -165,6 +165,37 @@ async function request<T>(
   return (envelope.data !== undefined ? envelope.data : json) as T;
 }
 
+async function requestBlob(
+  path: string,
+  options?: RequestOptions,
+  isAfterRefresh = false,
+): Promise<Blob> {
+  const url = buildUrl(path, options?.params);
+  const headers: Record<string, string> = {
+    ...getAuthHeaders(),
+    ...(options?.headers as Record<string, string>),
+  };
+
+  const res = await fetch(url, { method: "GET", headers, ...options });
+
+  if (res.status === 401 && !isAfterRefresh) {
+    const refreshed = await refreshSessionTokens();
+    if (refreshed) return requestBlob(path, options, true);
+    throw new HttpError(401, "Unauthorized");
+  }
+
+  if (res.status === 403) {
+    navigateTo403();
+    throw new HttpError(403, "Forbidden");
+  }
+
+  if (!res.ok) {
+    throw new HttpError(res.status, `HTTP ${res.status}: ${res.statusText}`);
+  }
+
+  return res.blob();
+}
+
 async function requestUpload<T>(
   path: string,
   formData: FormData,
@@ -222,4 +253,5 @@ export const httpClient = {
     request<T>("DELETE", path, body, options),
   upload: <T>(path: string, formData: FormData, options?: RequestOptions) =>
     requestUpload<T>(path, formData, options),
+  download: (path: string, options?: RequestOptions) => requestBlob(path, options),
 };

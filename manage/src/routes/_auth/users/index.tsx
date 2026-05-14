@@ -66,7 +66,7 @@ function UsersPage() {
         params: {
           page: search.page,
           pageSize: search.pageSize,
-          keyword: search.keyword || undefined,
+          nickname: search.keyword || undefined,
           role: search.role || undefined,
           sortField: search.sortField ?? undefined,
           sortOrder: search.sortOrder ?? undefined,

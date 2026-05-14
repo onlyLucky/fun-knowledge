@@ -62,7 +62,7 @@ function AdminPage() {
         params: {
           page: search.page,
           pageSize: search.pageSize,
-          keyword: search.keyword || undefined,
+          username: search.keyword || undefined,
         },
       }),
     select: (raw) => paginatedSchema.shape.data.parse(raw),

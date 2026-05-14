@@ -5,9 +5,8 @@ import type { Knowledge } from "@/api/knowledge";
 import { API_BASE_URL } from "@/utils/constants";
 
 const STATUS_MAP: Record<number, { label: string; color: string }> = {
-  [KnowledgeStatus.DRAFT]: { label: "草稿", color: "default" },
-  [KnowledgeStatus.PUBLISHED]: { label: "已发布", color: "success" },
-  [KnowledgeStatus.OFFLINE]: { label: "已下线", color: "error" },
+  [KnowledgeStatus.OFFLINE]: { label: "下架", color: "default" },
+  [KnowledgeStatus.ONLINE]: { label: "上架", color: "success" },
 };
 
 const RESOURCE_TYPE_MAP: Record<string, string> = {
@@ -40,7 +39,7 @@ export function DetailDrawer({ open, knowledge, onClose }: DetailDrawerProps) {
 
   return (
     <Drawer title={t`知识详情`} open={open} onClose={onClose} width={520}>
-      <Descriptions column={1} size="small" bordered>
+      <Descriptions column={1} size="small" bordered styles={{ label: { whiteSpace: "nowrap" } }}>
         <Descriptions.Item label={t`标题`}>{knowledge.title}</Descriptions.Item>
         <Descriptions.Item label={t`分类`}>
           {knowledge.category?.name ?? knowledge.category_id}

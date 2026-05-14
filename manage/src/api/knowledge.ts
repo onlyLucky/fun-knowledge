@@ -11,15 +11,15 @@ export const KNOWLEDGE_ENDPOINTS = {
   batchDelete: "/api/admin/v1/knowledge/batch-delete",
   toggleStatus: (id: string) => `/api/admin/v1/knowledge/${id}/status`,
   import: "/api/admin/v1/knowledge/import",
+  importStatus: (id: string) => `/api/admin/v1/knowledge/import/${id}`,
   template: "/api/admin/v1/knowledge/template",
 } as const;
 
 /* ---------- Schemas ---------- */
 
 export const KnowledgeStatus = {
-  DRAFT: 0,
-  PUBLISHED: 1,
-  OFFLINE: 2,
+  OFFLINE: 0, // 下架
+  ONLINE: 1, // 上架
 } as const;
 
 export type KnowledgeStatus = (typeof KnowledgeStatus)[keyof typeof KnowledgeStatus];
@@ -80,3 +80,30 @@ export const ToggleKnowledgeStatusSchema = z.object({
 });
 
 export type ToggleKnowledgeStatus = z.infer<typeof ToggleKnowledgeStatusSchema>;
+
+/* ---------- Import ---------- */
+
+export const ImportStatus = {
+  PROCESSING: 0,
+  SUCCESS: 1,
+  FAILED: 2,
+} as const;
+
+export type ImportStatus = (typeof ImportStatus)[keyof typeof ImportStatus];
+
+export const ImportTaskSchema = z.object({
+  id: z.string(),
+  admin_id: z.string(),
+  file_url: z.string().nullable().optional(),
+  image_zip_url: z.string().nullable().optional(),
+  total_count: z.number(),
+  success_count: z.number(),
+  fail_count: z.number(),
+  status: z.number(),
+  error_log: z.string().nullable().optional(),
+  completed_at: z.string().nullable().optional(),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
+});
+
+export type ImportTask = z.infer<typeof ImportTaskSchema>;

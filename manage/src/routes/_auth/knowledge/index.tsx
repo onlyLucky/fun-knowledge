@@ -23,6 +23,7 @@ import { useUrlSearchState } from "@/hooks/useUrlSearchState";
 import { Toolbar } from "./-Toolbar";
 import { FormModal } from "./-FormModal";
 import { DetailDrawer } from "./-DetailDrawer";
+import { ImportModal } from "./-ImportModal";
 
 const SearchParamsSchema = z.object({
   page: z.coerce.number().int().positive().catch(1),
@@ -51,6 +52,7 @@ function KnowledgePage() {
   const queryClient = useQueryClient();
   const { token } = theme.useToken();
   const [modalOpen, setModalOpen] = useState(false);
+  const [importModalOpen, setImportModalOpen] = useState(false);
   const pageShellRef = useRef<HTMLDivElement>(null);
   const toolbarRowRef = useRef<HTMLDivElement>(null);
   const middleSectionRef = useRef<HTMLDivElement>(null);
@@ -108,7 +110,7 @@ function KnowledgePage() {
         params: {
           page: search.page,
           pageSize: search.pageSize,
-          keyword: search.keyword || undefined,
+          title: search.keyword || undefined,
           category_id: search.category_id || undefined,
           status: search.status || undefined,
           sortField: search.sortField ?? undefined,
@@ -150,9 +152,7 @@ function KnowledgePage() {
     setTogglingId(record.id);
     try {
       const nextStatus =
-        record.status === KnowledgeStatus.PUBLISHED
-          ? KnowledgeStatus.OFFLINE
-          : KnowledgeStatus.PUBLISHED;
+        record.status === KnowledgeStatus.ONLINE ? KnowledgeStatus.OFFLINE : KnowledgeStatus.ONLINE;
       await httpClient.put(KNOWLEDGE_ENDPOINTS.toggleStatus(record.id), { status: nextStatus });
       await queryClient.invalidateQueries({ queryKey: ["knowledge"] });
     } finally {
@@ -172,9 +172,8 @@ function KnowledgePage() {
   };
 
   const STATUS_MAP: Record<number, { label: string; color: string }> = {
-    [KnowledgeStatus.DRAFT]: { label: t`草稿`, color: "default" },
-    [KnowledgeStatus.PUBLISHED]: { label: t`已发布`, color: "success" },
-    [KnowledgeStatus.OFFLINE]: { label: t`已下线`, color: "error" },
+    [KnowledgeStatus.ONLINE]: { label: t`上架`, color: "success" },
+    [KnowledgeStatus.OFFLINE]: { label: t`下架`, color: "default" },
   };
 
   const columns = [
@@ -194,7 +193,7 @@ function KnowledgePage() {
     {
       title: t`标签`,
       key: "tags",
-      width: 200,
+      width: 300,
       render: (_: unknown, record: KnowledgeType) =>
         record.tags && record.tags.length > 0
           ? record.tags.map((tag) => (
@@ -233,7 +232,7 @@ function KnowledgePage() {
             size="small"
             loading={togglingId === record.id}
             disabled={togglingId === record.id}
-            checked={record.status === KnowledgeStatus.PUBLISHED}
+            checked={record.status === KnowledgeStatus.ONLINE}
             onChange={() => toggleStatus(record)}
           />
           <Dropdown
@@ -327,6 +326,7 @@ function KnowledgePage() {
           form.resetFields();
           setModalOpen(true);
         }}
+        onImportClick={() => setImportModalOpen(true)}
         selectedCount={selectedRowKeys.length}
         onBatchDelete={confirmBatchDelete}
       />
@@ -396,6 +396,8 @@ function KnowledgePage() {
       />
 
       <DetailDrawer open={!!viewing} knowledge={viewing} onClose={() => setViewing(null)} />
+
+      <ImportModal open={importModalOpen} onClose={() => setImportModalOpen(false)} />
     </Flex>
   );
 }

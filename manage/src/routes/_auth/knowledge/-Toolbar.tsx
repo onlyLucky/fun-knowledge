@@ -1,6 +1,6 @@
 import { Button, Input, Select, theme } from "antd";
 import { useLingui } from "@lingui/react/macro";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Upload } from "lucide-react";
 import { forwardRef, useMemo } from "react";
 import { FilterToolbar } from "@/components/FilterToolbar";
 
@@ -14,6 +14,7 @@ export type ToolbarProps = {
   statusValue: string | undefined;
   onStatusChange: (status: string) => void;
   onCreateClick: () => void;
+  onImportClick?: () => void;
   selectedCount?: number;
   onBatchDelete?: () => void;
 };
@@ -27,6 +28,7 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
     statusValue,
     onStatusChange,
     onCreateClick,
+    onImportClick,
     selectedCount = 0,
     onBatchDelete,
   },
@@ -63,9 +65,8 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
             value={statusValue}
             onChange={(v) => onStatusChange(v ?? "")}
             options={[
-              { label: t`已发布`, value: "1" },
-              { label: t`草稿`, value: "0" },
-              { label: t`已下线`, value: "2" },
+              { label: t`上架`, value: "1" },
+              { label: t`下架`, value: "0" },
             ]}
           />
         ),
@@ -92,6 +93,11 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
           {selectedCount > 0 && onBatchDelete && (
             <Button danger icon={<Trash2 size={token.fontSize} />} onClick={onBatchDelete}>
               {t`批量删除`} ({selectedCount})
+            </Button>
+          )}
+          {onImportClick && (
+            <Button icon={<Upload size={token.fontSize} />} onClick={onImportClick}>
+              {t`批量导入`}
             </Button>
           )}
           <Button type="primary" icon={<Plus size={token.fontSize} />} onClick={onCreateClick}>
