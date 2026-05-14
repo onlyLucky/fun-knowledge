@@ -6,6 +6,7 @@ import {
   Delete,
   Param,
   Body,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -20,6 +21,7 @@ import { recordOperationLog } from '../../common/utils/operation-log.util';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UpdateSortDto } from './dto/update-sort.dto';
+import { QueryCategoryDto } from './dto/query-category.dto';
 import { BatchDeleteDto } from '../../common/dto/batch-delete.dto';
 
 @ApiTags('管理端-类目')
@@ -34,9 +36,21 @@ export class CategoryAdminController {
 
   @Get('list')
   @Roles(AdminRole.SUPER_ADMIN, AdminRole.CONTENT_ADMIN)
-  @ApiOperation({ summary: '获取类目列表' })
-  async findAll() {
-    return this.categoryService.findAll();
+  @ApiOperation({ summary: '获取类目列表（分页）' })
+  async findAll(@Query() query: QueryCategoryDto) {
+    return this.categoryService.findAll({
+      page: query.page,
+      pageSize: query.pageSize,
+      name: query.name,
+      status: query.status,
+    });
+  }
+
+  @Get('enabled')
+  @Roles(AdminRole.SUPER_ADMIN, AdminRole.CONTENT_ADMIN)
+  @ApiOperation({ summary: '获取所有启用类目（不分页）' })
+  async findEnabled() {
+    return this.categoryService.findEnabled();
   }
 
   @Post('create')
@@ -76,6 +90,21 @@ export class CategoryAdminController {
       module: 'category',
       action: 'update',
       description: '更新类目',
+      targetId: id,
+    });
+    return result;
+  }
+
+  @Put(':id/toggle-status')
+  @Roles(AdminRole.SUPER_ADMIN, AdminRole.CONTENT_ADMIN)
+  @ApiOperation({ summary: '切换类目状态（启用/停用）' })
+  @ApiParam({ name: 'id', description: '类目 UUID' })
+  async toggleStatus(@Param('id') id: string, @Req() request: Request) {
+    const result = await this.categoryService.toggleStatus(id);
+    recordOperationLog(this.logService, request, {
+      module: 'category',
+      action: 'update',
+      description: `类目状态切换为${result.status === 1 ? '启用' : '停用'}`,
       targetId: id,
     });
     return result;

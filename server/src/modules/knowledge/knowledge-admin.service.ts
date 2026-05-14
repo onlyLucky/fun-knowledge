@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Knowledge } from './entities/knowledge.entity';
@@ -144,11 +144,16 @@ export class KnowledgeAdminService {
   async toggleStatus(id: string, adminId: string): Promise<Knowledge> {
     const knowledge = await this.knowledgeRepo.findOne({
       where: { id },
+      relations: ['category'],
       withDeleted: true,
     });
 
     if (!knowledge) {
       throw new NotFoundException('知识卡片不存在');
+    }
+
+    if (knowledge.category && knowledge.category.status === 0) {
+      throw new BadRequestException('当前类目停用中，不可切换状态');
     }
 
     knowledge.status =

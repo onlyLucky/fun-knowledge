@@ -2,9 +2,11 @@ import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { Category } from './entities/category.entity';
+import { Knowledge } from '../knowledge/entities/knowledge.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { UpdateSortDto } from './dto/update-sort.dto';
+import { PaginatedResponseDto } from '../../common/dto/pagination.dto';
 
 /**
  * 类目服务
@@ -16,13 +18,50 @@ export class CategoryService {
   constructor(
     @InjectRepository(Category)
     private readonly categoryRepo: Repository<Category>,
+    @InjectRepository(Knowledge)
+    private readonly knowledgeRepo: Repository<Knowledge>,
   ) {}
 
   /**
-   * 查询所有类目
+   * 查询类目列表（管理端，支持分页和搜索）
    */
-  async findAll(): Promise<Category[]> {
+  async findAll(options?: {
+    page?: number;
+    pageSize?: number;
+    name?: string;
+    status?: number;
+  }): Promise<PaginatedResponseDto<Category>> {
+    const { page = 1, pageSize = 20, name, status } = options || {};
+
+    const qb = this.categoryRepo
+      .createQueryBuilder('c')
+      .where('c.deleted_at IS NULL');
+
+    if (name) {
+      qb.andWhere('c.name LIKE :name', { name: `%${name}%` });
+    }
+
+    if (status !== undefined) {
+      qb.andWhere('c.status = :status', { status });
+    }
+
+    qb.orderBy('c.sort_order', 'ASC').addOrderBy('c.created_at', 'DESC');
+
+    const total = await qb.getCount();
+    const list = await qb
+      .skip((page - 1) * pageSize)
+      .take(pageSize)
+      .getMany();
+
+    return new PaginatedResponseDto(list, total, page, pageSize);
+  }
+
+  /**
+   * 查询所有启用类目（客户端）
+   */
+  async findEnabled(): Promise<Category[]> {
     return this.categoryRepo.find({
+      where: { status: 1 },
       order: { sort_order: 'ASC', created_at: 'DESC' },
     });
   }
@@ -45,6 +84,23 @@ export class CategoryService {
     Object.assign(category, dto);
     await this.categoryRepo.save(category);
     this.logger.log(`类目更新成功: ${id}`);
+    return category;
+  }
+
+  /**
+   * 切换类目状态（启用/停用）
+   */
+  async toggleStatus(id: string): Promise<Category> {
+    const category = await this.findOne(id);
+    const newStatus = category.status === 1 ? 0 : 1;
+    category.status = newStatus;
+    await this.categoryRepo.save(category);
+
+    // 级联更新关联知识卡片状态
+    const knowledgeStatus = newStatus === 1 ? 1 : 0;
+    await this.knowledgeRepo.update({ category_id: id }, { status: knowledgeStatus });
+
+    this.logger.log(`类目状态切换: ${id} → ${newStatus === 1 ? '启用' : '停用'}，关联卡片同步更新为${knowledgeStatus === 1 ? '上架' : '下架'}`);
     return category;
   }
 

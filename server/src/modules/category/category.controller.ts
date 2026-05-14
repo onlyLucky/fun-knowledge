@@ -10,8 +10,8 @@ export class CategoryController {
 
   @Get('list')
   @Public()
-  @ApiOperation({ summary: '获取类目列表' })
+  @ApiOperation({ summary: '获取启用类目列表' })
   async findAll() {
-    return this.categoryService.findAll();
+    return this.categoryService.findEnabled();
   }
 }

@@ -26,7 +26,8 @@ export class KnowledgeService {
       .createQueryBuilder('k')
       .leftJoinAndSelect('k.category', 'c')
       .where('k.status = :status', { status: KnowledgeStatus.ONLINE })
-      .andWhere('k.deleted_at IS NULL');
+      .andWhere('k.deleted_at IS NULL')
+      .andWhere('(c.status = :categoryStatus OR c.id IS NULL)', { categoryStatus: 1 });
 
     if (title) {
       qb.andWhere('k.title LIKE :title', { title: `%${title}%` });
@@ -71,6 +72,7 @@ export class KnowledgeService {
       .where('k.id = :id', { id })
       .andWhere('k.status = :status', { status: KnowledgeStatus.ONLINE })
       .andWhere('k.deleted_at IS NULL')
+      .andWhere('(c.status = :categoryStatus OR c.id IS NULL)', { categoryStatus: 1 })
       .getOne();
 
     if (!knowledge) {

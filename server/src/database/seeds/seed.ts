@@ -105,23 +105,30 @@ async function seedCategories(dataSource: DataSource) {
 
 async function seedSystemConfigs(dataSource: DataSource) {
   const configRepo = dataSource.getRepository(SystemConfig);
-  const count = await configRepo.count();
-
-  if (count > 0) {
-    console.log('⏭️  系统配置已存在，跳过');
-    return;
-  }
 
   const configsData = JSON.parse(
     fs.readFileSync(path.join(__dirname, 'data/system-config.json'), 'utf-8'),
   );
 
+  let created = 0;
+  let skipped = 0;
+
   for (const configData of configsData) {
+    const existing = await configRepo.findOne({
+      where: { config_key: configData.config_key },
+    });
+
+    if (existing) {
+      skipped++;
+      continue;
+    }
+
     const config = configRepo.create(configData);
     await configRepo.save(config);
+    created++;
   }
 
-  console.log(`✅ 创建了 ${configsData.length} 条系统配置`);
+  console.log(`✅ 系统配置：新增 ${created} 条，跳过 ${skipped} 条`);
 }
 
 seed();
