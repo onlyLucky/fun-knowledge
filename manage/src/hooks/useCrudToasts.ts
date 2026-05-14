@@ -5,7 +5,7 @@ import { useLingui } from "@lingui/react/macro";
 type MutationLifecycle<TValues> = {
   onMutate?: (values: TValues) => void;
   onSuccess?: (values: TValues) => void;
-  onError?: (values: TValues) => void;
+  onError?: (values: TValues, error: Error) => void;
 };
 
 export type CrudToastLifecycles<TCreate, TUpdate> = {
@@ -36,8 +36,9 @@ export function useCrudToasts<TCreate, TUpdate>(options: {
         onSuccess: () => {
           message.success({ content: t`创建成功`, key: keys.create });
         },
-        onError: () => {
-          message.error({ content: t`创建失败`, key: keys.create });
+        onError: (_values, error) => {
+          const msg = error?.message || t`创建失败`;
+          message.error({ content: msg, key: keys.create });
         },
       },
       updateLifecycle: {
@@ -47,8 +48,9 @@ export function useCrudToasts<TCreate, TUpdate>(options: {
         onSuccess: () => {
           message.success({ content: t`更新成功`, key: keys.update });
         },
-        onError: () => {
-          message.error({ content: t`更新失败`, key: keys.update });
+        onError: (_values, error) => {
+          const msg = error?.message || t`更新失败`;
+          message.error({ content: msg, key: keys.update });
         },
       },
       deleteLifecycle: {
@@ -58,8 +60,9 @@ export function useCrudToasts<TCreate, TUpdate>(options: {
         onSuccess: () => {
           message.success({ content: t`删除成功`, key: keys.delete });
         },
-        onError: () => {
-          message.error({ content: t`删除失败`, key: keys.delete });
+        onError: (_values, error) => {
+          const msg = error?.message || t`删除失败`;
+          message.error({ content: msg, key: keys.delete });
         },
       },
     }),

@@ -9,6 +9,7 @@ import {
   PanelLeft,
   ShieldAlert,
   Users,
+  UserCheck,
   BookOpen,
   FolderTree,
   MessageSquareWarning,
@@ -27,6 +28,7 @@ const PATH_LABEL: Record<string, string> = {
   "/knowledge": "Knowledge",
   "/category": "Category",
   "/correction": "Correction",
+  "/user-review": "UserReview",
   "/users": "Users",
   "/admin": "Admin",
   "/config": "Config",
@@ -87,6 +89,7 @@ export function Header({ showBreadcrumb: showBreadcrumbProp = true }: HeaderProp
 
   const ICON_MAP: Record<string, LucideIcon> = {
     "/users": Users,
+    "/user-review": UserCheck,
     "/knowledge": BookOpen,
     "/category": FolderTree,
     "/correction": MessageSquareWarning,
@@ -102,6 +105,7 @@ export function Header({ showBreadcrumb: showBreadcrumbProp = true }: HeaderProp
     Knowledge: () => t`知识卡片`,
     Category: () => t`分类管理`,
     Correction: () => t`纠错审核`,
+    UserReview: () => t`资料审核`,
     Users: () => t`用户管理`,
     Admin: () => t`管理员`,
     Config: () => t`系统配置`,

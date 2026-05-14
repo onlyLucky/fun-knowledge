@@ -26,8 +26,9 @@ export const userHandlers = [
     const { limit, offset } = parsePaginationParams(url.searchParams);
     const keyword = url.searchParams.get("keyword") ?? "";
     const role = url.searchParams.get("role") ?? "";
+    const status = url.searchParams.get("status") ?? "";
 
-    const filtered = filterUsers(users, { keyword, role });
+    const filtered = filterUsers(users, { keyword, role, status });
     const list = paginateList(filtered, limit, offset);
 
     return paginatedWithSchema(UserSchema, { list, total: filtered.length });
@@ -38,11 +39,10 @@ export const userHandlers = [
     const body = (await request.json()) as Record<string, unknown>;
     const newUser = {
       id: String(users.length + 1),
-      username: String(body.username),
+      nickname: String(body.nickname ?? body.username),
       avatar: null,
       email: typeof body.email === "string" ? body.email : null,
-      roles: (body.roles as string[]) ?? [],
-      permissions: [] as string[],
+      status: 0,
     };
     users.push(newUser);
     return successWithSchema(UserSchema, newUser);

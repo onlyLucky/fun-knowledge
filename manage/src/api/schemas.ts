@@ -29,6 +29,8 @@ export const ROLE_PERMISSIONS: Record<AdminRole, string[]> = {
     "user:create",
     "user:edit",
     "user:delete",
+    "user-review:view",
+    "user-review:review",
     "admin:view",
     "admin:create",
     "admin:edit",
@@ -57,7 +59,12 @@ export const ROLE_PERMISSIONS: Record<AdminRole, string[]> = {
     "config:edit",
     "log:view",
   ],
-  [AdminRole.REVIEWER]: ["correction:view", "correction:review"],
+  [AdminRole.REVIEWER]: [
+    "correction:view",
+    "correction:review",
+    "user-review:view",
+    "user-review:review",
+  ],
 };
 
 /** 根据角色 ID 获取权限列表 */
@@ -96,16 +103,23 @@ export type AdminLoginResponse = z.infer<typeof AdminLoginResponseSchema>;
 
 export const UserSchema = z.object({
   id: z.string(),
-  username: z.string(),
-  avatar: z.string().nullable(),
-  email: z.string().nullable(),
-  roles: z.array(z.string()),
-  permissions: z.array(z.string()),
+  nickname: z.string().nullable().optional(),
+  avatar: z.string().nullable().optional(),
+  email: z.string().nullable().optional(),
+  phone: z.string().nullable().optional(),
+  openid: z.string().nullable().optional(),
+  status: z.number().optional(),
+  streak_days: z.number().optional(),
+  total_check_in_days: z.number().optional(),
+  favorites_count: z.number().optional(),
+  ai_usage_count: z.number().optional(),
+  created_at: z.string().optional(),
+  updated_at: z.string().optional(),
 });
 
 export type User = z.infer<typeof UserSchema>;
 
-export const AuthUserResponseSchema = UserSchema.omit({ permissions: true });
+export const AuthUserResponseSchema = UserSchema;
 export type AuthUserResponse = z.infer<typeof AuthUserResponseSchema>;
 
 export const RefreshTokenRequestSchema = z.object({

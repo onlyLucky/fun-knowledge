@@ -88,7 +88,7 @@ function ConfigPage() {
       form.resetFields();
       void queryClient.invalidateQueries({ queryKey: ["config"] });
     },
-    onError: () => message.error(t`创建失败`),
+    onError: (err: Error) => message.error(err.message || t`创建失败`),
   });
 
   const updateMutation = useMutation({
@@ -100,7 +100,7 @@ function ConfigPage() {
       form.resetFields();
       void queryClient.invalidateQueries({ queryKey: ["config"] });
     },
-    onError: () => message.error(t`更新失败`),
+    onError: (err: Error) => message.error(err.message || t`更新失败`),
   });
 
   const deleteMutation = useMutation({
@@ -109,7 +109,7 @@ function ConfigPage() {
       message.success(t`删除成功`);
       void queryClient.invalidateQueries({ queryKey: ["config"] });
     },
-    onError: () => message.error(t`删除失败`),
+    onError: (err: Error) => message.error(err.message || t`删除失败`),
   });
 
   const confirmDelete = (record: SystemConfig) => {

@@ -12,8 +12,7 @@ describe("successWithSchema", () => {
   it("throws ZodError when payload does not match schema (mock drift surfaces here)", () => {
     expect(() =>
       successWithSchema(UserSchema, {
-        id: "1",
-        username: "x",
+        id: 123,
       } as unknown),
     ).toThrow(z.ZodError);
   });
@@ -21,16 +20,14 @@ describe("successWithSchema", () => {
   it("returns JSON body with parsed data when valid", async () => {
     const row = {
       id: "1",
-      username: "u",
+      nickname: "u",
       avatar: null,
       email: null,
-      roles: [] as string[],
-      permissions: [] as string[],
     };
     const res = successWithSchema(UserSchema, row);
     const body = (await res.json()) as { code: number; data: typeof row };
     expect(body.code).toBe(0);
-    expect(body.data.username).toBe("u");
+    expect(body.data.nickname).toBe("u");
   });
 });
 
@@ -39,7 +36,7 @@ describe("paginatedListSchema / paginatedWithSchema", () => {
     const schema = paginatedListSchema(UserSchema);
     expect(() =>
       schema.parse({
-        list: [{ id: "1" }],
+        list: [{ name: "no-id" }],
         total: 1,
       }),
     ).toThrow(z.ZodError);
@@ -48,11 +45,9 @@ describe("paginatedListSchema / paginatedWithSchema", () => {
   it("accepts valid paginated payload via paginatedWithSchema", async () => {
     const row = {
       id: "1",
-      username: "u",
+      nickname: "u",
       avatar: null,
       email: null,
-      roles: [] as string[],
-      permissions: [] as string[],
     };
     const res = paginatedWithSchema(UserSchema, { list: [row], total: 1 });
     const body = (await res.json()) as { data: { list: (typeof row)[]; total: number } };

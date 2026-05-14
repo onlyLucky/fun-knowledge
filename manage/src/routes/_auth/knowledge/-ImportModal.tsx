@@ -82,8 +82,8 @@ export function ImportModal({ open, onClose }: ImportModalProps) {
       if (parsed.status === ImportStatus.PROCESSING) {
         message.info(t`导入任务已创建，正在处理中`);
       }
-    } catch {
-      message.error(t`导入失败`);
+    } catch (err) {
+      message.error(err instanceof Error ? err.message : t`导入失败`);
     } finally {
       setUploading(false);
     }
@@ -100,8 +100,8 @@ export function ImportModal({ open, onClose }: ImportModalProps) {
       a.download = "import-template.zip";
       a.click();
       URL.revokeObjectURL(url);
-    } catch {
-      message.error(t`下载失败`);
+    } catch (err) {
+      message.error(err instanceof Error ? err.message : t`下载失败`);
     } finally {
       setDownloading(false);
     }

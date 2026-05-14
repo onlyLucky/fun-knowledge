@@ -4,7 +4,7 @@ import type { UseMutationResult } from "@tanstack/react-query";
 type MutationLifecycle<TValues> = {
   onMutate?: (values: TValues) => void;
   onSuccess?: (values: TValues) => void;
-  onError?: (values: TValues) => void;
+  onError?: (values: TValues, error: Error) => void;
 };
 
 export type ResourceListData<TItem extends { id: string }> = {
@@ -102,8 +102,8 @@ export function useResourceCRUD<
       void queryClient.invalidateQueries({ queryKey: invalidateKey });
       options.createLifecycle?.onSuccess?.(values);
     },
-    onError: (_error, values) => {
-      options.createLifecycle?.onError?.(values);
+    onError: (error, values) => {
+      options.createLifecycle?.onError?.(values, error);
     },
   });
 
@@ -129,12 +129,12 @@ export function useResourceCRUD<
       void queryClient.invalidateQueries({ queryKey: invalidateKey });
       options.updateLifecycle?.onSuccess?.(values);
     },
-    onError: (_error, values, context) => {
+    onError: (error, values, context) => {
       const snap = context?.snapshot;
       if (snap !== undefined) {
         queryClient.setQueryData(queryKey, snap);
       }
-      options.updateLifecycle?.onError?.(values);
+      options.updateLifecycle?.onError?.(values, error);
     },
   });
 
@@ -160,12 +160,12 @@ export function useResourceCRUD<
       await queryClient.invalidateQueries({ queryKey: invalidateKey });
       options.deleteLifecycle?.onSuccess?.(id);
     },
-    onError: (_error, id, context) => {
+    onError: (error, id, context) => {
       const snap = context?.snapshot;
       if (snap !== undefined) {
         queryClient.setQueryData(queryKey, snap);
       }
-      options.deleteLifecycle?.onError?.(id);
+      options.deleteLifecycle?.onError?.(id, error);
     },
   });
 

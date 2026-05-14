@@ -93,8 +93,8 @@ export function FormModal({
         resource_type: result.resource_type,
       });
       message.success(t`上传成功`);
-    } catch {
-      message.error(t`上传失败`);
+    } catch (err) {
+      message.error(err instanceof Error ? err.message : t`上传失败`);
     } finally {
       setUploading(false);
     }

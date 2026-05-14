@@ -96,7 +96,7 @@ function KnowledgePage() {
       await queryClient.invalidateQueries({ queryKey: ["knowledge"] });
       correctPageAfterDelete();
     },
-    onError: () => message.error(t`删除失败`),
+    onError: (err: Error) => message.error(err.message || t`删除失败`),
   });
 
   const confirmBatchDelete = () => {

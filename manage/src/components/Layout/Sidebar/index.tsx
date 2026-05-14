@@ -14,6 +14,7 @@ import {
   SlidersHorizontal,
   FolderTree,
   Users,
+  UserCheck,
   Zap,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -32,6 +33,7 @@ const MENU_LABELS: Record<string, ReturnType<typeof msg>> = {
   Knowledge: msg`知识卡片`,
   Category: msg`分类管理`,
   Correction: msg`纠错审核`,
+  UserReview: msg`资料审核`,
   System: msg`系统`,
   Users: msg`用户管理`,
   Admin: msg`管理员`,
@@ -51,6 +53,7 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
   IconLucideBookOpen: BookOpen,
   IconLucideFolderTree: FolderTree,
   IconLucideMessageSquareWarning: MessageSquareWarning,
+  IconLucideUserCheck: UserCheck,
   IconLucideUsers: Users,
   IconLucideShieldCheck: ShieldCheck,
   IconLucideSlidersHorizontal: SlidersHorizontal,

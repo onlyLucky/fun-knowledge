@@ -26,17 +26,18 @@ const MOCK_IDENTITIES: ReadonlyArray<[string, string]> = [
 
 export const GUEST_AUTH_USER_BODY = {
   id: "99",
-  username: "guest",
+  nickname: "guest",
   avatar: null as null,
   email: "guest@example.com",
-  roles: [] as string[],
 };
 
-export const MOCK_USERS: User[] = MOCK_IDENTITIES.map(([username, email], i) => ({
+export const MOCK_USERS: User[] = MOCK_IDENTITIES.map(([nickname, email], i) => ({
   id: String(i + 1),
-  username,
-  avatar: vercelAvatarUrl(username),
+  nickname,
+  avatar: vercelAvatarUrl(nickname),
   email,
-  roles: i === 0 ? ["admin"] : ["editor"],
-  permissions: i === 0 ? ["user:view", "user:create", "user:edit", "user:delete"] : ["user:view"],
+  status: i % 5 === 0 ? 1 : 0, // ~20% disabled
+  streak_days: Math.floor(Math.random() * 30),
+  total_check_in_days: Math.floor(Math.random() * 100) + 10,
+  favorites_count: Math.floor(Math.random() * 50),
 }));

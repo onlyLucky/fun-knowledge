@@ -76,7 +76,7 @@ export const authHandlers = [
     if (password.length < 6) {
       return errorResponse(ERROR_CODES.BAD_REQUEST, "Password must be at least 6 characters");
     }
-    const taken = username === "guest" || MOCK_USERS.some((u) => u.username === username);
+    const taken = username === "guest" || MOCK_USERS.some((u) => u.nickname === username);
     if (taken) {
       return errorResponse(ERROR_CODES.BAD_REQUEST, "Username already taken");
     }
@@ -132,18 +132,16 @@ export const authHandlers = [
       if (session) {
         return successWithSchema(AuthUserResponseSchema, {
           id: "reg-mock",
-          username: session.username,
+          nickname: session.username,
           avatar: null,
           email: session.email,
-          roles: ["editor"],
         });
       }
     }
     if (isGuestAuth(auth)) {
       return successWithSchema(AuthUserResponseSchema, GUEST_AUTH_USER_BODY);
     }
-    const { permissions: _permissions, ...userWithoutPermissions } = MOCK_USERS[0]!;
-    return successWithSchema(AuthUserResponseSchema, userWithoutPermissions);
+    return successWithSchema(AuthUserResponseSchema, MOCK_USERS[0]!);
   }),
 
   http.get("/api/auth/permissions", ({ request }) => {
@@ -154,6 +152,11 @@ export const authHandlers = [
     if (isGuestAuth(auth)) {
       return successWithSchema(PermissionsListSchema, [] as string[]);
     }
-    return successWithSchema(PermissionsListSchema, MOCK_USERS[0]!.permissions);
+    return successWithSchema(PermissionsListSchema, [
+      "user:view",
+      "user:create",
+      "user:edit",
+      "user:delete",
+    ]);
   }),
 ];

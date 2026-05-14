@@ -88,7 +88,7 @@ function LogsPage() {
       await queryClient.invalidateQueries({ queryKey: ["logs"] });
       correctPageAfterDelete();
     },
-    onError: () => message.error(t`删除失败`),
+    onError: (err: Error) => message.error(err.message || t`删除失败`),
   });
 
   const batchDeleteMutation = useMutation({
@@ -99,7 +99,7 @@ function LogsPage() {
       await queryClient.invalidateQueries({ queryKey: ["logs"] });
       correctPageAfterDelete();
     },
-    onError: () => message.error(t`删除失败`),
+    onError: (err: Error) => message.error(err.message || t`删除失败`),
   });
 
   const confirmDelete = (record: OperationLog) => {

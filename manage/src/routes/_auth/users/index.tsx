@@ -1,9 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Avatar, Space, theme, Tag, Flex } from "antd";
+import { Avatar, theme, Flex, Switch, App, Button } from "antd";
 import type { TablePaginationConfig } from "antd/es/table/interface";
 import { useLingui } from "@lingui/react/macro";
-import { useMemo, useRef } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMemo, useRef, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Eye } from "lucide-react";
 import { httpClient } from "@/utils/http";
 import { USER_ENDPOINTS } from "@/api/user";
 import { PaginatedResponseSchema, UserSchema } from "@/api/schemas";
@@ -13,6 +14,7 @@ import { DataTable } from "@/components/DataTable";
 import { useTableFitHeight } from "@/hooks/useTableFitHeight";
 import { useUrlSearchState } from "@/hooks/useUrlSearchState";
 import { Toolbar } from "./-Toolbar";
+import { DetailDrawer } from "./-DetailDrawer";
 
 const UserSearchParamsSchema = z.object({
   page: z.coerce.number().int().positive().catch(1),
@@ -21,6 +23,7 @@ const UserSearchParamsSchema = z.object({
   sortOrder: z.enum(["ascend", "descend"]).nullable().catch(null),
   keyword: z.string().catch(""),
   role: z.string().catch(""),
+  status: z.string().catch(""),
 });
 
 type UserSearch = z.infer<typeof UserSearchParamsSchema>;
@@ -37,10 +40,29 @@ function UsersPage() {
   const navigate = useNavigate({ from: Route.fullPath });
   const { t } = useLingui();
   const { token } = theme.useToken();
+  const { message } = App.useApp();
+  const queryClient = useQueryClient();
   const pageShellRef = useRef<HTMLDivElement>(null);
   const toolbarRowRef = useRef<HTMLDivElement>(null);
   const middleSectionRef = useRef<HTMLDivElement>(null);
   const tableFrameRef = useRef<HTMLDivElement>(null);
+  const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selected, setSelected] = useState<User | null>(null);
+
+  const toggleStatus = async (record: User) => {
+    setTogglingId(record.id);
+    try {
+      const nextStatus = record.status === 0 ? 1 : 0;
+      await httpClient.put(USER_ENDPOINTS.updateStatus(record.id), { status: nextStatus });
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : t`操作失败`;
+      message.error(msg);
+    } finally {
+      setTogglingId(null);
+    }
+  };
 
   const setSearch = (next: UserSearch) => {
     void navigate({ search: next });
@@ -58,6 +80,7 @@ function UsersPage() {
       search.pageSize,
       search.keyword,
       search.role,
+      search.status,
       search.sortField,
       search.sortOrder,
     ],
@@ -68,6 +91,7 @@ function UsersPage() {
           pageSize: search.pageSize,
           nickname: search.keyword || undefined,
           role: search.role || undefined,
+          status: search.status || undefined,
           sortField: search.sortField ?? undefined,
           sortOrder: search.sortOrder ?? undefined,
         },
@@ -76,25 +100,25 @@ function UsersPage() {
   });
 
   const columns = [
-    {
+    /* {
       title: "ID",
       dataIndex: "id",
       key: "id",
       sorter: true,
       sortOrder: search.sortField === "id" ? search.sortOrder : null,
-    },
+    }, */
     {
-      title: t`用户名`,
-      dataIndex: "username",
-      key: "username",
+      title: t`用户昵称`,
+      dataIndex: "nickname",
+      key: "nickname",
       sorter: true,
-      sortOrder: search.sortField === "username" ? search.sortOrder : null,
+      sortOrder: search.sortField === "nickname" ? search.sortOrder : null,
       render: (_: unknown, record: User) => {
         const src = (record.avatar ?? "").trim() || undefined;
         return (
           <Flex align="center" gap={token.marginSM} style={{ minWidth: 0 }}>
             <Avatar size={24} src={src} shape="circle" style={{ flexShrink: 0 }}>
-              {record.username?.[0]?.toUpperCase()}
+              {record.nickname?.[0]?.toUpperCase()}
             </Avatar>
             <span
               style={{
@@ -103,7 +127,7 @@ function UsersPage() {
                 whiteSpace: "nowrap",
               }}
             >
-              {record.username}
+              {record.nickname}
             </span>
           </Flex>
         );
@@ -117,29 +141,58 @@ function UsersPage() {
       sortOrder: search.sortField === "email" ? search.sortOrder : null,
     },
     {
-      title: t`角色`,
-      dataIndex: "roles",
-      key: "roles",
+      title: t`手机号`,
+      dataIndex: "phone",
+      key: "phone",
+      width: 180,
+    },
+    {
+      title: t`打卡天数`,
+      dataIndex: "total_check_in_days",
+      key: "total_check_in_days",
+      width: 100,
       sorter: true,
-      sortOrder: search.sortField === "roles" ? search.sortOrder : null,
-      render: (roles: string[]) => (
-        <Space wrap>
-          {roles.map((role) => (
-            <Tag
-              key={role}
-              variant="outlined"
-              styles={{
-                root: {
-                  borderRadius: 9999,
-                  background: "transparent",
-                  boxShadow: "none",
-                },
-              }}
-            >
-              {role}
-            </Tag>
-          ))}
-        </Space>
+      sortOrder: search.sortField === "total_check_in_days" ? search.sortOrder : null,
+      render: (val: number | undefined) => val ?? 0,
+    },
+    {
+      title: t`收藏数`,
+      dataIndex: "favorites_count",
+      key: "favorites_count",
+      width: 100,
+      sorter: true,
+      sortOrder: search.sortField === "favorites_count" ? search.sortOrder : null,
+      render: (val: number | undefined) => val ?? 0,
+    },
+    {
+      title: t`状态`,
+      dataIndex: "status",
+      key: "status",
+      width: 100,
+      render: (_: unknown, record: User) => (
+        <Switch
+          size="small"
+          loading={togglingId === record.id}
+          disabled={togglingId === record.id}
+          checked={record.status === 0}
+          onChange={() => toggleStatus(record)}
+        />
+      ),
+    },
+    {
+      title: t`操作`,
+      key: "actions",
+      width: 60,
+      align: "right" as const,
+      render: (_: unknown, record: User) => (
+        <Button
+          type="text"
+          icon={<Eye size={token.fontSize} />}
+          onClick={() => {
+            setSelected(record);
+            setDrawerOpen(true);
+          }}
+        />
       ),
     },
   ];
@@ -197,6 +250,12 @@ function UsersPage() {
             search: { ...search, role, page: 1 },
           })
         }
+        statusValue={search.status || undefined}
+        onStatusChange={(status) =>
+          void navigate({
+            search: { ...search, status, page: 1 },
+          })
+        }
       />
 
       <DataTable<User>
@@ -213,11 +272,19 @@ function UsersPage() {
         dataSource={data?.list ?? []}
         loading={isLoading}
         pagination={tablePagination}
+        onRow={(record) => ({
+          onClick: (e) => {
+            if ((e.target as HTMLElement).closest(".ant-switch, .ant-btn")) return;
+            setSelected(record);
+            setDrawerOpen(true);
+          },
+          style: { cursor: "pointer" },
+        })}
         style={{ flex: 1, minHeight: 0 }}
         scroll={tableScrollY != null ? { x: "max-content", y: tableScrollY } : { x: "max-content" }}
         onChange={(_pagination, _filters, sorter) => {
           if (Array.isArray(sorter)) return;
-          const nextSortField = sorter.order ? String(sorter.field) : "username";
+          const nextSortField = sorter.order ? String(sorter.field) : "nickname";
           const nextSortOrder = sorter.order ? sorter.order : "descend";
           void navigate({
             search: {
@@ -227,6 +294,16 @@ function UsersPage() {
             },
           });
         }}
+      />
+
+      <DetailDrawer
+        open={drawerOpen}
+        user={selected}
+        onClose={() => {
+          setDrawerOpen(false);
+          setSelected(null);
+        }}
+        onStatusChange={(user) => toggleStatus(user)}
       />
     </Flex>
   );

@@ -10,6 +10,7 @@ export type FormModalProps = {
   editing: AdminItem | null;
   form: FormInstance<CreateAdminRequest>;
   confirmLoading: boolean;
+  isSuperAdmin: boolean;
   onCancel: () => void;
   onFinish: (values: CreateAdminRequest) => void;
 };
@@ -19,6 +20,7 @@ export function FormModal({
   editing,
   form,
   confirmLoading,
+  isSuperAdmin,
   onCancel,
   onFinish,
 }: FormModalProps) {
@@ -42,15 +44,13 @@ export function FormModal({
       >
         <Input disabled={!!editing} placeholder={t`请输入用户名`} />
       </Form.Item>
-      {!editing && (
-        <Form.Item
-          name="password"
-          label={t`密码`}
-          rules={[{ required: true, message: t`请输入密码` }]}
-        >
-          <Input.Password placeholder={t`请输入密码`} />
-        </Form.Item>
-      )}
+      <Form.Item
+        name="password"
+        label={t`密码`}
+        rules={editing ? [] : [{ required: true, message: t`请输入密码` }]}
+      >
+        <Input.Password placeholder={editing ? t`留空则不修改` : t`请输入密码`} />
+      </Form.Item>
       <Form.Item name="real_name" label={t`真实姓名`}>
         <Input placeholder={t`真实姓名`} />
       </Form.Item>
@@ -58,7 +58,7 @@ export function FormModal({
         <Select
           placeholder={t`请选择角色`}
           options={[
-            { label: t`超级管理员`, value: AdminRole.SUPER_ADMIN },
+            { label: t`超级管理员`, value: AdminRole.SUPER_ADMIN, disabled: !isSuperAdmin },
             { label: t`内容管理员`, value: AdminRole.CONTENT_ADMIN },
             { label: t`运营`, value: AdminRole.OPERATIONS },
             { label: t`审核员`, value: AdminRole.REVIEWER },

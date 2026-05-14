@@ -13,10 +13,21 @@ export type ToolbarProps = {
   onClearSearch: () => void;
   roleValue: string | undefined;
   onRoleChange: (role: string) => void;
+  statusValue: string | undefined;
+  onStatusChange: (status: string) => void;
 };
 
 export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(
-  { keywordInput, onKeywordChange, onSearch, onClearSearch, roleValue, onRoleChange },
+  {
+    keywordInput,
+    onKeywordChange,
+    onSearch,
+    onClearSearch,
+    roleValue,
+    onRoleChange,
+    statusValue,
+    onStatusChange,
+  },
   ref,
 ) {
   const { t } = useLingui();
@@ -57,6 +68,23 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
           />
         ),
       },
+      {
+        key: "status",
+        minWidth: FILTER_CONTROL_WIDTH,
+        children: (
+          <Select
+            allowClear
+            placeholder={t`用户状态`}
+            style={{ width: FILTER_CONTROL_WIDTH }}
+            value={statusValue}
+            onChange={(v) => onStatusChange(v ?? "")}
+            options={[
+              { label: t`正常`, value: "0" },
+              { label: t`禁用`, value: "1" },
+            ]}
+          />
+        ),
+      },
     ],
     [
       keywordInput,
@@ -64,7 +92,9 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
       onKeywordChange,
       onRoleChange,
       onSearch,
+      onStatusChange,
       roleValue,
+      statusValue,
       t,
       token.fontSize,
     ],
