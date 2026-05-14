@@ -14,7 +14,7 @@ import {
 import { PaginatedResponseSchema } from "@/api/schemas";
 import type { Knowledge as KnowledgeType, CreateKnowledgeRequest } from "@/api/knowledge";
 import { z } from "zod/v4";
-import { MoreVertical, Pencil, Trash2, Eye } from "lucide-react";
+import { MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { DataTable } from "@/components/DataTable";
 import { useResourceCRUD } from "@/hooks/useResourceCRUD";
 import { useTableFitHeight } from "@/hooks/useTableFitHeight";
@@ -22,7 +22,6 @@ import { useCrudToasts } from "@/hooks/useCrudToasts";
 import { useUrlSearchState } from "@/hooks/useUrlSearchState";
 import { Toolbar } from "./-Toolbar";
 import { FormModal } from "./-FormModal";
-import { DetailDrawer } from "./-DetailDrawer";
 import { ImportModal } from "./-ImportModal";
 
 const SearchParamsSchema = z.object({
@@ -58,7 +57,6 @@ function KnowledgePage() {
   const middleSectionRef = useRef<HTMLDivElement>(null);
   const tableFrameRef = useRef<HTMLDivElement>(null);
   const [editing, setEditing] = useState<KnowledgeType | null>(null);
-  const [viewing, setViewing] = useState<KnowledgeType | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const [form] = Form.useForm();
@@ -158,6 +156,7 @@ function KnowledgePage() {
       onMutate: crudToasts.deleteLifecycle?.onMutate,
       onSuccess: (id) => {
         crudToasts.deleteLifecycle?.onSuccess?.(id);
+        setSelectedRowKeys((prev) => prev.filter((key) => key !== id));
         correctPageAfterDelete();
       },
       onError: crudToasts.deleteLifecycle?.onError,
@@ -257,12 +256,6 @@ function KnowledgePage() {
           <Dropdown
             menu={{
               items: [
-                {
-                  key: "view",
-                  icon: <Eye size={token.fontSize} />,
-                  label: t`查看`,
-                  onClick: () => setViewing(record),
-                },
                 {
                   key: "edit",
                   icon: <Pencil size={token.fontSize} />,
@@ -372,7 +365,9 @@ function KnowledgePage() {
         onRow={(record) => ({
           onClick: (e) => {
             if ((e.target as HTMLElement).closest(".ant-switch, .ant-dropdown, .ant-btn")) return;
-            setViewing(record);
+            setEditing(record);
+            form.setFieldsValue(record);
+            setModalOpen(true);
           },
           style: { cursor: "pointer" },
         })}
@@ -413,8 +408,6 @@ function KnowledgePage() {
           }
         }}
       />
-
-      <DetailDrawer open={!!viewing} knowledge={viewing} onClose={() => setViewing(null)} />
 
       <ImportModal open={importModalOpen} onClose={() => setImportModalOpen(false)} />
     </Flex>

@@ -1,18 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  Button,
-  Form,
-  App,
-  Checkbox,
-  Tag,
-  theme,
-  Flex,
-  Tabs,
-  Card,
-  Empty,
-  Spin,
-  Typography,
-} from "antd";
+import { Button, Form, App, Tag, theme, Flex, Tabs, Card, Empty, Spin, Typography } from "antd";
 import { useLingui } from "@lingui/react/macro";
 import { useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -42,7 +29,6 @@ function ConfigPage() {
   const { token } = theme.useToken();
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<SystemConfig | null>(null);
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [form] = Form.useForm();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -80,22 +66,8 @@ function ConfigPage() {
               <ConfigCard
                 key={item.id}
                 item={item}
-                checked={selectedIds.includes(item.id)}
-                onCheck={(checked) =>
-                  setSelectedIds((prev) =>
-                    checked ? [...prev, item.id] : prev.filter((id) => id !== item.id),
-                  )
-                }
                 onEdit={() => {
                   setEditing(item);
-                  form.setFieldsValue({
-                    config_key: item.config_key,
-                    config_value: item.config_value,
-                    description: item.description ?? undefined,
-                    group: item.group ?? undefined,
-                    config_type: item.config_type ?? "input",
-                    options: item.options ?? undefined,
-                  });
                   setModalOpen(true);
                 }}
                 onDelete={() => confirmDelete(item)}
@@ -104,7 +76,7 @@ function ConfigPage() {
           </div>
         ),
       })),
-    [grouped, selectedIds, token.marginMD, form],
+    [grouped, token.marginMD, form],
   );
 
   const createMutation = useMutation({
@@ -140,16 +112,6 @@ function ConfigPage() {
     onError: () => message.error(t`删除失败`),
   });
 
-  const batchDeleteMutation = useMutation({
-    mutationFn: (ids: string[]) => httpClient.delete(CONFIG_ENDPOINTS.batchDelete, { ids }),
-    onSuccess: () => {
-      message.success(t`删除成功`);
-      setSelectedIds([]);
-      void queryClient.invalidateQueries({ queryKey: ["config"] });
-    },
-    onError: () => message.error(t`删除失败`),
-  });
-
   const confirmDelete = (record: SystemConfig) => {
     modal.confirm({
       title: t`确定要删除吗？`,
@@ -161,17 +123,6 @@ function ConfigPage() {
     });
   };
 
-  const confirmBatchDelete = () => {
-    modal.confirm({
-      title: t`确定删除选中的 ${selectedIds.length} 条记录？`,
-      content: t`此操作不可撤销。`,
-      okText: t`删除`,
-      okType: "danger",
-      cancelText: t`取消`,
-      onOk: () => batchDeleteMutation.mutate(selectedIds),
-    });
-  };
-
   return (
     <Flex
       vertical
@@ -179,26 +130,17 @@ function ConfigPage() {
       style={{ flex: "1 1 0%", minHeight: 0, overflow: "hidden" }}
     >
       <Flex justify="flex-end" style={{ flexShrink: 0 }}>
-        {selectedIds.length > 0 ? (
-          <Flex gap={token.marginSM}>
-            <Button danger icon={<Trash2 size={token.fontSize} />} onClick={confirmBatchDelete}>
-              {t`批量删除`} ({selectedIds.length})
-            </Button>
-            <Button onClick={() => setSelectedIds([])}>{t`取消选择`}</Button>
-          </Flex>
-        ) : (
-          <Button
-            type="primary"
-            icon={<Plus size={token.fontSize} />}
-            onClick={() => {
-              setEditing(null);
-              form.resetFields();
-              setModalOpen(true);
-            }}
-          >
-            {t`新增配置`}
-          </Button>
-        )}
+        <Button
+          type="primary"
+          icon={<Plus size={token.fontSize} />}
+          onClick={() => {
+            setEditing(null);
+            form.resetFields();
+            setModalOpen(true);
+          }}
+        >
+          {t`新增配置`}
+        </Button>
       </Flex>
 
       <div
@@ -280,14 +222,10 @@ function formatConfigValue(item: SystemConfig): string {
 
 function ConfigCard({
   item,
-  checked,
-  onCheck,
   onEdit,
   onDelete,
 }: {
   item: SystemConfig;
-  checked: boolean;
-  onCheck: (checked: boolean) => void;
   onEdit: () => void;
   onDelete: () => void;
 }) {
@@ -296,9 +234,6 @@ function ConfigCard({
   return (
     <Card
       size="small"
-      style={{
-        borderColor: checked ? token.colorPrimary : undefined,
-      }}
       styles={{
         body: { padding: token.paddingSM },
       }}
@@ -320,16 +255,13 @@ function ConfigCard({
         </Flex>
       }
       title={
-        <Flex align="center" gap={token.marginXS}>
-          <Checkbox checked={checked} onChange={(e) => onCheck(e.target.checked)} />
-          <Typography.Text
-            strong
-            ellipsis={{ tooltip: item.config_key }}
-            style={{ fontSize: token.fontSizeSM, maxWidth: 180 }}
-          >
-            {item.config_key}
-          </Typography.Text>
-        </Flex>
+        <Typography.Text
+          strong
+          ellipsis={{ tooltip: item.config_key }}
+          style={{ fontSize: token.fontSizeSM, maxWidth: 180 }}
+        >
+          {item.config_key}
+        </Typography.Text>
       }
     >
       <Flex vertical gap={token.marginXXS}>

@@ -14,6 +14,7 @@ import type { FormInstance } from "antd/es/form";
 import { useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import dayjs from "dayjs";
 import { Plus, Trash2 } from "lucide-react";
 import {
   CONFIG_ENDPOINTS,
@@ -100,13 +101,24 @@ export function FormModal({
   });
 
   const configType = Form.useWatch("config_type", form) as ConfigType | undefined;
+  const rawOptions = Form.useWatch("options", form) as string | undefined;
   const showOptionsEditor = configType === "select" || configType === "switch";
+
+  // config_type changed to "date" while modal is open: convert string → dayjs
+  useEffect(() => {
+    if (configType !== "date") return;
+    const raw = form.getFieldValue("config_value");
+    if (raw && typeof raw === "string") {
+      form.setFieldValue("config_value", dayjs(raw));
+    }
+  }, [configType, form]);
 
   useEffect(() => {
     if (!open) return;
     if (editing) {
       const type = editing.config_type ?? "input";
       let value = editing.config_value ?? "";
+
       // storage: bytes → best-fit display
       if (type === "storage" && value) {
         const bytes = Number(value);
@@ -116,6 +128,12 @@ export function FormModal({
           setStorageUnit(unit);
         }
       }
+
+      // date: string → dayjs object
+      if (type === "date" && value) {
+        value = dayjs(value) as unknown as string;
+      }
+
       form.setFieldsValue({
         config_key: editing.config_key,
         config_value: value,
@@ -254,18 +272,47 @@ export function FormModal({
         label={t`配置值`}
         rules={[{ required: true, message: t`请输入配置值` }]}
       >
-        <ConfigValueInput configType={configType ?? "input"} form={form} />
-      </Form.Item>
-      {configType === "storage" && (
-        <Form.Item label={t`存储大小`}>
-          <StorageInput
-            value={storageValue}
-            unit={storageUnit}
-            onValueChange={setStorageValue}
-            onUnitChange={setStorageUnit}
+        {configType === "number" ? (
+          <InputNumber style={{ width: "100%" }} placeholder={t`请输入数字`} />
+        ) : configType === "switch" ? (
+          <Select
+            placeholder={t`请选择`}
+            options={parseOptions(rawOptions).map((o) => ({
+              label: o.label,
+              value: o.value,
+            }))}
           />
-        </Form.Item>
-      )}
+        ) : configType === "select" ? (
+          <Select
+            placeholder={t`请选择`}
+            options={parseOptions(rawOptions).map((o) => ({
+              label: o.label,
+              value: o.value,
+            }))}
+          />
+        ) : configType === "textarea" || configType === "json" ? (
+          <Input.TextArea rows={4} placeholder={t`请输入`} />
+        ) : configType === "color" ? (
+          <ColorPicker showText format="hex" />
+        ) : configType === "date" ? (
+          <DatePicker style={{ width: "100%" }} />
+        ) : configType === "storage" ? (
+          <>
+            <Input style={{ display: "none" }} />
+            <StorageInput
+              value={storageValue}
+              unit={storageUnit}
+              onValueChange={setStorageValue}
+              onUnitChange={setStorageUnit}
+            />
+          </>
+        ) : (
+          <Input placeholder={t`请输入`} />
+        )}
+      </Form.Item>
+      <Form.Item name="options" hidden>
+        <Input />
+      </Form.Item>
       {showOptionsEditor && (
         <Form.Item label={t`选项配置`}>
           <OptionsEditor form={form} />
@@ -276,46 +323,6 @@ export function FormModal({
       </Form.Item>
     </BaseFormModal>
   );
-}
-
-function ConfigValueInput({ configType, form }: { configType: ConfigType; form: FormInstance }) {
-  const { t } = useLingui();
-
-  switch (configType) {
-    case "number":
-      return <InputNumber style={{ width: "100%" }} placeholder={t`请输入数字`} />;
-    case "switch":
-      return (
-        <Select
-          placeholder={t`请选择`}
-          options={[
-            { label: "true", value: "true" },
-            { label: "false", value: "false" },
-          ]}
-        />
-      );
-    case "select": {
-      const options = parseOptions(form.getFieldValue("options"));
-      return (
-        <Select
-          placeholder={t`请选择`}
-          options={options.map((o) => ({ label: o.label, value: o.value }))}
-        />
-      );
-    }
-    case "textarea":
-    case "json":
-      return <Input.TextArea rows={4} placeholder={t`请输入`} />;
-    case "color":
-      return <ColorPicker showText format="hex" />;
-    case "date":
-      return <DatePicker style={{ width: "100%" }} />;
-    case "storage":
-      return <Input style={{ display: "none" }} />;
-    case "input":
-    default:
-      return <Input placeholder={t`请输入`} />;
-  }
 }
 
 function StorageInput({
@@ -353,7 +360,8 @@ function StorageInput({
 function OptionsEditor({ form }: { form: FormInstance }) {
   const { t } = useLingui();
   const { token } = theme.useToken();
-  const options = parseOptions(form.getFieldValue("options"));
+  const rawOptions = Form.useWatch("options", form) as string | undefined;
+  const options = parseOptions(rawOptions);
 
   const updateOptions = (next: { label: string; value: string }[]) => {
     form.setFieldValue("options", JSON.stringify(next));

@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { theme, Tag, Flex, Button } from "antd";
+import { theme, Tag, Flex, Button, Input, Select, Space } from "antd";
 import type { TablePaginationConfig } from "antd/es/table/interface";
 import { useLingui } from "@lingui/react/macro";
 import { useMemo, useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { httpClient } from "@/utils/http";
 import {
   CORRECTION_ENDPOINTS,
@@ -14,16 +14,20 @@ import {
 import { PaginatedResponseSchema } from "@/api/schemas";
 import type { Correction as CorrectionT } from "@/api/correction";
 import { z } from "zod/v4";
-import { Eye } from "lucide-react";
+import { Eye, Search } from "lucide-react";
 import { DataTable } from "@/components/DataTable";
 import { useTableFitHeight } from "@/hooks/useTableFitHeight";
+import { useUrlSearchState } from "@/hooks/useUrlSearchState";
 import { DetailDrawer } from "./-DetailDrawer";
 
 const SearchParamsSchema = z.object({
   page: z.coerce.number().int().positive().catch(1),
   pageSize: z.coerce.number().int().positive().catch(10),
   status: z.string().catch(""),
+  keyword: z.string().catch(""),
 });
+
+type Search = z.infer<typeof SearchParamsSchema>;
 
 export const Route = createFileRoute("/_auth/correction/")({
   validateSearch: (search) => SearchParamsSchema.parse(search),
@@ -33,16 +37,16 @@ export const Route = createFileRoute("/_auth/correction/")({
 const paginatedSchema = PaginatedResponseSchema(CorrectionSchema);
 
 const TYPE_MAP: Record<number, string> = {
-  [CorrectionType.FACT_ERROR]: "事实错误",
-  [CorrectionType.TYPO]: "错别字",
-  [CorrectionType.OUTDATED]: "内容过时",
+  [CorrectionType.CONTENT_ERROR]: "内容错误",
+  [CorrectionType.CATEGORY_ERROR]: "分类错误",
+  [CorrectionType.IMAGE_MISMATCH]: "图片不符",
   [CorrectionType.OTHER]: "其他",
 };
 
 const STATUS_MAP: Record<number, { label: string; color: string }> = {
   [CorrectionStatus.PENDING]: { label: "待审核", color: "warning" },
-  [CorrectionStatus.APPROVED]: { label: "已通过", color: "success" },
-  [CorrectionStatus.REJECTED]: { label: "已拒绝", color: "error" },
+  [CorrectionStatus.ACCEPTED]: { label: "已采纳", color: "success" },
+  [CorrectionStatus.REJECTED]: { label: "已驳回", color: "error" },
 };
 
 function CorrectionPage() {
@@ -50,6 +54,7 @@ function CorrectionPage() {
   const navigate = useNavigate({ from: Route.fullPath });
   const { t } = useLingui();
   const { token } = theme.useToken();
+  const queryClient = useQueryClient();
   const pageShellRef = useRef<HTMLDivElement>(null);
   const toolbarRowRef = useRef<HTMLDivElement>(null);
   const middleSectionRef = useRef<HTMLDivElement>(null);
@@ -57,21 +62,31 @@ function CorrectionPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selected, setSelected] = useState<CorrectionT | null>(null);
 
+  const setSearch = (next: Search) => void navigate({ search: next });
+
+  const { keywordInput, setKeywordInput, applyKeyword } = useUrlSearchState({ search, setSearch });
+
   const { data, isLoading } = useQuery({
-    queryKey: ["correction", search.page, search.pageSize, search.status],
+    queryKey: ["correction", search.page, search.pageSize, search.status, search.keyword],
     queryFn: () =>
       httpClient.get(CORRECTION_ENDPOINTS.list, {
         params: {
           page: search.page,
           pageSize: search.pageSize,
           status: search.status || undefined,
+          keyword: search.keyword || undefined,
         },
       }),
     select: (raw) => paginatedSchema.shape.data.parse(raw),
   });
 
   const columns = [
-    { title: t`知识标题`, dataIndex: "knowledge_id", key: "knowledge_id", ellipsis: true },
+    {
+      title: t`知识标题`,
+      key: "knowledge_title",
+      ellipsis: true,
+      render: (_: unknown, record: CorrectionT) => record.knowledge?.title ?? record.knowledge_id,
+    },
     {
       title: t`类型`,
       dataIndex: "type",
@@ -131,13 +146,9 @@ function CorrectionPage() {
             pageSize: search.pageSize,
             showSizeChanger: true,
             showTotal: (total) => t`${total} 条记录`,
-            onChange: (page, pageSize) =>
-              void navigate({
-                search: { ...search, page: pageSize !== search.pageSize ? 1 : page, pageSize },
-              }),
           }
         : false,
-    [showPagination, data?.total, search, navigate, t],
+    [showPagination, data?.total, search.page, search.pageSize, t],
   );
 
   return (
@@ -147,19 +158,34 @@ function CorrectionPage() {
       gap={token.marginMD}
       style={{ flex: "1 1 0%", minHeight: 0, overflow: "hidden" }}
     >
-      <Flex ref={toolbarRowRef} justify="flex-end">
-        <Button.Group>
-          {[undefined, "0", "1", "2"].map((s) => (
-            <Button
-              key={s ?? "all"}
-              type={search.status === (s ?? "") ? "primary" : "default"}
-              loading={isLoading && search.status === (s ?? "")}
-              onClick={() => void navigate({ search: { ...search, status: s ?? "", page: 1 } })}
-            >
-              {s === undefined ? t`全部` : (STATUS_MAP[Number(s)]?.label ?? s)}
-            </Button>
-          ))}
-        </Button.Group>
+      <Flex ref={toolbarRowRef} justify="space-between" align="center">
+        <Space>
+          <Input
+            placeholder={t`搜索知识标题或描述`}
+            prefix={<Search size={token.fontSize} />}
+            value={keywordInput}
+            onChange={(e) => setKeywordInput(e.target.value)}
+            onPressEnter={() => applyKeyword(keywordInput)}
+            allowClear
+            onClear={() => {
+              setKeywordInput("");
+              setSearch({ ...search, keyword: "", page: 1 });
+            }}
+            style={{ width: 240 }}
+          />
+          <Select
+            allowClear
+            placeholder={t`审核状态`}
+            style={{ width: 120 }}
+            value={search.status || undefined}
+            onChange={(v) => void navigate({ search: { ...search, status: v ?? "", page: 1 } })}
+            options={[
+              { label: t`待审核`, value: "0" },
+              { label: t`已采纳`, value: "1" },
+              { label: t`已驳回`, value: "2" },
+            ]}
+          />
+        </Space>
       </Flex>
 
       <DataTable<CorrectionT>
@@ -176,8 +202,27 @@ function CorrectionPage() {
         dataSource={data?.list ?? []}
         loading={isLoading}
         pagination={tablePagination}
+        onRow={(record) => ({
+          onClick: (e) => {
+            if ((e.target as HTMLElement).closest(".ant-btn")) return;
+            setSelected(record);
+            setDrawerOpen(true);
+          },
+          style: { cursor: "pointer" },
+        })}
         style={{ flex: 1, minHeight: 0 }}
         scroll={tableScrollY != null ? { x: "max-content", y: tableScrollY } : { x: "max-content" }}
+        onChange={(pagination) => {
+          const next: Search = {
+            ...search,
+            page: pagination.current ?? 1,
+            pageSize: pagination.pageSize ?? 10,
+          };
+          if (pagination.pageSize !== search.pageSize) {
+            next.page = 1;
+          }
+          void navigate({ search: next });
+        }}
       />
 
       <DetailDrawer
@@ -186,6 +231,9 @@ function CorrectionPage() {
         onClose={() => {
           setDrawerOpen(false);
           setSelected(null);
+        }}
+        onReviewSuccess={() => {
+          void queryClient.invalidateQueries({ queryKey: ["correction"] });
         }}
       />
     </Flex>
