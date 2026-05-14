@@ -11,6 +11,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Favorite } from '../../favorite/entities/favorite.entity';
 import { Correction } from '../../correction/entities/correction.entity';
 import { CheckIn } from '../../check-in/entities/check-in.entity';
+import { UserReview } from '../../user-review/entities/user-review.entity';
 
 /**
  * 用户实体
@@ -32,6 +33,10 @@ export class User {
   @ApiProperty({ description: '头像 URL' })
   @Column({ type: 'varchar', length: 500, nullable: true, comment: '头像 URL' })
   avatar: string;
+
+  @ApiProperty({ description: '个性签名' })
+  @Column({ type: 'varchar', length: 200, nullable: true, comment: '个性签名' })
+  signature: string;
 
   @ApiProperty({ description: '手机号' })
   @Column({ type: 'varchar', length: 20, nullable: true, unique: true, comment: '手机号' })
@@ -81,4 +86,7 @@ export class User {
 
   @OneToMany(() => CheckIn, (checkIn) => checkIn.user)
   checkIns: CheckIn[];
+
+  @OneToMany(() => UserReview, (review) => review.user)
+  userReviews: UserReview[];
 }

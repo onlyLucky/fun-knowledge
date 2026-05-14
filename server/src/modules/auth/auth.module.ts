@@ -16,6 +16,8 @@ import { AuthAdminService } from './auth-admin.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { AdminJwtStrategy } from './strategies/admin-jwt.strategy';
 
+import { UserReviewModule } from '../user-review/user-review.module';
+
 /**
  * 认证模块
  *
@@ -44,6 +46,9 @@ import { AdminJwtStrategy } from './strategies/admin-jwt.strategy';
         },
       }),
     }),
+
+    // 用户信息审核模块
+    UserReviewModule,
   ],
   controllers: [AuthController, AuthAdminController],
   providers: [AuthService, AuthAdminService, JwtStrategy, AdminJwtStrategy],

@@ -1,0 +1,122 @@
+[
+  {
+    "nickname": "张小明",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=zhangxm",
+    "phone": "13800001001",
+    "status": 0,
+    "streak_days": 15,
+    "total_check_in_days": 45,
+    "ai_usage_count": 23,
+    "user_auths": {
+      "phone": { "phone": "13800001001" }
+    }
+  },
+  {
+    "nickname": "李小红",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=lixh",
+    "phone": "13800001002",
+    "status": 0,
+    "streak_days": 7,
+    "total_check_in_days": 30,
+    "ai_usage_count": 15,
+    "user_auths": {
+      "phone": { "phone": "13800001002" }
+    }
+  },
+  {
+    "nickname": "王大力",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=wangdl",
+    "phone": "13800001003",
+    "status": 0,
+    "streak_days": 3,
+    "total_check_in_days": 10,
+    "ai_usage_count": 8,
+    "user_auths": {
+      "phone": { "phone": "13800001003" }
+    }
+  },
+  {
+    "nickname": "赵小刚",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=zhaoxg",
+    "openid": "wx_test_001",
+    "status": 0,
+    "streak_days": 0,
+    "total_check_in_days": 5,
+    "ai_usage_count": 3,
+    "user_auths": {
+      "wechat": { "openid": "wx_test_001" }
+    }
+  },
+  {
+    "nickname": "刘小美",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=liuxm",
+    "openid": "wx_test_002",
+    "status": 0,
+    "streak_days": 20,
+    "total_check_in_days": 60,
+    "ai_usage_count": 42,
+    "user_auths": {
+      "wechat": { "openid": "wx_test_002" }
+    }
+  },
+  {
+    "nickname": "陈小强",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=chenxq",
+    "email": "chenxq@test.com",
+    "status": 0,
+    "streak_days": 1,
+    "total_check_in_days": 2,
+    "ai_usage_count": 1,
+    "user_auths": {
+      "email": { "email": "chenxq@test.com" }
+    }
+  },
+  {
+    "nickname": "周小婷",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=zhouxt",
+    "phone": "13800001007",
+    "status": 1,
+    "streak_days": 0,
+    "total_check_in_days": 0,
+    "ai_usage_count": 0,
+    "user_auths": {
+      "phone": { "phone": "13800001007" }
+    }
+  },
+  {
+    "nickname": "吴小华",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=wuxh",
+    "phone": "13800001008",
+    "status": 0,
+    "streak_days": 10,
+    "total_check_in_days": 100,
+    "ai_usage_count": 56,
+    "user_auths": {
+      "phone": { "phone": "13800001008" }
+    }
+  },
+  {
+    "nickname": "郑小龙",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=zhengxl",
+    "openid": "wx_test_003",
+    "status": 0,
+    "streak_days": 5,
+    "total_check_in_days": 20,
+    "ai_usage_count": 12,
+    "user_auths": {
+      "wechat": { "openid": "wx_test_003" }
+    }
+  },
+  {
+    "nickname": "孙小丽",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=sunxl",
+    "email": "sunxl@test.com",
+    "status": 0,
+    "streak_days": 0,
+    "total_check_in_days": 1,
+    "ai_usage_count": 0,
+    "user_auths": {
+      "email": { "email": "sunxl@test.com" }
+    }
+  }
+]

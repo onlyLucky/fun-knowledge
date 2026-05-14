@@ -24,4 +24,14 @@ export class UpdateProfileDto {
   @MaxLength(500, { message: '头像 URL 最多 500 个字符' })
   @IsOptional()
   avatar?: string;
+
+  @ApiPropertyOptional({
+    description: '个性签名',
+    example: '热爱学习冷知识',
+    maxLength: 200,
+  })
+  @IsString({ message: '个性签名必须是字符串' })
+  @MaxLength(200, { message: '个性签名最多 200 个字符' })
+  @IsOptional()
+  signature?: string;
 }

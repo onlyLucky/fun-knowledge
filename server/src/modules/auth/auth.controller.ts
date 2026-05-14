@@ -26,12 +26,16 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { BindPlatformDto } from './dto/bind-platform.dto';
+import { UserReviewService } from '../user-review/user-review.service';
 
 @ApiTags('客户端认证')
 @UseGuards(JwtAuthGuard)
 @Controller('v1/auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userReviewService: UserReviewService,
+  ) {}
 
   /**
    * 用户登录（多平台）
@@ -99,21 +103,20 @@ export class AuthController {
    */
   @Put('profile')
   @ApiBearerAuth()
-  @ApiOperation({ summary: '更新用户资料', description: '更新当前登录用户的昵称、头像等信息' })
-  @ApiResponse({ status: 200, description: '更新成功' })
+  @ApiOperation({ summary: '更新用户资料', description: '提交用户信息更新申请，需管理员审核' })
+  @ApiResponse({ status: 200, description: '提交成功' })
   @ApiResponse({ status: 401, description: '未登录' })
   async updateProfile(
     @CurrentUser() user: User,
     @Body() dto: UpdateProfileDto,
   ) {
-    const updated = await this.authService.updateProfile(user.id, dto);
+    const review = await this.userReviewService.create(user.id, dto);
     return {
       code: 0,
-      message: '更新成功',
+      message: '提交成功，等待管理员审核',
       data: {
-        id: updated.id,
-        nickname: updated.nickname,
-        avatar: updated.avatar,
+        id: review.id,
+        status: review.status,
       },
     };
   }

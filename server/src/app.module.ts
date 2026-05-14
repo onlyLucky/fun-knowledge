@@ -29,6 +29,7 @@ import { ConfigModule as AppConfigModule } from './modules/config/config.module'
 import { ImportModule } from './modules/import/import.module';
 import { LogModule } from './modules/log/log.module';
 import { UploadModule } from './modules/upload/upload.module';
+import { UserReviewModule } from './modules/user-review/user-review.module';
 
 @Module({
   imports: [
@@ -119,6 +120,7 @@ import { UploadModule } from './modules/upload/upload.module';
     ImportModule,
     UploadModule,
     LogModule,
+    UserReviewModule,
   ],
   providers: [
     {

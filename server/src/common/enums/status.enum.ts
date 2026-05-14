@@ -57,6 +57,18 @@ export enum CorrectionType {
 }
 
 /**
+ * 用户信息审核状态枚举
+ */
+export enum UserReviewStatus {
+  /** 待审核 */
+  PENDING = 0,
+  /** 已通过 */
+  APPROVED = 1,
+  /** 已驳回 */
+  REJECTED = 2,
+}
+
+/**
  * 登录平台枚举
  */
 export enum LoginPlatform {

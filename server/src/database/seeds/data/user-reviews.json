@@ -1,0 +1,71 @@
+[
+  {
+    "nickname": "冷知识达人",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=review1",
+    "signature": "每天学一点冷知识",
+    "status": 0
+  },
+  {
+    "nickname": "科学探索者",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=review2",
+    "signature": "探索未知的世界",
+    "status": 0
+  },
+  {
+    "nickname": "历史爱好者",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=review3",
+    "signature": "以史为鉴",
+    "status": 1,
+    "review_remark": "内容积极向上，审核通过",
+    "review_time": "2026-05-13T10:30:00Z"
+  },
+  {
+    "nickname": "自然观察员",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=review4",
+    "signature": "观察自然，感悟生活",
+    "status": 1,
+    "review_remark": "不错的签名",
+    "review_time": "2026-05-12T14:20:00Z"
+  },
+  {
+    "nickname": "数学天才",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=review5",
+    "signature": "1+1=2，这是真理",
+    "status": 2,
+    "review_remark": "签名过于简单，请修改",
+    "review_time": "2026-05-11T09:15:00Z"
+  },
+  {
+    "nickname": "宇宙漫游者",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=review6",
+    "signature": "仰望星空，脚踏实地",
+    "status": 0
+  },
+  {
+    "nickname": "动物世界",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=review7",
+    "signature": "爱护动物，保护自然",
+    "status": 1,
+    "review_remark": "正能量签名，通过",
+    "review_time": "2026-05-10T16:45:00Z"
+  },
+  {
+    "nickname": "植物学家",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=review8",
+    "status": 0
+  },
+  {
+    "nickname": "科技前沿",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=review9",
+    "signature": "科技改变生活",
+    "status": 2,
+    "review_remark": "请提供更详细的个性签名",
+    "review_time": "2026-05-09T11:30:00Z"
+  },
+  {
+    "nickname": "艺术鉴赏家",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=review10",
+    "signature": "艺术源于生活，高于生活",
+    "status": 0
+  }
+]
