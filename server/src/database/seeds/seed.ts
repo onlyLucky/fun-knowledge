@@ -55,6 +55,9 @@ async function seed() {
     // 5. 初始化用户审核数据
     await seedUserReviews(dataSource);
 
+    // 6. 初始化用户画像数据
+    await seedUserInterests(dataSource);
+
     console.log('🎉 种子数据初始化完成！');
   } catch (error) {
     console.error('❌ 种子数据初始化失败:', error);
@@ -193,6 +196,76 @@ async function seedUserReviews(dataSource: DataSource) {
   }
 
   console.log(`✅ 创建了 ${reviewsData.length} 条用户审核记录`);
+}
+
+async function seedUserInterests(dataSource: DataSource) {
+  const interestRepo = dataSource.getRepository(UserInterest);
+  const count = await interestRepo.count();
+
+  if (count > 0) {
+    console.log('⏭️  用户画像数据已存在，跳过');
+    return;
+  }
+
+  const userRepo = dataSource.getRepository(User);
+  const categoryRepo = dataSource.getRepository(Category);
+
+  const users = await userRepo.find();
+  const categories = await categoryRepo.find();
+
+  if (users.length === 0 || categories.length === 0) {
+    console.log('⏭️  无用户或类目数据，跳过画像初始化');
+    return;
+  }
+
+  // Sample tags for tag-level interests
+  const allTags = [
+    '物理', '化学', '生物', '天文', '地理', '医学', '心理学',
+    '编程', 'AI', '量子', '进化', '宇宙', '海洋', '气候',
+    '饮食', '运动', '睡眠', '养生', '发明', '发现',
+  ];
+
+  let created = 0;
+
+  for (let i = 0; i < users.length; i++) {
+    const user = users[i];
+
+    // Each user gets 3-5 category interests with varying scores
+    const categoryCount = 3 + (i % 3);
+    const shuffledCategories = [...categories].sort(() => Math.random() - 0.5);
+
+    for (let j = 0; j < categoryCount && j < shuffledCategories.length; j++) {
+      const score = Math.round((20 - j * 3 + Math.random() * 5) * 10) / 10;
+      const interest = interestRepo.create({
+        user_id: user.id,
+        type: 'category',
+        category_id: shuffledCategories[j].id,
+        tag_name: undefined,
+        score: Math.max(1, score),
+      });
+      await interestRepo.save(interest);
+      created++;
+    }
+
+    // Each user gets 2-4 tag interests
+    const tagCount = 2 + (i % 3);
+    const shuffledTags = [...allTags].sort(() => Math.random() - 0.5);
+
+    for (let j = 0; j < tagCount; j++) {
+      const score = Math.round((15 - j * 2 + Math.random() * 4) * 10) / 10;
+      const interest = interestRepo.create({
+        user_id: user.id,
+        type: 'tag',
+        category_id: undefined,
+        tag_name: shuffledTags[j],
+        score: Math.max(0.5, score),
+      });
+      await interestRepo.save(interest);
+      created++;
+    }
+  }
+
+  console.log(`✅ 创建了 ${created} 条用户画像记录（${users.length} 个用户）`);
 }
 
 seed();
