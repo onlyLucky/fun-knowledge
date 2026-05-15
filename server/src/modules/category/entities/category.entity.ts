@@ -35,6 +35,10 @@ export class Category {
   @Column({ type: 'int', default: 0, comment: '排序序号' })
   sort_order: number;
 
+  @ApiProperty({ description: '运营权重 (-2 到 2)' })
+  @Column({ type: 'smallint', default: 0, comment: '运营权重：-2到2' })
+  weight: number;
+
   @ApiProperty({ description: '状态', enum: [0, 1] })
   @Column({ type: 'smallint', default: 1, comment: '状态：0-禁用，1-启用' })
   status: number;

@@ -30,6 +30,7 @@ import { ImportModule } from './modules/import/import.module';
 import { LogModule } from './modules/log/log.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { UserReviewModule } from './modules/user-review/user-review.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -121,6 +122,7 @@ import { UserReviewModule } from './modules/user-review/user-review.module';
     UploadModule,
     LogModule,
     UserReviewModule,
+    DashboardModule,
   ],
   providers: [
     {

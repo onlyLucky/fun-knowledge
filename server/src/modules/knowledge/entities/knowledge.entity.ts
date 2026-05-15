@@ -79,6 +79,18 @@ export class Knowledge {
   @Column({ type: 'int', default: 0, comment: '排序权重' })
   sort_weight: number;
 
+  @ApiProperty({ description: '运营权重 (-2 到 2)' })
+  @Column({ type: 'smallint', default: 0, comment: '运营权重：-2到2' })
+  weight!: number;
+
+  @ApiProperty({ description: 'AI 延伸解读次数' })
+  @Column({ type: 'int', default: 0, comment: 'AI延伸解读次数' })
+  ai_extend_count!: number;
+
+  @ApiProperty({ description: '质量分' })
+  @Column({ type: 'float', default: 0, comment: '质量分' })
+  quality_score!: number;
+
   @ApiProperty({ description: '创建时间' })
   @CreateDateColumn({ type: 'timestamptz', comment: '创建时间' })
   created_at: Date;

@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsOptional, IsNumber, MaxLength, Min } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsInt, MaxLength, Min, Max } from 'class-validator';
 import { Type } from 'class-transformer';
 
 /**
@@ -30,4 +30,11 @@ export class UpdateCategoryDto {
   @Min(0)
   @Type(() => Number)
   sort_order?: number;
+
+  @ApiPropertyOptional({ description: '运营权重 (-2 到 2)', minimum: -2, maximum: 2 })
+  @IsOptional()
+  @IsInt()
+  @Min(-2)
+  @Max(2)
+  weight?: number;
 }

@@ -71,6 +71,9 @@ export class AiService {
     // 增加用户 AI 使用次数
     await this.userRepo.increment({ id: userId }, 'ai_usage_count', 1);
 
+    // 增加知识卡片 AI 延伸解读次数
+    await this.knowledgeRepo.increment({ id: knowledgeId }, 'ai_extend_count', 1);
+
     return saved;
   }
 

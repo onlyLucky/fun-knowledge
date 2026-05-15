@@ -78,6 +78,14 @@
     "config_type": "number"
   },
   {
+    "config_key": "recommend_behavior_dedup_enabled",
+    "config_value": "true",
+    "description": "是否开启用户行为上报去重",
+    "group": "recommend",
+    "config_type": "switch",
+    "options": "[{\"label\":\"开启\",\"value\":\"true\"},{\"label\":\"关闭\",\"value\":\"false\"}]"
+  },
+  {
     "config_key": "upload_max_size",
     "config_value": "10485760",
     "description": "上传文件最大大小（字节），默认 10MB",

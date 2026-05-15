@@ -29,8 +29,14 @@ export class RecommendLog {
   @Prop({ comment: '点击时间' })
   clicked_at: Date;
 
+  @Prop({ comment: '浏览时长（秒）' })
+  browse_duration: number;
+
+  @Prop({ comment: '行为类型：browse/favorite/ai_extend' })
+  action: string;
+
   @Prop({ default: () => new Date(), comment: '推荐时间' })
-  created_at: Date;
+  recommended_at: Date;
 }
 
 export const RecommendLogSchema = SchemaFactory.createForClass(RecommendLog);
@@ -41,3 +47,4 @@ RecommendLogSchema.index({ knowledge_id: 1 });
 RecommendLogSchema.index({ strategy: 1 });
 RecommendLogSchema.index({ created_at: -1 });
 RecommendLogSchema.index({ user_id: 1, created_at: -1 });
+RecommendLogSchema.index({ user_id: 1, knowledge_id: 1, action: 1, created_at: -1 });

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsOptional, IsArray, IsInt, IsIn, IsEnum, MaxLength } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsArray, IsInt, IsIn, IsEnum, MaxLength, Min, Max } from 'class-validator';
 import { ResourceType } from '../../../common/enums/resource-type.enum';
 
 /**
@@ -55,4 +55,11 @@ export class CreateKnowledgeDto {
   @IsOptional()
   @IsInt()
   sort_weight?: number;
+
+  @ApiPropertyOptional({ description: '运营权重 (-2 到 2)', default: 0, minimum: -2, maximum: 2 })
+  @IsOptional()
+  @IsInt()
+  @Min(-2)
+  @Max(2)
+  weight?: number;
 }
