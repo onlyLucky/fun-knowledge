@@ -1,6 +1,6 @@
 import { motion } from 'motion/react';
 import { Shield, Lock, Eye, Database, Trash2, Bell } from 'lucide-react';
-import { PageHeader } from '../components/PageHeader';
+import { PageHeader } from '../../components/PageHeader';
 
 const HIGHLIGHTS = [
   { icon: Lock, title: '数据加密', desc: '所有传输数据采用 TLS 加密，确保信息安全' },

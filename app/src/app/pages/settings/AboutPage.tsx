@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { Star, Shield, Zap, Heart, ChevronRight } from 'lucide-react';
-import { PageHeader } from '../components/PageHeader';
+import { PageHeader } from '../../components/PageHeader';
 
 const FEATURES = [
   { icon: Zap, title: '每日精选', desc: '精心策划的冷知识，每天更新，拒绝信息噪音' },

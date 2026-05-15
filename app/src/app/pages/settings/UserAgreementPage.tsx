@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { PageHeader } from '../components/PageHeader';
+import { PageHeader } from '../../components/PageHeader';
 
 const SECTIONS = [
   {

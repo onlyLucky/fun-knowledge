@@ -2,9 +2,9 @@ import { useParams, useNavigate } from 'react-router';
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Star, AlertCircle, Sparkles, ChevronLeft } from 'lucide-react';
-import { MOCK_CARDS } from '../data/mock';
-import { AIBottomSheet } from '../components/AIBottomSheet';
-import { ErrorReportSheet } from '../components/ErrorReportSheet';
+import { MOCK_CARDS } from '../../data/mock';
+import { AIBottomSheet } from '../../components/AIBottomSheet';
+import { ErrorReportSheet } from '../../components/ErrorReportSheet';
 
 export function CardDetailPage() {
   const { id } = useParams<{ id: string }>();

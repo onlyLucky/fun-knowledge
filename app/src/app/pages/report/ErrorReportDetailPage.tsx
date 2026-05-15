@@ -1,8 +1,8 @@
 import { useParams, useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { CheckCircle2, Clock, XCircle, MessageSquare, FileText } from 'lucide-react';
-import { MOCK_CARDS } from '../data/mock';
-import { PageHeader } from '../components/PageHeader';
+import { MOCK_CARDS } from '../../data/mock';
+import { PageHeader } from '../../components/PageHeader';
 
 type Status = 'pending' | 'resolved' | 'rejected';
 

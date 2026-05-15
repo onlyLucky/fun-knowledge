@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router';
-import { CATEGORIES, MOCK_CARDS } from '../data/mock';
+import { CATEGORIES, MOCK_CARDS } from '../../data/mock';
 import {
   Camera, Sparkles, Lightbulb, Leaf, FlaskConical,
   Calculator, BookOpen, User, Globe, Utensils, Map, Palette, Search,
 } from 'lucide-react';
 import { createElement, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { PageHeader } from '../components/PageHeader';
+import { PageHeader } from '../../components/PageHeader';
 
 const iconMap: Record<string, any> = {
   Sparkles, Lightbulb, Leaf, FlaskConical,

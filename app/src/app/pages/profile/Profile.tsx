@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router';
 import { Star, Calendar, AlertCircle, Settings, Info, ChevronRight, BookOpen, Flame, Pencil } from 'lucide-react';
 import { motion } from 'motion/react';
-import { PageHeader } from '../components/PageHeader';
-import { useUser } from '../context/UserContext';
+import { PageHeader } from '../../components/PageHeader';
+import { useUser } from '../../context/UserContext';
 
 // ─── Avatar display ───────────────────────────────────────────────────────────
 

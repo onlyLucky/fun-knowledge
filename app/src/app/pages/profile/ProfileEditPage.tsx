@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, Check, Camera, X } from 'lucide-react';
-import { useUser } from '../context/UserContext';
+import { useUser } from '../../context/UserContext';
 
 // ─── Preset Avatars ───────────────────────────────────────────────────────────
 

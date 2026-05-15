@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Mail, MessageSquare, Clock, Send, CheckCircle2, Copy, Check } from 'lucide-react';
-import { PageHeader } from '../components/PageHeader';
+import { PageHeader } from '../../components/PageHeader';
 
 const TOPICS = ['产品建议', '内容问题', '账号帮助', '商务合作', '媒体联系', '其他'];
 

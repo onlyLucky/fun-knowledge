@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Send, CheckCircle2 } from 'lucide-react';
-import { PageHeader } from '../components/PageHeader';
+import { PageHeader } from '../../components/PageHeader';
 
 const REPORT_TYPES = [
   { emoji: '❌', label: '虚假信息', desc: '内容存在明显错误或谣言' },

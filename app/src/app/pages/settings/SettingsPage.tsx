@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Bell, Moon, Eye, Globe, Shield, Trash2, ChevronRight, Check, LogOut, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router';
-import { PageHeader } from '../components/PageHeader';
-import { useAuth } from '../context/AuthContext';
+import { PageHeader } from '../../components/PageHeader';
+import { useAuth } from '../../context/AuthContext';
 
 // ─── Language Options ────────────────────────────────────────────────────────
 

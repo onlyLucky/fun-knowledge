@@ -1,26 +1,13 @@
 import { createBrowserRouter, Navigate } from "react-router";
 import { Layout } from "./components/Layout";
-import { Home } from "./pages/Home";
-import { Discover } from "./pages/Discover";
-import { Profile } from "./pages/Profile";
-import { Favorites } from "./pages/Favorites";
-import { CalendarPage } from "./pages/CalendarPage";
-import { SettingsPage } from "./pages/SettingsPage";
-import { AboutPage } from "./pages/AboutPage";
-import { CategoryDetail } from "./pages/CategoryDetail";
-import { ErrorReportPage } from "./pages/ErrorReportPage";
-import { ErrorReportDetailPage } from "./pages/ErrorReportDetailPage";
-import { CardDetailPage } from "./pages/CardDetailPage";
-import { UserAgreementPage } from "./pages/UserAgreementPage";
-import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
-import { ReportContentPage } from "./pages/ReportContentPage";
-import { ContactUsPage } from "./pages/ContactUsPage";
-import { ProfileEditPage } from "./pages/ProfileEditPage";
 import { SubPageWrapper } from "./components/SubPageWrapper";
-import { WelcomePage } from "./pages/auth/WelcomePage";
-import { LoginPage } from "./pages/auth/LoginPage";
-import { RegisterPage } from "./pages/auth/RegisterPage";
 import { useAuth } from "./context/AuthContext";
+import { Home, CardDetailPage, CategoryDetail } from "./pages/home";
+import { Discover } from "./pages/discover";
+import { Profile, ProfileEditPage, Favorites, CalendarPage } from "./pages/profile";
+import { SettingsPage, AboutPage, ContactUsPage, PrivacyPolicyPage, UserAgreementPage } from "./pages/settings";
+import { ErrorReportPage, ErrorReportDetailPage, ReportContentPage } from "./pages/report";
+import { WelcomePage, LoginPage, RegisterPage } from "./pages/auth";
 
 // ─── Auth guard wrapping Layout ───────────────────────────────────────────────
 

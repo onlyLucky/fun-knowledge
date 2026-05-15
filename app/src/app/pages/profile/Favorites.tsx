@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Star, Sparkles, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router';
-import { MOCK_CARDS } from '../data/mock';
-import { PageHeader } from '../components/PageHeader';
-import { AIBottomSheet } from '../components/AIBottomSheet';
+import { MOCK_CARDS } from '../../data/mock';
+import { PageHeader } from '../../components/PageHeader';
+import { AIBottomSheet } from '../../components/AIBottomSheet';
 
 // Simulate saved cards (first 3 + last card)
 const INITIAL_SAVED = [MOCK_CARDS[0], MOCK_CARDS[1], MOCK_CARDS[3], MOCK_CARDS[4]];

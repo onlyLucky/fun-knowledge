@@ -5,10 +5,10 @@ import {
   Sparkles, Lightbulb, Leaf, FlaskConical,
   Calculator, BookOpen, User, Globe, Utensils, Map, Palette,
 } from 'lucide-react';
-import { CATEGORIES, MOCK_CARDS } from '../data/mock';
-import { KnowledgeCard } from '../components/KnowledgeCard';
-import { AIBottomSheet } from '../components/AIBottomSheet';
-import { PageHeader } from '../components/PageHeader';
+import { CATEGORIES, MOCK_CARDS } from '../../data/mock';
+import { KnowledgeCard } from '../../components/KnowledgeCard';
+import { AIBottomSheet } from '../../components/AIBottomSheet';
+import { PageHeader } from '../../components/PageHeader';
 import { clsx } from 'clsx';
 
 const iconMap: Record<string, any> = {

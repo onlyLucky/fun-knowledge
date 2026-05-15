@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { CheckCircle2, Clock, XCircle, ChevronRight } from 'lucide-react';
-import { PageHeader } from '../components/PageHeader';
-import { MOCK_CARDS } from '../data/mock';
+import { PageHeader } from '../../components/PageHeader';
+import { MOCK_CARDS } from '../../data/mock';
 
 type Status = 'pending' | 'resolved' | 'rejected';
 

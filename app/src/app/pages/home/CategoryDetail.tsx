@@ -1,8 +1,8 @@
 import { useParams, useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { Star, Sparkles } from 'lucide-react';
-import { CATEGORIES, MOCK_CARDS } from '../data/mock';
-import { PageHeader } from '../components/PageHeader';
+import { CATEGORIES, MOCK_CARDS } from '../../data/mock';
+import { PageHeader } from '../../components/PageHeader';
 import { useState } from 'react';
 
 export function CategoryDetail() {
@@ -22,7 +22,11 @@ export function CategoryDetail() {
     e.stopPropagation();
     setSaved(prev => {
       const next = new Set(prev);
-      next.has(cardId) ? next.delete(cardId) : next.add(cardId);
+      if (next.has(cardId)) {
+        next.delete(cardId);
+      } else {
+        next.add(cardId);
+      }
       return next;
     });
   };
