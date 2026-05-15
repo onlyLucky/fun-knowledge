@@ -52,6 +52,21 @@ export function FormModal({
           placeholder={t`请输入排序`}
         />
       </Form.Item>
+      <Form.Item
+        name="weight"
+        label={t`运营权重`}
+        initialValue={0}
+        tooltip={t`-2到2，影响推荐排序`}
+      >
+        <InputNumber
+          min={-2}
+          max={2}
+          step={1}
+          precision={0}
+          style={{ width: "100%" }}
+          placeholder={t`运营权重`}
+        />
+      </Form.Item>
     </BaseFormModal>
   );
 }

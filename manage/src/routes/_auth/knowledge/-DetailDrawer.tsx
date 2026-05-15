@@ -1,4 +1,4 @@
-import { Drawer, Descriptions, Tag, Image, Typography } from "antd";
+import { Drawer, Descriptions, Tag, Image, Typography, Divider } from "antd";
 import { useLingui } from "@lingui/react/macro";
 import { KnowledgeStatus } from "@/api/knowledge";
 import type { Knowledge } from "@/api/knowledge";
@@ -88,10 +88,35 @@ export function DetailDrawer({ open, knowledge, onClose }: DetailDrawerProps) {
         {knowledge.source && (
           <Descriptions.Item label={t`来源`}>{knowledge.source}</Descriptions.Item>
         )}
-        <Descriptions.Item label={t`浏览量`}>{knowledge.view_count ?? 0}</Descriptions.Item>
+
         <Descriptions.Item label={t`排序权重`}>{knowledge.sort_weight ?? 0}</Descriptions.Item>
-        <Descriptions.Item label={t`创建时间`}>{knowledge.created_at}</Descriptions.Item>
-        <Descriptions.Item label={t`更新时间`}>{knowledge.updated_at}</Descriptions.Item>
+      </Descriptions>
+
+      <Divider plain style={{ margin: "16px 0" }}>{t`数据统计`}</Divider>
+
+      <Descriptions column={3} size="small" bordered>
+        <Descriptions.Item label={t`浏览量`}>{knowledge.view_count ?? 0}</Descriptions.Item>
+        <Descriptions.Item label={t`收藏数`}>{knowledge.favorite_count ?? 0}</Descriptions.Item>
+        <Descriptions.Item label={t`纠错数`}>{knowledge.correction_count ?? 0}</Descriptions.Item>
+        <Descriptions.Item label={t`AI解读`}>{knowledge.ai_extend_count ?? 0}</Descriptions.Item>
+        <Descriptions.Item label={t`质量分`}>{knowledge.quality_score ?? 0}</Descriptions.Item>
+        <Descriptions.Item label={t`运营权重`}>{knowledge.weight ?? 0}</Descriptions.Item>
+      </Descriptions>
+
+      <Divider plain style={{ margin: "16px 0" }}>{t`数据时间`}</Divider>
+
+      <Descriptions
+        column={1}
+        size="small"
+        bordered
+        styles={{ label: { whiteSpace: "nowrap" }, content: { whiteSpace: "nowrap" } }}
+      >
+        <Descriptions.Item label={t`创建时间`}>
+          {knowledge.created_at ? new Date(knowledge.created_at).toLocaleString("zh-CN") : "-"}
+        </Descriptions.Item>
+        <Descriptions.Item label={t`更新时间`}>
+          {knowledge.updated_at ? new Date(knowledge.updated_at).toLocaleString("zh-CN") : "-"}
+        </Descriptions.Item>
       </Descriptions>
     </Drawer>
   );

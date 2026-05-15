@@ -1,110 +1,422 @@
-import type { CSSProperties } from "react";
-import { useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Card, Col, Row, Typography, Avatar, theme, Flex, Skeleton, Timeline, Tag } from "antd";
+import {
+  Card,
+  Col,
+  Row,
+  Typography,
+  theme,
+  Flex,
+  Skeleton,
+  Table,
+  Progress,
+  Tabs,
+  Statistic,
+} from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { useLingui } from "@lingui/react/macro";
-import { DollarSign, Users, CreditCard, Activity } from "lucide-react";
-import "./index.css";
+import { Sparkles, AlertTriangle, Users, TrendingUp, MousePointerClick } from "lucide-react";
+import { httpClient } from "@/utils/http";
+import { DASHBOARD_ENDPOINTS, RecommendStatsSchema } from "@/api/dashboard";
+import type { RecommendStats } from "@/api/dashboard";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 export const Route = createFileRoute("/_auth/dashboard/")({
   component: DashboardPage,
 });
 
-async function fetchDashboardShell() {
-  await new Promise((r) => setTimeout(r, 1000));
-  return true;
-}
-
-type AntToken = ReturnType<typeof theme.useToken>["token"];
-
-function StatCardSkeleton({ token }: { token: AntToken }) {
-  const titleLine = Math.round(token.fontSizeSM * token.lineHeight);
-  const iconBox = 24;
-  const titleRowHeight = Math.max(titleLine, iconBox);
-  const valueLine = Math.round(24 * 1);
-  const descLine = Math.round(token.fontSizeSM * token.lineHeight);
-
-  return (
-    <Card styles={{ body: { padding: token.paddingLG } }}>
-      <div className="dash-skel-stat">
-        <Flex
-          justify="space-between"
-          align="center"
-          style={{ marginBottom: token.marginXS, minHeight: titleRowHeight }}
-        >
-          <Skeleton.Input active size="small" style={{ width: "55%", height: titleLine }} />
-          <Skeleton.Avatar active size="small" style={{ width: iconBox, height: iconBox }} />
-        </Flex>
-        <Flex vertical gap={token.marginXS}>
-          <Skeleton.Input active style={{ width: "25%", height: valueLine }} />
-          <Skeleton.Input
-            active
-            size="small"
-            style={{ width: "75%", maxWidth: 200, height: descLine }}
-          />
-        </Flex>
-      </div>
-    </Card>
-  );
-}
-
-function DashboardSkeleton() {
+function DashboardPage() {
+  const { t } = useLingui();
   const { token } = theme.useToken();
-  const body = { padding: token.paddingLG } as const;
-  const cardTitleSkel = (w: number) => (
-    <Skeleton.Input
-      active
-      style={{
-        width: w,
-        height: Math.round(token.fontSizeHeading5 * token.lineHeightHeading5),
-      }}
-    />
-  );
+
+  const { data, isLoading } = useQuery<RecommendStats>({
+    queryKey: ["dashboard", "recommend-stats"],
+    queryFn: () => httpClient.get(DASHBOARD_ENDPOINTS.recommendStats),
+    select: (raw) => RecommendStatsSchema.parse(raw),
+    staleTime: 60_000,
+  });
+
+  if (isLoading || !data) {
+    return <DashboardSkeleton token={token} />;
+  }
+
+  const {
+    realtime,
+    quality_distribution,
+    hot_ranking,
+    quality_alerts,
+    category_stats,
+    category_recommend_stats,
+    user_stats,
+  } = data;
+
+  const qualityTotal =
+    quality_distribution.excellent +
+    quality_distribution.normal +
+    quality_distribution.low +
+    quality_distribution.unevaluated;
 
   return (
     <Flex vertical gap={token.marginLG}>
+      {/* Top Stats */}
       <Row gutter={[16, 16]}>
-        {[0, 1, 2, 3].map((i) => (
-          <Col xs={24} sm={12} lg={6} key={i}>
-            <StatCardSkeleton token={token} />
-          </Col>
-        ))}
-      </Row>
-      <Row gutter={[16, 16]}>
-        <Col xs={24} lg={14}>
-          <Card title={cardTitleSkel(88)} styles={{ body: body }} style={{ height: "100%" }}>
-            <Skeleton.Node active style={{ width: "100%", height: 300 }}>
-              <div style={{ width: "100%", height: "100%" }} />
-            </Skeleton.Node>
+        <Col xs={24} sm={12} lg={6}>
+          <Card styles={{ body: { padding: token.paddingLG } }}>
+            <Statistic
+              title={t`今日推荐次数`}
+              value={realtime.today_recommend_count}
+              prefix={<TrendingUp size={16} />}
+            />
           </Card>
         </Col>
-        <Col xs={24} lg={10}>
-          <Card title={cardTitleSkel(112)} styles={{ body: body }} style={{ height: "100%" }}>
-            <Flex vertical className="dash-skel-recent">
-              {[0, 1, 2, 3, 4].map((i) => (
-                <Flex
-                  key={i}
-                  align="center"
-                  justify="space-between"
-                  gap={token.marginSM}
-                  style={{
-                    padding: `${token.paddingXS}px ${token.paddingSM}px`,
-                    borderRadius: token.borderRadius,
-                  }}
-                >
-                  <Flex align="center" gap={token.marginSM} style={{ minWidth: 0, flex: 1 }}>
-                    <Skeleton.Avatar active size={40} shape="circle" />
-                    <Flex vertical style={{ minWidth: 0, flex: 1 }} gap={2}>
-                      <Skeleton.Input active size="small" style={{ width: "50%", height: 12 }} />
-                      <Skeleton.Input active size="small" style={{ width: "85%", height: 12 }} />
-                    </Flex>
+        <Col xs={24} sm={12} lg={6}>
+          <Card styles={{ body: { padding: token.paddingLG } }}>
+            <Statistic
+              title={t`今日点击率`}
+              value={realtime.today_click_rate}
+              suffix="%"
+              prefix={<MousePointerClick size={16} />}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} lg={6}>
+          <Card styles={{ body: { padding: token.paddingLG } }}>
+            <Statistic
+              title={t`今日AI延伸解读率`}
+              value={realtime.today_ai_extend_rate}
+              suffix="%"
+              prefix={<Sparkles size={16} />}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} lg={6}>
+          <Card styles={{ body: { padding: token.paddingLG } }}>
+            <Statistic
+              title={t`总用户数`}
+              value={user_stats.total_users}
+              prefix={<Users size={16} />}
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Quality Distribution + Category Analysis */}
+      <Row gutter={[16, 16]}>
+        <Col xs={24} lg={12}>
+          <Card title={t`内容质量分布`} styles={{ body: { padding: token.paddingLG } }}>
+            <Flex vertical gap={token.marginMD}>
+              {qualityTotal > 0 ? (
+                <>
+                  <Flex justify="space-between">
+                    <Text>{t`优质 (>=15分)`}</Text>
+                    <Text strong>{quality_distribution.excellent}</Text>
                   </Flex>
-                </Flex>
-              ))}
+                  <Progress
+                    percent={Math.round((quality_distribution.excellent / qualityTotal) * 100)}
+                    strokeColor={token.colorSuccess}
+                    showInfo={false}
+                  />
+                  <Flex justify="space-between">
+                    <Text>{t`普通 (5-15分)`}</Text>
+                    <Text strong>{quality_distribution.normal}</Text>
+                  </Flex>
+                  <Progress
+                    percent={Math.round((quality_distribution.normal / qualityTotal) * 100)}
+                    strokeColor={token.colorPrimary}
+                    showInfo={false}
+                  />
+                  <Flex justify="space-between">
+                    <Text>{t`低质 (<5分)`}</Text>
+                    <Text strong>{quality_distribution.low}</Text>
+                  </Flex>
+                  <Progress
+                    percent={Math.round((quality_distribution.low / qualityTotal) * 100)}
+                    strokeColor={token.colorWarning}
+                    showInfo={false}
+                  />
+                  <Flex justify="space-between">
+                    <Text>{t`待评估 (浏览<100)`}</Text>
+                    <Text strong>{quality_distribution.unevaluated}</Text>
+                  </Flex>
+                  <Progress
+                    percent={Math.round((quality_distribution.unevaluated / qualityTotal) * 100)}
+                    strokeColor={token.colorTextQuaternary}
+                    showInfo={false}
+                  />
+                </>
+              ) : (
+                <Text type="secondary">{t`暂无数据`}</Text>
+              )}
             </Flex>
+          </Card>
+        </Col>
+        <Col xs={24} lg={12}>
+          <Card title={t`类目分析`} styles={{ body: { padding: token.paddingLG } }}>
+            <Table
+              dataSource={category_stats}
+              rowKey="category_id"
+              size="small"
+              pagination={false}
+              scroll={{ y: 300 }}
+              columns={[
+                { title: t`类目`, dataIndex: "name", key: "name" },
+                {
+                  title: t`内容数`,
+                  dataIndex: "knowledge_count",
+                  key: "knowledge_count",
+                  width: 80,
+                },
+                { title: t`总浏览`, dataIndex: "total_views", key: "total_views", width: 90 },
+                {
+                  title: t`总收藏`,
+                  dataIndex: "total_favorites",
+                  key: "total_favorites",
+                  width: 90,
+                },
+              ]}
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Hot Ranking + Quality Alerts */}
+      <Row gutter={[16, 16]}>
+        <Col xs={24} lg={12}>
+          <Card title={t`热度排行`} styles={{ body: { padding: token.paddingLG } }}>
+            <Tabs
+              items={[
+                {
+                  key: "view",
+                  label: t`浏览量`,
+                  children: (
+                    <Table
+                      dataSource={hot_ranking.top_view}
+                      rowKey="id"
+                      size="small"
+                      pagination={false}
+                      scroll={{ y: 300 }}
+                      columns={[
+                        { title: t`标题`, dataIndex: "title", key: "title", ellipsis: true },
+                        { title: t`浏览量`, dataIndex: "view_count", key: "view_count", width: 80 },
+                      ]}
+                    />
+                  ),
+                },
+                {
+                  key: "favorite",
+                  label: t`收藏量`,
+                  children: (
+                    <Table
+                      dataSource={hot_ranking.top_favorite}
+                      rowKey="id"
+                      size="small"
+                      pagination={false}
+                      scroll={{ y: 300 }}
+                      columns={[
+                        { title: t`标题`, dataIndex: "title", key: "title", ellipsis: true },
+                        {
+                          title: t`收藏量`,
+                          dataIndex: "favorite_count",
+                          key: "favorite_count",
+                          width: 80,
+                        },
+                      ]}
+                    />
+                  ),
+                },
+                {
+                  key: "ai_extend",
+                  label: t`AI解读`,
+                  children: (
+                    <Table
+                      dataSource={hot_ranking.top_ai_extend}
+                      rowKey="id"
+                      size="small"
+                      pagination={false}
+                      scroll={{ y: 300 }}
+                      columns={[
+                        { title: t`标题`, dataIndex: "title", key: "title", ellipsis: true },
+                        {
+                          title: t`AI解读`,
+                          dataIndex: "ai_extend_count",
+                          key: "ai_extend_count",
+                          width: 80,
+                        },
+                      ]}
+                    />
+                  ),
+                },
+              ]}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} lg={12}>
+          <Card
+            title={
+              <>
+                {t`低质预警`}{" "}
+                <AlertTriangle size={16} style={{ color: token.colorWarning, marginLeft: 8 }} />
+              </>
+            }
+            styles={{ body: { padding: token.paddingLG } }}
+          >
+            <Tabs
+              items={[
+                {
+                  key: "low_fav",
+                  label: t`收藏率<3%`,
+                  children: (
+                    <Table
+                      dataSource={quality_alerts.low_favorite_rate}
+                      rowKey="id"
+                      size="small"
+                      pagination={false}
+                      scroll={{ y: 300 }}
+                      columns={[
+                        { title: t`标题`, dataIndex: "title", key: "title", ellipsis: true },
+                        {
+                          title: t`收藏率`,
+                          dataIndex: "favorite_rate",
+                          key: "favorite_rate",
+                          width: 80,
+                          render: (v: number) => `${v}%`,
+                        },
+                      ]}
+                    />
+                  ),
+                },
+                {
+                  key: "low_ai",
+                  label: t`AI解读率<5%`,
+                  children: (
+                    <Table
+                      dataSource={quality_alerts.low_ai_rate}
+                      rowKey="id"
+                      size="small"
+                      pagination={false}
+                      scroll={{ y: 300 }}
+                      columns={[
+                        { title: t`标题`, dataIndex: "title", key: "title", ellipsis: true },
+                        {
+                          title: t`AI解读率`,
+                          dataIndex: "ai_extend_rate",
+                          key: "ai_extend_rate",
+                          width: 80,
+                          render: (v: number) => `${v}%`,
+                        },
+                      ]}
+                    />
+                  ),
+                },
+                {
+                  key: "high_correction",
+                  label: t`高纠错`,
+                  children: (
+                    <Table
+                      dataSource={quality_alerts.high_correction}
+                      rowKey="id"
+                      size="small"
+                      pagination={false}
+                      scroll={{ y: 300 }}
+                      columns={[
+                        { title: t`标题`, dataIndex: "title", key: "title", ellipsis: true },
+                        {
+                          title: t`纠错次数`,
+                          dataIndex: "correction_count",
+                          key: "correction_count",
+                          width: 80,
+                        },
+                      ]}
+                    />
+                  ),
+                },
+              ]}
+            />
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Category Recommend Stats + User Stats */}
+      <Row gutter={[16, 16]}>
+        <Col xs={24} lg={12}>
+          <Card title={t`类目推荐分析`} styles={{ body: { padding: token.paddingLG } }}>
+            <Table
+              dataSource={category_recommend_stats}
+              rowKey="category_id"
+              size="small"
+              pagination={false}
+              scroll={{ y: 300 }}
+              columns={[
+                { title: t`类目`, dataIndex: "name", key: "name" },
+                {
+                  title: t`推荐次数`,
+                  dataIndex: "recommend_count",
+                  key: "recommend_count",
+                  width: 90,
+                },
+                { title: t`点击次数`, dataIndex: "click_count", key: "click_count", width: 90 },
+                {
+                  title: t`点击率`,
+                  dataIndex: "click_rate",
+                  key: "click_rate",
+                  width: 80,
+                  render: (v: number) => `${v}%`,
+                },
+              ]}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} lg={12}>
+          <Card title={t`用户分析`} styles={{ body: { padding: token.paddingLG } }}>
+            <Row gutter={[16, 16]} style={{ marginBottom: token.marginMD }}>
+              <Col span={8}>
+                <Statistic title={t`总用户`} value={user_stats.total_users} />
+              </Col>
+              <Col span={8}>
+                <Statistic title={t`7日新增`} value={user_stats.new_users_7d} />
+              </Col>
+              <Col span={8}>
+                <Statistic title={t`7日活跃`} value={user_stats.active_users_7d} />
+              </Col>
+            </Row>
+            <Tabs
+              items={[
+                {
+                  key: "categories",
+                  label: t`兴趣类目Top`,
+                  children: (
+                    <Table
+                      dataSource={user_stats.top_interest_categories}
+                      rowKey="category_id"
+                      size="small"
+                      pagination={false}
+                      scroll={{ y: 200 }}
+                      columns={[
+                        { title: t`类目`, dataIndex: "name", key: "name" },
+                        { title: t`用户数`, dataIndex: "user_count", key: "user_count", width: 80 },
+                      ]}
+                    />
+                  ),
+                },
+                {
+                  key: "tags",
+                  label: t`兴趣标签Top`,
+                  children: (
+                    <Table
+                      dataSource={user_stats.top_interest_tags}
+                      rowKey="tag_name"
+                      size="small"
+                      pagination={false}
+                      scroll={{ y: 200 }}
+                      columns={[
+                        { title: t`标签`, dataIndex: "tag_name", key: "tag_name" },
+                        { title: t`用户数`, dataIndex: "user_count", key: "user_count", width: 80 },
+                      ]}
+                    />
+                  ),
+                },
+              ]}
+            />
           </Card>
         </Col>
       </Row>
@@ -112,227 +424,50 @@ function DashboardSkeleton() {
   );
 }
 
-function DashboardPage() {
-  const { t } = useLingui();
-  const { token } = theme.useToken();
-  const { isPending } = useQuery({
-    queryKey: ["dashboard"],
-    queryFn: fetchDashboardShell,
-    staleTime: 60_000,
-  });
-
-  const cardHoverStyle = {
-    ["--dash-card-hover-bg" as string]: token.colorBgContainer,
-    ["--dash-card-hover-border" as string]: token.colorPrimaryBorderHover,
-    ["--dash-card-hover-shadow" as string]: "none",
-  } as CSSProperties;
-
-  const stats = useMemo(
-    () => [
-      {
-        title: t`总收入`,
-        value: "$45,231.89",
-        description: t`较上月 +20.1%`,
-        icon: <DollarSign style={{ color: token.colorTextSecondary }} />,
-      },
-      {
-        title: t`订阅数`,
-        value: "+2350",
-        description: t`较上月 +180.1%`,
-        icon: <Users style={{ color: token.colorTextSecondary }} />,
-      },
-      {
-        title: t`销售额`,
-        value: "+12,234",
-        description: t`较上月 +19%`,
-        icon: <CreditCard style={{ color: token.colorTextSecondary }} />,
-      },
-      {
-        title: t`当前活跃`,
-        value: "+573",
-        description: t`较上小时 +201`,
-        icon: <Activity style={{ color: token.colorTextSecondary }} />,
-      },
-    ],
-    [t, token.colorTextSecondary],
-  );
-
-  const recentSales = useMemo(
-    () => [
-      {
-        name: "Olivia Martin",
-        email: "olivia.martin@email.com",
-        amount: "+$1,999.00",
-        initials: "OM",
-      },
-      {
-        name: "Jackson Lee",
-        email: "jackson.lee@email.com",
-        amount: "+$39.00",
-        initials: "JL",
-      },
-      {
-        name: "Isabella Nguyen",
-        email: "isabella.nguyen@email.com",
-        amount: "+$299.00",
-        initials: "IN",
-      },
-      {
-        name: "William Kim",
-        email: "will@email.com",
-        amount: "+$99.00",
-        initials: "WK",
-      },
-      {
-        name: "Sofia Davis",
-        email: "sofia.davis@email.com",
-        amount: "+$39.00",
-        initials: "SD",
-      },
-    ],
-    [],
-  );
-
-  const timelineItems = useMemo(
-    () => [
-      {
-        color: "green",
-        content: (
-          <Flex vertical gap={4}>
-            <Text strong>{t`08:30 · 部署 V3.2.0`}</Text>
-            <Text type="secondary">{t`发布分支已合并，生产环境上线完成。`}</Text>
-          </Flex>
-        ),
-      },
-      {
-        color: "blue",
-        content: (
-          <Flex vertical gap={4}>
-            <Text strong>{t`10:10 · 菜单策略更新`}</Text>
-            <Text type="secondary">{t`管理员修改了侧边栏可见性和权限映射。`}</Text>
-          </Flex>
-        ),
-      },
-      {
-        color: "gold",
-        content: (
-          <Flex vertical gap={4}>
-            <Text strong>{t`13:20 · 安全审查`}</Text>
-            <Text type="secondary">{t`Token 刷新行为和 403 路由验证通过。`}</Text>
-          </Flex>
-        ),
-      },
-      {
-        color: "red",
-        content: (
-          <Flex vertical gap={4}>
-            <Text strong>{t`15:50 · 故障恢复`}</Text>
-            <Text type="secondary">{t`用户创建高峰已处理，队列已恢复。`}</Text>
-          </Flex>
-        ),
-      },
-    ],
-    [t],
-  );
-
-  if (isPending) {
-    return <DashboardSkeleton />;
-  }
-
+function DashboardSkeleton({ token }: { token: ReturnType<typeof theme.useToken>["token"] }) {
   return (
     <Flex vertical gap={token.marginLG}>
       <Row gutter={[16, 16]}>
-        {stats.map((stat) => (
-          <Col xs={24} sm={12} lg={6} key={stat.title}>
-            <Card
-              className="dash-card-interactive"
-              style={cardHoverStyle}
-              styles={{ body: { padding: token.paddingLG } }}
-            >
-              <Flex justify="space-between" align="center" style={{ marginBottom: token.marginXS }}>
-                <Text strong style={{ fontSize: token.fontSizeSM }}>
-                  {stat.title}
-                </Text>
-                {stat.icon}
-              </Flex>
-              <div style={{ fontSize: 24, fontWeight: "bold", marginBottom: 4 }}>{stat.value}</div>
-              <Text ellipsis type="secondary" style={{ fontSize: token.fontSizeSM }}>
-                {stat.description}
-              </Text>
+        {[0, 1, 2, 3].map((i) => (
+          <Col xs={24} sm={12} lg={6} key={i}>
+            <Card styles={{ body: { padding: token.paddingLG } }}>
+              <Skeleton.Input
+                active
+                size="small"
+                style={{ width: "60%", height: 16, marginBottom: 8 }}
+              />
+              <Skeleton.Input active style={{ width: "40%", height: 32 }} />
             </Card>
           </Col>
         ))}
       </Row>
-
       <Row gutter={[16, 16]}>
-        <Col xs={24} lg={14}>
+        <Col xs={24} lg={12}>
           <Card
-            className="dash-card-interactive"
-            style={{ ...cardHoverStyle, height: "100%" }}
-            title={
-              <Flex align="center" gap={token.marginSM}>
-                <Title level={5} style={{ margin: 0 }}>
-                  {t`时间线`}
-                </Title>
-                <Tag variant="filled" color="processing">
-                  {t`今天`}
-                </Tag>
-              </Flex>
-            }
+            title={<Skeleton.Input active style={{ width: 100, height: 20 }} />}
+            styles={{ body: { padding: token.paddingLG } }}
           >
-            <Timeline className="dash-timeline" items={timelineItems} />
+            {[0, 1, 2].map((i) => (
+              <Skeleton.Input
+                key={i}
+                active
+                style={{ width: "100%", height: 24, marginBottom: 12 }}
+              />
+            ))}
           </Card>
         </Col>
-        <Col xs={24} lg={10}>
+        <Col xs={24} lg={12}>
           <Card
-            className="dash-card-interactive"
-            style={{ ...cardHoverStyle, height: "100%" }}
-            title={<Title level={5} style={{ margin: 0 }}>{t`最近销售`}</Title>}
+            title={<Skeleton.Input active style={{ width: 100, height: 20 }} />}
+            styles={{ body: { padding: token.paddingLG } }}
           >
-            <Flex
-              vertical
-              style={{
-                ["--dash-recent-hover-bg" as string]: token.colorBgTextHover,
-              }}
-            >
-              {recentSales.map((item) => (
-                <Flex
-                  key={item.email}
-                  className="dash-recent-row"
-                  align="center"
-                  justify="space-between"
-                  style={{
-                    padding: `${token.paddingXS}px ${token.paddingSM}px`,
-                    borderRadius: token.borderRadius,
-                  }}
-                >
-                  <Flex align="center" gap={token.marginSM} style={{ minWidth: 0 }}>
-                    <Avatar
-                      size={40}
-                      shape="circle"
-                      style={{
-                        flexShrink: 0,
-                        backgroundColor: token.colorFillSecondary,
-                        color: token.colorTextSecondary,
-                        fontWeight: 600,
-                        fontSize: token.fontSizeSM,
-                      }}
-                    >
-                      {item.initials}
-                    </Avatar>
-                    <Flex vertical style={{ minWidth: 0 }}>
-                      <Text strong style={{ fontSize: token.fontSizeSM, lineHeight: 1 }}>
-                        {item.name}
-                      </Text>
-                      <Text type="secondary" style={{ fontSize: token.fontSizeSM }} ellipsis>
-                        {item.email}
-                      </Text>
-                    </Flex>
-                  </Flex>
-                  <div style={{ fontWeight: 500 }}>{item.amount}</div>
-                </Flex>
-              ))}
-            </Flex>
+            {[0, 1, 2].map((i) => (
+              <Skeleton.Input
+                key={i}
+                active
+                style={{ width: "100%", height: 24, marginBottom: 12 }}
+              />
+            ))}
           </Card>
         </Col>
       </Row>

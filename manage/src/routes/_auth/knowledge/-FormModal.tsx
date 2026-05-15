@@ -145,24 +145,20 @@ export function FormModal({
         />
       </Form.Item>
       <Form.Item label={t`资源`}>
-        <Space orientation="vertical" style={{ width: "100%" }} size="small">
-          <Form.Item name="resource_url" noStyle>
-            <Space.Compact style={{ width: "100%" }}>
-              <Input
-                placeholder={t`输入图片或视频链接`}
-                onChange={handleUrlChange}
-                style={{ flex: 1 }}
-              />
-              <Upload
-                beforeUpload={handleUpload}
-                showUploadList={false}
-                accept="image/*,video/*"
-                disabled={uploading}
-              >
-                <Button icon={<UploadIcon size={14} />} loading={uploading} />
-              </Upload>
-            </Space.Compact>
-          </Form.Item>
+        <Space direction="vertical" style={{ width: "100%" }} size="small">
+          <Space.Compact style={{ width: "100%" }}>
+            <Form.Item name="resource_url" noStyle>
+              <Input placeholder={t`输入图片或视频链接`} onChange={handleUrlChange} />
+            </Form.Item>
+            <Upload
+              beforeUpload={handleUpload}
+              showUploadList={false}
+              accept="image/*,video/*"
+              disabled={uploading}
+            >
+              <Button icon={<UploadIcon size={14} />} loading={uploading} />
+            </Upload>
+          </Space.Compact>
           {resourceUrl && (
             <div style={{ position: "relative" }}>
               <Button
@@ -240,6 +236,21 @@ export function FormModal({
           precision={0}
           style={{ width: "100%" }}
           placeholder={t`排序权重`}
+        />
+      </Form.Item>
+      <Form.Item
+        name="weight"
+        label={t`运营权重`}
+        initialValue={0}
+        tooltip={t`-2到2，影响推荐排序`}
+      >
+        <InputNumber
+          min={-2}
+          max={2}
+          step={1}
+          precision={0}
+          style={{ width: "100%" }}
+          placeholder={t`运营权重`}
         />
       </Form.Item>
     </BaseFormModal>

@@ -21,6 +21,7 @@ export const CategorySchema = z.object({
   icon: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
   sort_order: z.number(),
+  weight: z.number().optional(),
   status: z.number(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
@@ -33,6 +34,7 @@ export const CreateCategoryRequestSchema = z.object({
   icon: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
   sort_order: z.number().optional(),
+  weight: z.number().min(-2).max(2).optional(),
   status: z.number().optional(),
 });
 

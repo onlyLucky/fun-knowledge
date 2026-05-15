@@ -51,6 +51,9 @@ export const KnowledgeSchema = z.object({
   created_by: z.string().nullable().optional(),
   updated_by: z.string().nullable().optional(),
   sort_weight: z.number().optional(),
+  weight: z.number().optional(),
+  ai_extend_count: z.number().optional(),
+  quality_score: z.number().optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
 });
@@ -67,6 +70,7 @@ export const CreateKnowledgeRequestSchema = z.object({
   source: z.string().nullable().optional(),
   status: z.number().optional(),
   sort_weight: z.number().optional(),
+  weight: z.number().min(-2).max(2).optional(),
 });
 
 export type CreateKnowledgeRequest = z.infer<typeof CreateKnowledgeRequestSchema>;

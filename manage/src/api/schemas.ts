@@ -101,6 +101,20 @@ export type AdminLoginResponse = z.infer<typeof AdminLoginResponseSchema>;
 
 /* ---------- User（保留兼容） ---------- */
 
+export const UserInterestSchema = z.object({
+  category_id: z.string().nullable().optional(),
+  category_name: z.string().nullable().optional(),
+  tag_name: z.string().nullable().optional(),
+  score: z.number(),
+  updated_at: z.string().optional(),
+});
+
+export const UserProfileSchema = z.object({
+  category_interests: z.array(UserInterestSchema),
+  tag_interests: z.array(UserInterestSchema),
+  total_interest_count: z.number(),
+});
+
 export const UserSchema = z.object({
   id: z.string(),
   nickname: z.string().nullable().optional(),
@@ -115,9 +129,11 @@ export const UserSchema = z.object({
   ai_usage_count: z.number().optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
+  profile: UserProfileSchema.optional(),
 });
 
 export type User = z.infer<typeof UserSchema>;
+export type UserProfile = z.infer<typeof UserProfileSchema>;
 
 export const AuthUserResponseSchema = UserSchema;
 export type AuthUserResponse = z.infer<typeof AuthUserResponseSchema>;

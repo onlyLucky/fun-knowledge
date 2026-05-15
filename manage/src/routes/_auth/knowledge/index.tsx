@@ -14,7 +14,7 @@ import {
 import { PaginatedResponseSchema } from "@/api/schemas";
 import type { Knowledge as KnowledgeType, CreateKnowledgeRequest } from "@/api/knowledge";
 import { z } from "zod/v4";
-import { MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { MoreVertical, Pencil, Trash2, Eye } from "lucide-react";
 import { DataTable } from "@/components/DataTable";
 import { useResourceCRUD } from "@/hooks/useResourceCRUD";
 import { useTableFitHeight } from "@/hooks/useTableFitHeight";
@@ -23,6 +23,7 @@ import { useUrlSearchState } from "@/hooks/useUrlSearchState";
 import { Toolbar } from "./-Toolbar";
 import { FormModal } from "./-FormModal";
 import { ImportModal } from "./-ImportModal";
+import { DetailDrawer } from "./-DetailDrawer";
 
 const SearchParamsSchema = z.object({
   page: z.coerce.number().int().positive().catch(1),
@@ -57,6 +58,8 @@ function KnowledgePage() {
   const middleSectionRef = useRef<HTMLDivElement>(null);
   const tableFrameRef = useRef<HTMLDivElement>(null);
   const [editing, setEditing] = useState<KnowledgeType | null>(null);
+  const [detailRecord, setDetailRecord] = useState<KnowledgeType | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
   const [form] = Form.useForm();
@@ -240,12 +243,39 @@ function KnowledgePage() {
       width: 80,
     },
     {
+      title: t`权重`,
+      dataIndex: "weight",
+      key: "weight",
+      sorter: true,
+      sortOrder: search.sortField === "weight" ? search.sortOrder : null,
+      width: 70,
+      render: (weight: number | undefined) => weight ?? 0,
+    },
+    {
+      title: t`AI解读`,
+      dataIndex: "ai_extend_count",
+      key: "ai_extend_count",
+      sorter: true,
+      sortOrder: search.sortField === "ai_extend_count" ? search.sortOrder : null,
+      width: 80,
+      render: (count: number | undefined) => count ?? 0,
+    },
+    {
       title: t`操作`,
       key: "actions",
       width: 100,
       align: "right" as const,
       render: (_: unknown, record: KnowledgeType) => (
         <Space>
+          {/* <Button
+            type="text"
+            icon={<Eye size={token.fontSize} />}
+            onClick={(e) => {
+              e.stopPropagation();
+              setDetailRecord(record);
+              setDetailOpen(true);
+            }}
+          /> */}
           <Switch
             size="small"
             loading={togglingId === record.id}
@@ -256,6 +286,15 @@ function KnowledgePage() {
           <Dropdown
             menu={{
               items: [
+                {
+                  key: "look",
+                  icon: <Eye size={token.fontSize} />,
+                  label: t`查看`,
+                  onClick: () => {
+                    setDetailRecord(record);
+                    setDetailOpen(true);
+                  },
+                },
                 {
                   key: "edit",
                   icon: <Pencil size={token.fontSize} />,
@@ -365,9 +404,8 @@ function KnowledgePage() {
         onRow={(record) => ({
           onClick: (e) => {
             if ((e.target as HTMLElement).closest(".ant-switch, .ant-dropdown, .ant-btn")) return;
-            setEditing(record);
-            form.setFieldsValue(record);
-            setModalOpen(true);
+            setDetailRecord(record);
+            setDetailOpen(true);
           },
           style: { cursor: "pointer" },
         })}
@@ -410,6 +448,15 @@ function KnowledgePage() {
       />
 
       <ImportModal open={importModalOpen} onClose={() => setImportModalOpen(false)} />
+
+      <DetailDrawer
+        open={detailOpen}
+        knowledge={detailRecord}
+        onClose={() => {
+          setDetailOpen(false);
+          setDetailRecord(null);
+        }}
+      />
     </Flex>
   );
 }

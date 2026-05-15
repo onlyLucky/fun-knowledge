@@ -148,6 +148,13 @@ function CategoryPage() {
     { title: t`描述`, dataIndex: "description", key: "description", ellipsis: true },
     { title: t`排序`, dataIndex: "sort_order", key: "sort_order", width: 100 },
     {
+      title: t`权重`,
+      dataIndex: "weight",
+      key: "weight",
+      width: 70,
+      render: (weight: number | undefined) => weight ?? 0,
+    },
+    {
       title: t`状态`,
       dataIndex: "status",
       key: "status",
