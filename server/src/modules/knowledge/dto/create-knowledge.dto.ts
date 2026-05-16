@@ -1,6 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsOptional, IsArray, IsInt, IsIn, IsEnum, MaxLength, Min, Max } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsArray, IsInt, IsIn, IsEnum, MaxLength, Min, Max, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ResourceType } from '../../../common/enums/resource-type.enum';
+import { AiExtendType } from '../../../common/enums/ai-extend-type.enum';
+import { AiExtendItemDto } from './ai-extend-item.dto';
 
 /**
  * 创建知识卡片 DTO
@@ -62,4 +65,16 @@ export class CreateKnowledgeDto {
   @Min(-2)
   @Max(2)
   weight?: number;
+
+  @ApiPropertyOptional({ description: 'AI延伸解读方式', enum: AiExtendType, default: AiExtendType.AI_MODEL })
+  @IsOptional()
+  @IsEnum(AiExtendType)
+  ai_extend_type?: AiExtendType;
+
+  @ApiPropertyOptional({ description: 'AI延伸解读静态数据', type: [AiExtendItemDto] })
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => AiExtendItemDto)
+  ai_extend_data?: AiExtendItemDto[];
 }

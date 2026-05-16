@@ -15,6 +15,7 @@ import { Category } from '../category/entities/category.entity';
 import { UploadService } from '../upload/upload.service';
 import { UploadType } from '../upload/dto/upload.dto';
 import { ImportStatus } from '../../common/enums/status.enum';
+import { AiExtendType } from '../../common/enums/ai-extend-type.enum';
 import type { ImportJobData, ExcelRow } from './import.service';
 
 /** 扩展名 → resource_type 映射 */
@@ -148,6 +149,18 @@ export class ImportProcessor {
         knowledge.created_by = row.admin_id;
         knowledge.updated_by = row.admin_id;
         knowledge.status = row.status ?? 1;
+
+        // AI 延伸解读配置
+        if (row.ai_extend_type && Object.values(AiExtendType).includes(row.ai_extend_type as AiExtendType)) {
+          knowledge.ai_extend_type = row.ai_extend_type;
+        }
+        if (row.ai_extend_data) {
+          try {
+            knowledge.ai_extend_data = JSON.parse(row.ai_extend_data);
+          } catch {
+            // parseRow 已验证过 JSON，此处兜底忽略
+          }
+        }
 
         await this.knowledgeRepo.save(knowledge);
         successCount++;

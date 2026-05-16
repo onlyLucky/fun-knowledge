@@ -87,6 +87,14 @@ export class Knowledge {
   @Column({ type: 'int', default: 0, comment: 'AI延伸解读次数' })
   ai_extend_count!: number;
 
+  @ApiProperty({ description: 'AI延伸解读方式', enum: ['ai_model', 'static_data'] })
+  @Column({ type: 'varchar', length: 20, default: 'ai_model', comment: 'AI延伸解读方式: ai_model=AI大模型, static_data=静态数据' })
+  ai_extend_type: string;
+
+  @ApiProperty({ description: 'AI延伸解读静态数据' })
+  @Column({ type: 'jsonb', nullable: true, comment: 'AI延伸解读静态数据' })
+  ai_extend_data: Array<{ title: string; content: string; source?: string }> | null;
+
   @ApiProperty({ description: '质量分' })
   @Column({ type: 'float', default: 0, comment: '质量分' })
   quality_score!: number;

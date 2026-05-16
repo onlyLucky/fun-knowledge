@@ -51,4 +51,15 @@ export class ImportKnowledgeDto {
   @IsString()
   @MaxLength(200)
   source?: string;
+
+  @ApiPropertyOptional({ description: 'AI延伸解读方式：ai_model 或 static_data', enum: ['ai_model', 'static_data'] })
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  ai_extend_type?: string;
+
+  @ApiPropertyOptional({ description: 'AI延伸解读静态数据（JSON 字符串）' })
+  @IsOptional()
+  @IsString()
+  ai_extend_data?: string;
 }

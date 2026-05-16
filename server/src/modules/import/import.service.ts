@@ -20,6 +20,8 @@ export interface ExcelRow {
   category_name: string;
   tags?: string;
   source?: string;
+  ai_extend_type?: string;
+  ai_extend_data?: string;
 }
 
 /** Bull 队列 Job 数据 */
@@ -226,6 +228,31 @@ export class ImportService {
     const tags = raw['标签（逗号分隔）'] ? this.sanitizeText(String(raw['标签（逗号分隔）']), 500) : undefined;
     const source = raw['来源'] ? this.sanitizeText(String(raw['来源']), 200) : undefined;
 
+    // AI 延伸解读方式
+    let aiExtendType: string | undefined;
+    const rawAiExtendType = raw['AI延伸解读方式'] ? this.sanitizeText(String(raw['AI延伸解读方式']), 20) : '';
+    if (rawAiExtendType) {
+      if (rawAiExtendType !== 'ai_model' && rawAiExtendType !== 'static_data') {
+        throw new BadRequestException(`第 ${rowNum} 行：AI延伸解读方式必须为 ai_model 或 static_data`);
+      }
+      aiExtendType = rawAiExtendType;
+    }
+
+    // AI 延伸解读数据（JSON 字符串）
+    let aiExtendData: string | undefined;
+    const rawAiExtendData = raw['AI延伸解读数据'] ? String(raw['AI延伸解读数据']).trim() : '';
+    if (rawAiExtendData) {
+      try {
+        const parsed = JSON.parse(rawAiExtendData);
+        if (!Array.isArray(parsed)) {
+          throw new Error('必须为数组');
+        }
+        aiExtendData = rawAiExtendData;
+      } catch {
+        throw new BadRequestException(`第 ${rowNum} 行：AI延伸解读数据 JSON 格式不正确，需为 [{title, content, source?}] 数组`);
+      }
+    }
+
     return {
       title,
       content,
@@ -235,6 +262,8 @@ export class ImportService {
       category_name: categoryName,
       tags,
       source,
+      ai_extend_type: aiExtendType,
+      ai_extend_data: aiExtendData,
     };
   }
 
@@ -285,7 +314,7 @@ export class ImportService {
    * 生成导入模板（ZIP 格式）
    */
   getTemplate(): Buffer {
-    const headers = ['标题', '内容', '状态', '资源类型', '资源URL', '类目名称', '标签（逗号分隔）', '来源'];
+    const headers = ['标题', '内容', '状态', '资源类型', '资源URL', '类目名称', '标签（逗号分隔）', '来源', 'AI延伸解读方式', 'AI延伸解读数据'];
     const exampleRow = [
       '太阳为什么是圆的',
       '引力使物质均匀分布...',
@@ -295,6 +324,8 @@ export class ImportService {
       '科学',
       '天文,物理',
       '维基百科',
+      'ai_model',
+      '[{"title":"延伸知识1","content":"这是延伸解读内容","source":"参考来源"}]',
     ];
 
     const worksheet = XLSX.utils.aoa_to_sheet([headers, exampleRow]);
@@ -307,6 +338,8 @@ export class ImportService {
       { wch: 15 }, // 类目名称
       { wch: 25 }, // 标签
       { wch: 20 }, // 来源
+      { wch: 18 }, // AI延伸解读方式
+      { wch: 40 }, // AI延伸解读数据
     ];
 
     const workbook = XLSX.utils.book_new();

@@ -11,6 +11,7 @@ import { AiImageLog } from './entities/ai-image-log.entity';
 import { Knowledge } from '../knowledge/entities/knowledge.entity';
 import { User } from '../user/entities/user.entity';
 import { SystemConfig } from '../config/entities/system-config.entity';
+import { AiExtendType } from '../../common/enums/ai-extend-type.enum';
 
 /**
  * AI 服务
@@ -55,15 +56,25 @@ export class AiService {
     // 检查 AI 使用上限
     await this.checkAiUsageLimit(userId);
 
-    // 调用 AI API（占位实现）
-    const aiResult = await this.callAiExtendApi(knowledge);
+    let aiContent: string;
+    let tokensUsed = 0;
+
+    if (knowledge.ai_extend_type === AiExtendType.STATIC_DATA && knowledge.ai_extend_data) {
+      // 静态数据模式：直接返回预设内容
+      aiContent = JSON.stringify(knowledge.ai_extend_data);
+    } else {
+      // AI大模型模式：调用AI API（占位实现）
+      const aiResult = await this.callAiExtendApi(knowledge);
+      aiContent = aiResult.content;
+      tokensUsed = aiResult.tokensUsed;
+    }
 
     // 保存延伸解读日志
     const log = this.extendLogRepo.create({
       user_id: userId,
       knowledge_id: knowledgeId,
-      ai_content: aiResult.content,
-      tokens_used: aiResult.tokensUsed,
+      ai_content: aiContent,
+      tokens_used: tokensUsed,
     });
 
     const saved = await this.extendLogRepo.save(log);

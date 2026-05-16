@@ -139,7 +139,7 @@ export class UploadService {
     if (this.useOss) {
       url = await this.uploadToOss(file, filename, uploadType);
     } else {
-      url = await this.uploadToLocal(file, filename);
+      url = await this.uploadToLocal(file, filename, uploadType, resourceType);
     }
 
     return {
@@ -201,8 +201,14 @@ export class UploadService {
   private async uploadToLocal(
     file: Express.Multer.File,
     filename: string,
+    uploadType: UploadType,
+    resourceType?: string,
   ): Promise<string> {
-    const uploadDir = this.configService.get<string>('storage.localPath', './uploads');
+    const baseDir = this.configService.get<string>('storage.localPath', './uploads');
+    const subDir = uploadType === UploadType.AVATAR
+      ? 'avatar'
+      : `knowledge/${resourceType || 'other'}`;
+    const uploadDir = path.join(baseDir, subDir);
 
     // 确保目录存在
     if (!fs.existsSync(uploadDir)) {
@@ -213,7 +219,7 @@ export class UploadService {
     fs.writeFileSync(filePath, file.buffer);
 
     this.logger.log(`文件已保存到本地: ${filePath}`);
-    return `/uploads/${filename}`;
+    return `/uploads/${subDir}/${filename}`;
   }
 
   /**

@@ -11,6 +11,9 @@ const ALLOWED_SORT_FIELDS = [
   'sort_weight',
   'favorite_count',
   'correction_count',
+  'ai_extend_count',
+  'quality_score',
+  'weight',
 ] as const;
 
 export type SortableField = (typeof ALLOWED_SORT_FIELDS)[number];
