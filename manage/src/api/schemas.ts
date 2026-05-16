@@ -38,6 +38,7 @@ export const ROLE_PERMISSIONS: Record<AdminRole, string[]> = {
     "config:view",
     "config:edit",
     "log:view",
+    "system:view",
   ],
   [AdminRole.CONTENT_ADMIN]: [
     "knowledge:view",

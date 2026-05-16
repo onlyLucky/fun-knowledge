@@ -34,6 +34,21 @@ export const ResourceType = {
 
 export type ResourceType = (typeof ResourceType)[keyof typeof ResourceType];
 
+export const AiExtendType = {
+  AI_MODEL: "ai_model",
+  STATIC_DATA: "static_data",
+} as const;
+
+export type AiExtendType = (typeof AiExtendType)[keyof typeof AiExtendType];
+
+export const AiExtendItemSchema = z.object({
+  title: z.string(),
+  content: z.string(),
+  source: z.string().optional(),
+});
+
+export type AiExtendItem = z.infer<typeof AiExtendItemSchema>;
+
 export const KnowledgeSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -53,6 +68,8 @@ export const KnowledgeSchema = z.object({
   sort_weight: z.number().optional(),
   weight: z.number().optional(),
   ai_extend_count: z.number().optional(),
+  ai_extend_type: z.string().optional(),
+  ai_extend_data: z.array(AiExtendItemSchema).nullable().optional(),
   quality_score: z.number().optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
@@ -71,6 +88,8 @@ export const CreateKnowledgeRequestSchema = z.object({
   status: z.number().optional(),
   sort_weight: z.number().optional(),
   weight: z.number().min(-2).max(2).optional(),
+  ai_extend_type: z.string().optional(),
+  ai_extend_data: z.array(AiExtendItemSchema).nullable().optional(),
 });
 
 export type CreateKnowledgeRequest = z.infer<typeof CreateKnowledgeRequestSchema>;

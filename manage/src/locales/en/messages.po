@@ -13,6 +13,16 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/routes/_auth/category/-FormModal.tsx
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "-2到2，影响推荐排序"
+msgstr ""
+
+#. placeholder {0}: task.fail_count
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "，失败 {0} 条"
+msgstr ""
+
 #. placeholder {0}: s.label
 #: src/routes/_auth/correction/-DetailDrawer.tsx
 #: src/routes/_auth/correction/index.tsx
@@ -20,74 +30,254 @@ msgid "{0}"
 msgstr "{0}"
 
 #: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/category/index.tsx
 #: src/routes/_auth/correction/index.tsx
 #: src/routes/_auth/knowledge/index.tsx
 #: src/routes/_auth/logs/index.tsx
+#: src/routes/_auth/user-review/index.tsx
 #: src/routes/_auth/users/index.tsx
 msgid "{total} 条记录"
 msgstr "{total} rows"
 
 #: src/routes/_auth/dashboard/index.tsx
-msgid "08:30 · 部署 V3.2.0"
-msgstr "08:30 · Deploy V3.2.0"
+#~ msgid "08:30 · 部署 V3.2.0"
+#~ msgstr "08:30 · Deploy V3.2.0"
 
 #: src/routes/_auth/dashboard/index.tsx
-msgid "10:10 · 菜单策略更新"
-msgstr "10:10 · Menu policy updated"
+#~ msgid "10:10 · 菜单策略更新"
+#~ msgstr "10:10 · Menu policy updated"
 
 #: src/routes/_auth/dashboard/index.tsx
-msgid "13:20 · 安全审查"
-msgstr "13:20 · Security review"
+#~ msgid "13:20 · 安全审查"
+#~ msgstr "13:20 · Security review"
 
 #: src/routes/_auth/dashboard/index.tsx
-msgid "15:50 · 故障恢复"
-msgstr "15:50 · Incident recovery"
+#~ msgid "15:50 · 故障恢复"
+#~ msgstr "15:50 · Incident recovery"
 
 #: src/components/Layout/Header/index.tsx
 msgid "403"
 msgstr "403"
 
+#: src/routes/_auth/dashboard/index.tsx
+msgid "7日新增"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "7日活跃"
+msgstr ""
+
+#: src/routes/_auth/knowledge/index.tsx
+msgid "AI"
+msgstr ""
+
+#: src/routes/_auth/users/-DetailDrawer.tsx
+msgid "AI 使用次数"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
+msgid "AI大模型"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "AI大模型调用"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "AI延伸解读方式"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
+msgid "AI延伸解读配置"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "AI解读"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "AI解读率"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "AI解读率<5%"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "Excel 文件为空"
+msgstr ""
+
 #: src/routes/_auth/logs/index.tsx
 msgid "IP地址"
 msgstr "IP Address"
 
+#: src/routes/_auth/users/-DetailDrawer.tsx
+msgid "OpenID"
+msgstr ""
+
 #: src/routes/_auth/dashboard/index.tsx
-msgid "Token 刷新行为和 403 路由验证通过。"
-msgstr "Token refresh behavior and 403 routes validated."
+#~ msgid "Token 刷新行为和 403 路由验证通过。"
+#~ msgstr "Token refresh behavior and 403 routes validated."
+
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "上传 ZIP 压缩包（内含 Excel 表格 + resources/ 资源文件夹）批量导入知识卡片，请先下载模板。"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "上传失败"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "上传成功"
+msgstr ""
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/knowledge/-Toolbar.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "上架"
+msgstr ""
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/knowledge/-Toolbar.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "下架"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "下载失败"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "下载导入模板"
+msgstr ""
 
 #: src/routes/register/index.tsx
 msgid "两次输入的密码不一致"
 msgstr "Passwords do not match"
 
+#: src/routes/_auth/system/index.tsx
+msgid "个"
+msgstr ""
+
+#: src/routes/_auth/user-review/-DetailDrawer.tsx
+#: src/routes/_auth/user-review/index.tsx
+msgid "个性签名"
+msgstr ""
+
+#: src/routes/_auth/system/index.tsx
+msgid "个文件"
+msgstr ""
+
 #: src/routes/_auth/dashboard/index.tsx
-msgid "今天"
-msgstr "Today"
+#~ msgid "今天"
+#~ msgstr "Today"
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "今日AI延伸解读率"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "今日推荐次数"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "今日点击率"
+msgstr ""
 
 #: src/components/Layout/Header/index.tsx
 #: src/components/Layout/Sidebar/index.tsx
 msgid "仪表盘"
 msgstr "Dashboard"
 
+#: src/routes/_auth/dashboard/index.tsx
+msgid "优质 (>=15分)"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "低质 (<5分)"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "低质预警"
+msgstr ""
+
+#: src/routes/_auth/system/index.tsx
+msgid "使用率"
+msgstr ""
+
 #: src/routes/_auth/config/index.tsx
-msgid "保存"
-msgstr "Save"
+#~ msgid "保存"
+#~ msgstr "Save"
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "修改知识卡片"
+msgstr ""
+
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "值"
+msgstr ""
 
 #: src/routes/_auth/category/index.tsx
 msgid "停用"
 msgstr "Inactive"
 
 #: src/routes/_auth/correction/index.tsx
-msgid "全部"
-msgstr "All"
+#~ msgid "全部"
+#~ msgstr "All"
+
+#. placeholder {0}: profile.total_interest_count
+#: src/routes/_auth/users/-DetailDrawer.tsx
+msgid "共 {0} 条兴趣记录"
+msgstr ""
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "关联知识卡片"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "关闭"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "关闭后导入将继续执行，确定关闭？"
+msgstr ""
+
+#: src/routes/_auth/users/-DetailDrawer.tsx
+msgid "兴趣标签"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "兴趣标签Top"
+msgstr ""
+
+#: src/routes/_auth/users/-DetailDrawer.tsx
+msgid "兴趣类目"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "兴趣类目Top"
+msgstr ""
 
 #: src/components/Layout/Sidebar/index.tsx
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
 #: src/routes/_auth/knowledge/-FormModal.tsx
 msgid "内容"
 msgstr "Content"
 
+#: src/routes/_auth/dashboard/index.tsx
+msgid "内容数"
+msgstr ""
+
 #: src/routes/_auth/admin/-FormModal.tsx
 msgid "内容管理员"
 msgstr "Content Admin"
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "内容质量分布"
+msgstr ""
 
 #: src/routes/register/index.tsx
 msgid "再次输入密码"
@@ -98,13 +288,14 @@ msgid "最后登录"
 msgstr "Last Login"
 
 #: src/routes/_auth/dashboard/index.tsx
-msgid "最近销售"
-msgstr "Recent Sales"
+#~ msgid "最近销售"
+#~ msgstr "Recent Sales"
 
 #: src/components/RouteError.tsx
 msgid "出错了"
 msgstr "Something went wrong"
 
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
 #: src/routes/_auth/knowledge/-FormModal.tsx
 #: src/routes/_auth/knowledge/index.tsx
 msgid "分类"
@@ -114,6 +305,10 @@ msgstr "Category"
 #: src/components/Layout/Sidebar/index.tsx
 msgid "分类管理"
 msgstr "Category"
+
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "分组"
+msgstr ""
 
 #: src/components/Layout/AppFooter/index.tsx
 #: src/components/Layout/Header/index.tsx
@@ -135,15 +330,18 @@ msgid "创建分类"
 msgstr "Create Category"
 
 #: src/hooks/useCrudToasts.ts
+#: src/routes/_auth/config/index.tsx
 msgid "创建失败"
 msgstr "Create failed"
 
 #: src/hooks/useCrudToasts.ts
+#: src/routes/_auth/config/index.tsx
 msgid "创建成功"
 msgstr "Created successfully"
 
 #: src/routes/_auth/correction/-DetailDrawer.tsx
 #: src/routes/_auth/correction/index.tsx
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
 msgid "创建时间"
 msgstr "Created At"
 
@@ -156,7 +354,9 @@ msgid "创建账号"
 msgstr "Create account"
 
 #: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/config/index.tsx
 #: src/routes/_auth/knowledge/index.tsx
+#: src/routes/_auth/logs/index.tsx
 msgid "删除"
 msgstr "Delete"
 
@@ -165,22 +365,42 @@ msgid "删除中…"
 msgstr "Deleting…"
 
 #: src/hooks/useCrudToasts.ts
+#: src/routes/_auth/config/index.tsx
+#: src/routes/_auth/knowledge/index.tsx
+#: src/routes/_auth/logs/index.tsx
 msgid "删除失败"
 msgstr "Delete failed"
 
 #: src/hooks/useCrudToasts.ts
+#: src/routes/_auth/config/index.tsx
+#: src/routes/_auth/knowledge/index.tsx
+#: src/routes/_auth/logs/index.tsx
 msgid "删除成功"
 msgstr "Deleted successfully"
 
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "参考来源"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "参考来源（可选）"
+msgstr ""
+
 #: src/routes/_auth/dashboard/index.tsx
-msgid "发布分支已合并，生产环境上线完成。"
-msgstr "Release branch merged and production rollout completed."
+#~ msgid "发布分支已合并，生产环境上线完成。"
+#~ msgstr "Release branch merged and production rollout completed."
 
 #: src/routes/_auth/admin/-FormModal.tsx
 #: src/routes/_auth/category/-FormModal.tsx
 #: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/config/-FormModal.tsx
+#: src/routes/_auth/config/index.tsx
 #: src/routes/_auth/knowledge/-FormModal.tsx
+#: src/routes/_auth/knowledge/-ImportModal.tsx
 #: src/routes/_auth/knowledge/index.tsx
+#: src/routes/_auth/logs/index.tsx
+#: src/routes/_auth/system/index.tsx
+#: src/routes/_auth/user-review/-DetailDrawer.tsx
 #: src/routes/_auth/users/-FormModal.tsx
 msgid "取消"
 msgstr "Cancel"
@@ -194,29 +414,79 @@ msgstr "Name"
 msgid "启用"
 msgstr "Active"
 
+#: src/routes/_auth/users/-DetailDrawer.tsx
+msgid "启用用户"
+msgstr ""
+
 #: src/routes/_auth/category/-FormModal.tsx
 msgid "图标"
 msgstr "Icon"
 
 #: src/routes/_auth/knowledge/-FormModal.tsx
-msgid "图片链接"
-msgstr "Image URL"
+msgid "图片加载失败"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+#~ msgid "图片链接"
+#~ msgstr "Image URL"
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "填写审核意见（可选）"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "失败"
+msgstr ""
+
+#: src/routes/_auth/user-review/-DetailDrawer.tsx
+msgid "头像"
+msgstr ""
 
 #: src/routes/_auth/admin/-FormModal.tsx
 msgid "审核员"
 msgstr "Reviewer"
 
 #: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/user-review/-DetailDrawer.tsx
 msgid "审核备注"
 msgstr "Review Remark"
 
 #: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/user-review/index.tsx
 msgid "审核失败"
 msgstr "Review failed"
 
 #: src/routes/_auth/correction/-DetailDrawer.tsx
 msgid "审核已提交"
 msgstr "Review submitted"
+
+#: src/routes/_auth/user-review/index.tsx
+msgid "审核成功"
+msgstr ""
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/user-review/-DetailDrawer.tsx
+msgid "审核操作"
+msgstr ""
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/user-review/-DetailDrawer.tsx
+msgid "审核时间"
+msgstr ""
+
+#: src/routes/_auth/correction/index.tsx
+#: src/routes/_auth/user-review/-DetailDrawer.tsx
+#: src/routes/_auth/user-review/index.tsx
+msgid "审核状态"
+msgstr ""
+
+#: src/routes/_auth/user-review/-DetailDrawer.tsx
+msgid "审核结果"
+msgstr ""
+
+#: src/routes/_auth/user-review/-DetailDrawer.tsx
+msgid "审核详情"
+msgstr ""
 
 #: src/routes/_auth/admin/-FormModal.tsx
 #: src/routes/login/index.tsx
@@ -228,35 +498,160 @@ msgstr "Password"
 msgid "密码至少需要 6 个字符"
 msgstr "Password must be at least 6 characters long"
 
-#: src/routes/_auth/knowledge/-Toolbar.tsx
-#: src/routes/_auth/knowledge/index.tsx
-msgid "已下线"
-msgstr "Offline"
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "导入任务已创建，正在处理中"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "导入任务进行中"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "导入失败"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "导入完成"
+msgstr ""
 
 #: src/routes/_auth/knowledge/-Toolbar.tsx
 #: src/routes/_auth/knowledge/index.tsx
-msgid "已发布"
-msgstr "Published"
+#~ msgid "已下线"
+#~ msgstr "Offline"
+
+#: src/routes/_auth/knowledge/-Toolbar.tsx
+#: src/routes/_auth/knowledge/index.tsx
+#~ msgid "已发布"
+#~ msgstr "Published"
+
+#. placeholder {0}: task.success_count + task.fail_count
+#. placeholder {1}: task.total_count
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "已处理 {0} / {1} 条"
+msgstr ""
+
+#: src/routes/_auth/system/index.tsx
+msgid "已引用"
+msgstr ""
 
 #: src/routes/register/index.tsx
 msgid "已有账号？"
 msgstr "Already have an account?"
 
+#: src/routes/_auth/user-review/index.tsx
+msgid "已通过"
+msgstr ""
+
+#: src/routes/_auth/correction/index.tsx
+msgid "已采纳"
+msgstr ""
+
+#: src/routes/_auth/correction/index.tsx
+#: src/routes/_auth/user-review/index.tsx
+msgid "已驳回"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "延伸知识标题"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "延伸解读内容"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "延伸解读数据"
+msgstr ""
+
 #: src/routes/_auth/dashboard/index.tsx
-msgid "当前活跃"
-msgstr "Active Now"
+#~ msgid "当前活跃"
+#~ msgstr "Active Now"
+
+#: src/routes/_auth/correction/index.tsx
+#: src/routes/_auth/user-review/index.tsx
+msgid "待审核"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "待评估 (浏览<100)"
+msgstr ""
 
 #: src/routes/login/index.tsx
 msgid "忘记密码？"
 msgstr "Forgot password?"
 
+#: src/routes/_auth/system/index.tsx
+msgid "总大小"
+msgstr ""
+
 #: src/routes/_auth/dashboard/index.tsx
-msgid "总收入"
-msgstr "Total Revenue"
+#~ msgid "总收入"
+#~ msgstr "Total Revenue"
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "总收藏"
+msgstr ""
+
+#: src/routes/_auth/system/index.tsx
+msgid "总文件数"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "总浏览"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "总用户"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "总用户数"
+msgstr ""
+
+#. placeholder {0}: task.total_count
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "总计 {0} 条，全部失败"
+msgstr ""
+
+#. placeholder {0}: task.total_count
+#. placeholder {1}: task.success_count
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "总计 {0} 条，成功 {1} 条"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "成功"
+msgstr ""
+
+#: src/routes/_auth/system/index.tsx
+msgid "所有资源均已被引用"
+msgstr "All resources are in use"
+
+#: src/routes/_auth/users/-DetailDrawer.tsx
+#: src/routes/_auth/users/index.tsx
+msgid "手机号"
+msgstr ""
+
+#: src/routes/_auth/users/index.tsx
+msgid "打卡天数"
+msgstr ""
 
 #: src/components/Layout/Sidebar/index.tsx
 msgid "打开账户菜单"
 msgstr "Open account menu"
+
+#: src/routes/_auth/knowledge/-Toolbar.tsx
+#: src/routes/_auth/logs/index.tsx
+msgid "批量删除"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-Toolbar.tsx
+msgid "批量导入"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "批量导入知识"
+msgstr ""
 
 #: src/components/Layout/AppFooter/index.tsx
 msgid "技术支持"
@@ -271,17 +666,26 @@ msgid "抱歉，您访问的页面不存在。"
 msgstr "Sorry, the page you visited does not exist."
 
 #: src/routes/_auth/correction/-DetailDrawer.tsx
-msgid "拒绝"
-msgstr "Reject"
+#~ msgid "拒绝"
+#~ msgstr "Reject"
+
+#: src/routes/_auth/system/index.tsx
+msgid "按类型分布"
+msgstr ""
 
 #: src/routes/_auth/category/-FormModal.tsx
 #: src/routes/_auth/category/index.tsx
 msgid "排序"
 msgstr "Sort Order"
 
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
 #: src/routes/_auth/knowledge/-FormModal.tsx
 msgid "排序权重"
 msgstr "Sort Weight"
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "推荐次数"
+msgstr ""
 
 #: src/routes/_auth/category/-FormModal.tsx
 #: src/routes/_auth/category/index.tsx
@@ -290,20 +694,54 @@ msgstr "Sort Weight"
 msgid "描述"
 msgstr "Description"
 
+#: src/routes/_auth/user-review/-DetailDrawer.tsx
+#: src/routes/_auth/user-review/index.tsx
+msgid "提交时间"
+msgstr ""
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "提交用户"
+msgstr ""
+
 #: src/routes/_auth/users/-Toolbar.tsx
 msgid "搜索用户"
 msgstr "Search User"
+
+#: src/routes/_auth/admin/index.tsx
+msgid "搜索用户名"
+msgstr ""
+
+#: src/routes/_auth/user-review/index.tsx
+msgid "搜索用户昵称"
+msgstr ""
 
 #: src/routes/_auth/knowledge/-Toolbar.tsx
 msgid "搜索知识"
 msgstr "Search knowledge"
 
+#: src/routes/_auth/correction/index.tsx
+msgid "搜索知识标题或描述"
+msgstr ""
+
+#: src/routes/_auth/category/index.tsx
+msgid "搜索类目名称"
+msgstr ""
+
 #: src/routes/_auth/admin/index.tsx
 #: src/routes/_auth/category/index.tsx
 #: src/routes/_auth/correction/index.tsx
 #: src/routes/_auth/knowledge/index.tsx
+#: src/routes/_auth/logs/index.tsx
+#: src/routes/_auth/user-review/index.tsx
+#: src/routes/_auth/users/index.tsx
 msgid "操作"
 msgstr "Actions"
+
+#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/knowledge/index.tsx
+#: src/routes/_auth/users/index.tsx
+msgid "操作失败"
+msgstr ""
 
 #: src/routes/_auth/logs/index.tsx
 msgid "操作描述"
@@ -315,12 +753,56 @@ msgid "操作日志"
 msgstr "Logs"
 
 #: src/routes/_auth/logs/index.tsx
+msgid "操作日志详情"
+msgstr ""
+
+#: src/routes/_auth/logs/index.tsx
 msgid "操作时间"
 msgstr "Time"
 
 #: src/routes/_auth/logs/index.tsx
 msgid "操作类型"
 msgstr "Action"
+
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
+#: src/routes/_auth/users/-DetailDrawer.tsx
+#: src/routes/_auth/users/index.tsx
+msgid "收藏数"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "收藏率"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "收藏率<3%"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "收藏量"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
+msgid "数据时间"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
+#: src/routes/_auth/users/-DetailDrawer.tsx
+msgid "数据统计"
+msgstr ""
+
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "新分组名"
+msgstr ""
+
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "新增分组"
+msgstr ""
+
+#: src/routes/_auth/config/-FormModal.tsx
+#: src/routes/_auth/config/index.tsx
+msgid "新增配置"
+msgstr ""
 
 #: src/routes/_auth/category/-FormModal.tsx
 msgid "新建分类"
@@ -340,12 +822,34 @@ msgid "新建管理员"
 msgstr "New Admin"
 
 #: src/routes/_auth/dashboard/index.tsx
-msgid "时间线"
-msgstr "Timeline"
+#~ msgid "时间线"
+#~ msgstr "Timeline"
+
+#: src/routes/_auth/user-review/-DetailDrawer.tsx
+msgid "昵称"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "普通 (5-15分)"
+msgstr ""
+
+#: src/routes/_auth/users/-DetailDrawer.tsx
+msgid "暂无兴趣标签"
+msgstr ""
+
+#: src/routes/_auth/users/-DetailDrawer.tsx
+msgid "暂无兴趣类目"
+msgstr ""
 
 #: src/components/DataTable/DataTableEmpty.tsx
+#: src/routes/_auth/dashboard/index.tsx
+#: src/routes/_auth/system/index.tsx
 msgid "暂无数据"
 msgstr "No data"
+
+#: src/routes/_auth/config/index.tsx
+msgid "暂无配置"
+msgstr ""
 
 #: src/routes/_auth/knowledge/-Toolbar.tsx
 #: src/routes/_auth/users/-Toolbar.tsx
@@ -358,21 +862,67 @@ msgstr "Updating…"
 
 #: src/hooks/useCrudToasts.ts
 #: src/routes/_auth/config/index.tsx
+#: src/routes/_auth/correction/-DetailDrawer.tsx
 msgid "更新失败"
 msgstr "Update failed"
 
 #: src/hooks/useCrudToasts.ts
+#: src/routes/_auth/config/index.tsx
 msgid "更新成功"
 msgstr "Updated successfully"
 
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
+#: src/routes/_auth/users/-DetailDrawer.tsx
+msgid "更新时间"
+msgstr ""
+
+#: src/routes/_auth/system/index.tsx
+msgid "未使用资源"
+msgstr "Unused"
+
+#: src/routes/_auth/system/index.tsx
+msgid "未引用"
+msgstr ""
+
+#: src/routes/_auth/system/index.tsx
+msgid "未知数据类型"
+msgstr ""
+
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/knowledge/index.tsx
+msgid "权重"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
 #: src/routes/_auth/knowledge/-FormModal.tsx
 msgid "来源"
 msgstr "Source"
 
+#. placeholder {0}: item.source
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
+msgid "来源：{0}"
+msgstr ""
+
+#: src/routes/_auth/knowledge/index.tsx
+msgid "查看"
+msgstr ""
+
+#: src/routes/_auth/logs/index.tsx
+msgid "查看详情"
+msgstr ""
+
+#: src/routes/_auth/config/-FormModal.tsx
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/dashboard/index.tsx
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
 #: src/routes/_auth/knowledge/-FormModal.tsx
+#: src/routes/_auth/knowledge/index.tsx
 msgid "标签"
 msgstr "Tags"
 
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/dashboard/index.tsx
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
 #: src/routes/_auth/knowledge/-FormModal.tsx
 #: src/routes/_auth/knowledge/index.tsx
 msgid "标题"
@@ -382,50 +932,148 @@ msgstr "Title"
 msgid "模块"
 msgstr "Module"
 
-#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "正在导入..."
+msgstr ""
+
+#: src/routes/_auth/users/-DetailDrawer.tsx
+#: src/routes/_auth/users/-Toolbar.tsx
 msgid "正常"
 msgstr "Active"
 
 #: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/config/index.tsx
 #: src/routes/_auth/knowledge/index.tsx
+#: src/routes/_auth/logs/index.tsx
 msgid "此操作不可撤销。"
 msgstr "This action cannot be undone."
+
+#: src/routes/_auth/system/index.tsx
+msgid "此操作将删除所有未被知识卡片引用的上传文件，不可撤销。"
+msgstr "This will delete all uploaded files not referenced by knowledge cards. Cannot be undone."
 
 #: src/routes/register/index.tsx
 msgid "注册失败"
 msgstr "Registration failed"
 
+#: src/routes/_auth/users/-DetailDrawer.tsx
+msgid "注册时间"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
 #: src/routes/_auth/knowledge/index.tsx
 msgid "浏览量"
 msgstr "Views"
+
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "添加"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "添加延伸解读"
+msgstr ""
+
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "添加选项"
+msgstr ""
+
+#: src/routes/_auth/system/index.tsx
+msgid "清理"
+msgstr ""
+
+#: src/routes/_auth/system/index.tsx
+msgid "清理失败"
+msgstr ""
+
+#. placeholder {0}: result.deleted_count
+#. placeholder {1}: formatStorage(result.freed_size)
+#: src/routes/_auth/system/index.tsx
+msgid "清理完成：删除 {0} 个文件，释放 {1}"
+msgstr ""
+
+#: src/routes/_auth/system/index.tsx
+msgid "清理未使用资源"
+msgstr "Clean Unused"
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "点击次数"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "点击率"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "热度排行"
+msgstr ""
 
 #: src/routes/_auth/admin/index.tsx
 #: src/routes/_auth/category/index.tsx
 #: src/routes/_auth/correction/-DetailDrawer.tsx
 #: src/routes/_auth/correction/index.tsx
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
 #: src/routes/_auth/knowledge/-Toolbar.tsx
 #: src/routes/_auth/knowledge/index.tsx
 #: src/routes/_auth/logs/index.tsx
+#: src/routes/_auth/users/-DetailDrawer.tsx
+#: src/routes/_auth/users/index.tsx
 msgid "状态"
 msgstr "Status"
 
+#: src/routes/_auth/user-review/-DetailDrawer.tsx
+#: src/routes/_auth/user-review/index.tsx
+msgid "用户"
+msgstr ""
+
 #: src/routes/_auth/dashboard/index.tsx
-msgid "用户创建高峰已处理，队列已恢复。"
-msgstr "User creation spike handled and queue restored."
+msgid "用户分析"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+#~ msgid "用户创建高峰已处理，队列已恢复。"
+#~ msgstr "User creation spike handled and queue restored."
 
 #: src/routes/_auth/admin/-FormModal.tsx
 #: src/routes/_auth/admin/index.tsx
 #: src/routes/_auth/users/-FormModal.tsx
-#: src/routes/_auth/users/index.tsx
 #: src/routes/login/index.tsx
 #: src/routes/register/index.tsx
 msgid "用户名"
 msgstr "Username"
 
+#: src/routes/_auth/dashboard/index.tsx
+msgid "用户数"
+msgstr ""
+
+#: src/routes/_auth/users/index.tsx
+msgid "用户昵称"
+msgstr ""
+
+#: src/routes/_auth/users/-Toolbar.tsx
+msgid "用户状态"
+msgstr ""
+
+#: src/routes/_auth/users/-DetailDrawer.tsx
+msgid "用户画像"
+msgstr ""
+
 #: src/components/Layout/Header/index.tsx
 #: src/components/Layout/Sidebar/index.tsx
 msgid "用户管理"
 msgstr "Users"
+
+#: src/routes/_auth/users/-DetailDrawer.tsx
+msgid "用户详情"
+msgstr ""
+
+#: src/routes/_auth/user-review/-DetailDrawer.tsx
+msgid "申请变更内容"
+msgstr ""
+
+#: src/routes/_auth/admin/-FormModal.tsx
+msgid "留空则不修改"
+msgstr ""
 
 #: src/routes/login/index.tsx
 #: src/routes/register/index.tsx
@@ -440,43 +1088,78 @@ msgstr "Login failed"
 msgid "登录成功"
 msgstr "Login successful"
 
+#: src/routes/_auth/logs/index.tsx
+msgid "目标ID"
+msgstr ""
+
 #: src/routes/_auth/admin/-FormModal.tsx
 #: src/routes/_auth/admin/index.tsx
 msgid "真实姓名"
 msgstr "Real Name"
 
 #: src/routes/_auth/correction/-DetailDrawer.tsx
-msgid "知识ID"
-msgstr "Knowledge ID"
+#~ msgid "知识ID"
+#~ msgstr "Knowledge ID"
 
 #: src/components/Layout/Header/index.tsx
 #: src/components/Layout/Sidebar/index.tsx
 msgid "知识卡片"
 msgstr "Knowledge"
 
+#: src/routes/_auth/system/index.tsx
+msgid "知识卡片存储"
+msgstr "Knowledge Storage"
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "知识卡片已更新"
+msgstr ""
+
 #: src/routes/_auth/correction/index.tsx
 msgid "知识标题"
 msgstr "Knowledge Title"
 
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
+msgid "知识详情"
+msgstr ""
+
 #: src/routes/_auth/admin/-FormModal.tsx
 #: src/routes/_auth/category/-FormModal.tsx
+#: src/routes/_auth/config/-FormModal.tsx
 #: src/routes/_auth/knowledge/-FormModal.tsx
+#: src/routes/_auth/knowledge/-ImportModal.tsx
 #: src/routes/_auth/users/-FormModal.tsx
 msgid "确定"
 msgstr "OK"
 
-#: src/routes/_auth/category/index.tsx
+#. placeholder {0}: selectedRowKeys.length
 #: src/routes/_auth/knowledge/index.tsx
+#: src/routes/_auth/logs/index.tsx
+msgid "确定删除选中的 {0} 条记录？"
+msgstr ""
+
+#: src/routes/_auth/category/index.tsx
+#: src/routes/_auth/config/index.tsx
+#: src/routes/_auth/knowledge/index.tsx
+#: src/routes/_auth/logs/index.tsx
 msgid "确定要删除吗？"
 msgstr "Are you absolutely sure?"
+
+#: src/routes/_auth/system/index.tsx
+msgid "确定要清理未使用的资源吗？"
+msgstr "Clean unused resources?"
 
 #: src/routes/register/index.tsx
 msgid "确认密码"
 msgstr "Confirm password"
 
-#: src/routes/_auth/admin/index.tsx
+#: src/routes/_auth/users/-DetailDrawer.tsx
+#: src/routes/_auth/users/-Toolbar.tsx
 msgid "禁用"
 msgstr "Inactive"
+
+#: src/routes/_auth/users/-DetailDrawer.tsx
+msgid "禁用用户"
+msgstr ""
 
 #: src/components/Layout/Header/index.tsx
 #: src/components/Layout/Sidebar/index.tsx
@@ -487,16 +1170,32 @@ msgid "管理员"
 msgstr "Admin"
 
 #: src/routes/_auth/dashboard/index.tsx
-msgid "管理员修改了侧边栏可见性和权限映射。"
-msgstr "Admin changed sidebar visibility and permission mapping."
+#~ msgid "管理员修改了侧边栏可见性和权限映射。"
+#~ msgstr "Admin changed sidebar visibility and permission mapping."
 
-#: src/routes/_auth/correction/-DetailDrawer.tsx
 #: src/routes/_auth/correction/index.tsx
 msgid "类型"
 msgstr "Type"
 
+#: src/routes/_auth/dashboard/index.tsx
+msgid "类目"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "类目分析"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "类目推荐分析"
+msgstr ""
+
 #: src/components/Layout/Sidebar/index.tsx
 msgid "系统"
+msgstr "System"
+
+#: src/components/Layout/Header/index.tsx
+#: src/components/Layout/Sidebar/index.tsx
+msgid "系统管理"
 msgstr "System"
 
 #: src/components/Layout/Header/index.tsx
@@ -510,8 +1209,28 @@ msgid "纠错审核"
 msgstr "Correction"
 
 #: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "纠错截图"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
+msgid "纠错数"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "纠错次数"
+msgstr ""
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "纠错类型"
+msgstr ""
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
 msgid "纠错详情"
 msgstr "Correction Detail"
+
+#: src/routes/_auth/users/-DetailDrawer.tsx
+msgid "累计打卡天数"
+msgstr ""
 
 #: src/routes/_auth/admin/index.tsx
 #: src/routes/_auth/category/index.tsx
@@ -537,6 +1256,10 @@ msgstr "Edit Knowledge"
 msgid "编辑管理员"
 msgstr "Edit Admin"
 
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "编辑配置"
+msgstr ""
+
 #: src/routes/_auth/logs/index.tsx
 msgid "耗时"
 msgstr "Duration"
@@ -551,12 +1274,13 @@ msgstr "Enter at least 6 characters"
 
 #: src/routes/_auth/knowledge/-Toolbar.tsx
 #: src/routes/_auth/knowledge/index.tsx
-msgid "草稿"
-msgstr "Draft"
+#~ msgid "草稿"
+#~ msgstr "Draft"
 
 #: src/routes/_auth/admin/index.tsx
 #: src/routes/_auth/category/index.tsx
 #: src/routes/_auth/knowledge/index.tsx
+#: src/routes/_auth/logs/index.tsx
 msgid "行操作"
 msgstr "Row actions"
 
@@ -564,21 +1288,32 @@ msgstr "Row actions"
 #: src/routes/_auth/admin/index.tsx
 #: src/routes/_auth/users/-FormModal.tsx
 #: src/routes/_auth/users/-Toolbar.tsx
-#: src/routes/_auth/users/index.tsx
 msgid "角色"
 msgstr "Role"
 
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
+msgid "解读方式"
+msgstr ""
+
 #: src/routes/_auth/dashboard/index.tsx
-msgid "订阅数"
-msgstr "Subscriptions"
+#~ msgid "订阅数"
+#~ msgstr "Subscriptions"
 
 #: src/components/DataTable/DataTableEmpty.tsx
 msgid "该列表暂无内容"
 msgstr "Nothing to show in this list yet"
 
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "说明"
+msgstr ""
+
 #: src/routes/register/index.tsx
 msgid "请确认密码"
 msgstr "Please confirm your password"
+
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "请输入"
+msgstr ""
 
 #: src/routes/_auth/knowledge/-FormModal.tsx
 msgid "请输入内容"
@@ -591,6 +1326,14 @@ msgstr "Please enter name"
 #: src/routes/_auth/category/-FormModal.tsx
 msgid "请输入图标"
 msgstr "Please enter icon"
+
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "请输入大小"
+msgstr ""
+
+#: src/routes/_auth/user-review/-DetailDrawer.tsx
+msgid "请输入审核备注（可选）"
+msgstr ""
 
 #: src/routes/_auth/admin/-FormModal.tsx
 #: src/routes/login/index.tsx
@@ -605,6 +1348,10 @@ msgstr "Please enter sort order"
 #: src/routes/_auth/category/-FormModal.tsx
 msgid "请输入描述"
 msgstr "Please enter description"
+
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "请输入数字"
+msgstr ""
 
 #: src/routes/register/index.tsx
 msgid "请输入有效的邮箱地址"
@@ -621,18 +1368,42 @@ msgstr "Please enter title"
 msgid "请输入用户名"
 msgstr "Please enter username"
 
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "请输入说明"
+msgstr ""
+
 #: src/routes/_auth/users/-FormModal.tsx
 msgid "请输入邮箱地址"
 msgstr "Please enter email address"
+
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "请输入配置值"
+msgstr ""
+
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "请输入配置键"
+msgstr ""
+
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "请选择"
+msgstr ""
 
 #: src/routes/_auth/knowledge/-FormModal.tsx
 msgid "请选择分类"
 msgstr "Please select category"
 
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "请选择分组"
+msgstr ""
+
 #: src/routes/_auth/admin/-FormModal.tsx
 #: src/routes/_auth/users/-FormModal.tsx
 msgid "请选择角色"
 msgstr "Please select role"
+
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "请选择配置类型"
+msgstr ""
 
 #: src/components/RouteError.tsx
 msgid "请重试或返回仪表盘。"
@@ -642,33 +1413,67 @@ msgstr "Please try again or return to the dashboard."
 msgid "账号创建成功"
 msgstr "Account created successfully"
 
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
+msgid "质量分"
+msgstr ""
+
+#: src/components/Layout/Header/index.tsx
+#: src/components/Layout/Sidebar/index.tsx
+msgid "资料审核"
+msgstr ""
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "资源"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "资源类型"
+msgstr ""
+
 #: src/routes/_auth/admin/-FormModal.tsx
 msgid "超级管理员"
 msgstr "Super Admin"
 
 #: src/routes/_auth/dashboard/index.tsx
-msgid "较上小时 +201"
-msgstr "+201 since last hour"
+#~ msgid "较上小时 +201"
+#~ msgstr "+201 since last hour"
 
 #: src/routes/_auth/dashboard/index.tsx
-msgid "较上月 +180.1%"
-msgstr "+180.1% from last month"
+#~ msgid "较上月 +180.1%"
+#~ msgstr "+180.1% from last month"
 
 #: src/routes/_auth/dashboard/index.tsx
-msgid "较上月 +19%"
-msgstr "+19% from last month"
+#~ msgid "较上月 +19%"
+#~ msgstr "+19% from last month"
 
 #: src/routes/_auth/dashboard/index.tsx
-msgid "较上月 +20.1%"
-msgstr "+20.1% from last month"
+#~ msgid "较上月 +20.1%"
+#~ msgstr "+20.1% from last month"
 
 #: src/routes/_auth/knowledge/-FormModal.tsx
-msgid "输入标签"
-msgstr "Enter tags"
+msgid "输入图片或视频链接"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+#~ msgid "输入标签"
+#~ msgstr "Enter tags"
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "输入标签，多个标签用顿号分隔"
+msgstr ""
 
 #: src/routes/_auth/admin/-FormModal.tsx
 msgid "运营"
 msgstr "Operations"
+
+#: src/routes/_auth/category/-FormModal.tsx
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "运营权重"
+msgstr ""
 
 #: src/components/NotFound/index.tsx
 msgid "返回"
@@ -679,14 +1484,31 @@ msgstr "Go back"
 msgid "返回首页"
 msgstr "Back to Home"
 
+#: src/routes/_auth/users/-DetailDrawer.tsx
+msgid "连续打卡天数"
+msgstr ""
+
 #: src/components/Layout/Sidebar/index.tsx
 msgid "退出登录"
 msgstr "Sign Out"
 
-#: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/knowledge/-ImportModal.tsx
+msgid "选择文件并导入"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "选择资源类型"
+msgstr ""
+
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "选项配置"
+msgstr ""
+
+#: src/routes/_auth/user-review/-DetailDrawer.tsx
 msgid "通过"
 msgstr "Approve"
 
+#: src/routes/_auth/users/-DetailDrawer.tsx
 #: src/routes/_auth/users/-FormModal.tsx
 #: src/routes/_auth/users/index.tsx
 msgid "邮箱"
@@ -696,14 +1518,52 @@ msgstr "Email"
 msgid "邮箱地址"
 msgstr "Email address"
 
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "配置值"
+msgstr ""
+
 #: src/routes/_auth/config/index.tsx
-msgid "配置已更新"
-msgstr "Config updated"
+#~ msgid "配置已更新"
+#~ msgstr "Config updated"
+
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "配置类型"
+msgstr ""
+
+#: src/routes/_auth/config/-FormModal.tsx
+msgid "配置键"
+msgstr ""
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+msgid "采纳"
+msgstr ""
 
 #: src/components/RouteError.tsx
 msgid "重试"
 msgstr "Retry"
 
 #: src/routes/_auth/dashboard/index.tsx
-msgid "销售额"
-msgstr "Sales"
+#~ msgid "销售额"
+#~ msgstr "Sales"
+
+#: src/routes/_auth/logs/index.tsx
+msgid "错误信息"
+msgstr ""
+
+#: src/routes/_auth/knowledge/index.tsx
+msgid "静态"
+msgstr ""
+
+#: src/routes/_auth/knowledge/-DetailDrawer.tsx
+#: src/routes/_auth/knowledge/-FormModal.tsx
+msgid "静态数据"
+msgstr ""
+
+#: src/routes/_auth/correction/-DetailDrawer.tsx
+#: src/routes/_auth/user-review/-DetailDrawer.tsx
+msgid "驳回"
+msgstr ""
+
+#: src/routes/_auth/dashboard/index.tsx
+msgid "高纠错"
+msgstr ""

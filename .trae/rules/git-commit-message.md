@@ -1,5 +1,9 @@
-# Git Commit 提交信息规范
+---
+scene: git_message
+---
 
+# Git Commit 提交信息规范
+使用中文，中文，中文
 ## 格式要求
 
 ```

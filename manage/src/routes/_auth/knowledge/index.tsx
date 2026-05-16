@@ -10,6 +10,7 @@ import {
   KnowledgeStatus,
   KnowledgeSchema,
   CreateKnowledgeRequestSchema,
+  AiExtendType,
 } from "@/api/knowledge";
 import { PaginatedResponseSchema } from "@/api/schemas";
 import type { Knowledge as KnowledgeType, CreateKnowledgeRequest } from "@/api/knowledge";
@@ -257,8 +258,18 @@ function KnowledgePage() {
       key: "ai_extend_count",
       sorter: true,
       sortOrder: search.sortField === "ai_extend_count" ? search.sortOrder : null,
-      width: 80,
-      render: (count: number | undefined) => count ?? 0,
+      width: 120,
+      render: (_: unknown, record: KnowledgeType) => (
+        <Space size={4}>
+          <span>{record.ai_extend_count ?? 0}</span>
+          <Tag
+            color={record.ai_extend_type === AiExtendType.STATIC_DATA ? "blue" : "green"}
+            style={{ marginLeft: 4 }}
+          >
+            {record.ai_extend_type === AiExtendType.STATIC_DATA ? t`静态` : t`AI`}
+          </Tag>
+        </Space>
+      ),
     },
     {
       title: t`操作`,

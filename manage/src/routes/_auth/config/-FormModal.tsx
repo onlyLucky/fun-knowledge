@@ -24,6 +24,8 @@ import {
 } from "@/api/config";
 import type { ConfigType, CreateConfigRequest, SystemConfig } from "@/api/config";
 import { httpClient } from "@/utils/http";
+import { STORAGE_UNITS, bytesToBest, storageToBytes } from "@/utils/utils";
+import type { StorageUnit } from "@/utils/utils";
 import { BaseFormModal } from "@/components/FormModal";
 import { z } from "zod/v4";
 
@@ -45,37 +47,6 @@ function parseOptions(raw: string | null | undefined): { label: string; value: s
   } catch {
     return [];
   }
-}
-
-/* ---- storage helpers ---- */
-
-const STORAGE_UNITS = ["B", "KB", "MB", "GB", "TB"] as const;
-type StorageUnit = (typeof STORAGE_UNITS)[number];
-
-const UNIT_BYTES: Record<StorageUnit, number> = {
-  B: 1,
-  KB: 1024,
-  MB: 1024 ** 2,
-  GB: 1024 ** 3,
-  TB: 1024 ** 4,
-};
-
-function bytesToBest(bytes: number): { value: number; unit: StorageUnit } {
-  if (bytes <= 0) return { value: 0, unit: "B" };
-  let best: StorageUnit = "B";
-  let bestVal = bytes;
-  for (const u of STORAGE_UNITS) {
-    const v = bytes / UNIT_BYTES[u];
-    if (v >= 1) {
-      best = u;
-      bestVal = v;
-    }
-  }
-  return { value: Number(bestVal.toFixed(2)), unit: best };
-}
-
-function storageToBytes(value: number, unit: StorageUnit): number {
-  return Math.round(value * UNIT_BYTES[unit]);
 }
 
 export function FormModal({

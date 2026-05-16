@@ -1,10 +1,11 @@
-import { Form, Input, Select, InputNumber, Upload, Button, App, Space, Spin } from "antd";
+import { Form, Input, Select, InputNumber, Upload, Button, App, Space, Spin, Radio } from "antd";
 import type { FormInstance } from "antd/es/form";
-import { UploadIcon, XIcon } from "lucide-react";
+import { UploadIcon, XIcon, Plus, Trash2 } from "lucide-react";
 import { useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import type { CreateKnowledgeRequest, Knowledge } from "@/api/knowledge";
+import { AiExtendType } from "@/api/knowledge";
 import { CATEGORY_ENDPOINTS, CategorySchema } from "@/api/category";
 import type { Category } from "@/api/category";
 import { httpClient } from "@/utils/http";
@@ -72,6 +73,7 @@ export function FormModal({
 
   const resourceUrl = Form.useWatch("resource_url", form) as string | undefined;
   const resourceType = Form.useWatch("resource_type", form) as string | undefined;
+  const aiExtendType = Form.useWatch("ai_extend_type", form) as string | undefined;
 
   const previewType = useMemo(() => {
     if (resourceType === "image" || resourceType === "video") return resourceType;
@@ -253,6 +255,81 @@ export function FormModal({
           placeholder={t`运营权重`}
         />
       </Form.Item>
+
+      <Form.Item
+        name="ai_extend_type"
+        label={t`AI延伸解读方式`}
+        initialValue={AiExtendType.AI_MODEL}
+      >
+        <Radio.Group>
+          <Radio value={AiExtendType.AI_MODEL}>{t`AI大模型调用`}</Radio>
+          <Radio value={AiExtendType.STATIC_DATA}>{t`静态数据`}</Radio>
+        </Radio.Group>
+      </Form.Item>
+
+      {aiExtendType === AiExtendType.STATIC_DATA && (
+        <Form.Item label={t`延伸解读数据`}>
+          <Form.List name="ai_extend_data" initialValue={[{ title: "", content: "", source: "" }]}>
+            {(fields, { add, remove }) => (
+              <Space direction="vertical" style={{ width: "100%" }} size="small">
+                {fields.map((field) => (
+                  <div
+                    key={field.key}
+                    style={{
+                      padding: 12,
+                      border: "1px solid #d9d9d9",
+                      borderRadius: 6,
+                      position: "relative",
+                    }}
+                  >
+                    {fields.length > 1 && (
+                      <Button
+                        type="text"
+                        danger
+                        size="small"
+                        icon={<Trash2 size={14} />}
+                        onClick={() => remove(field.name)}
+                        style={{ position: "absolute", top: 4, right: 4 }}
+                      />
+                    )}
+                    <Form.Item
+                      name={[field.name, "title"]}
+                      label={t`标题`}
+                      rules={[{ required: true, message: t`请输入标题` }]}
+                      style={{ marginBottom: 8 }}
+                    >
+                      <Input placeholder={t`延伸知识标题`} />
+                    </Form.Item>
+                    <Form.Item
+                      name={[field.name, "content"]}
+                      label={t`内容`}
+                      rules={[{ required: true, message: t`请输入内容` }]}
+                      style={{ marginBottom: 8 }}
+                    >
+                      <Input.TextArea rows={2} placeholder={t`延伸解读内容`} />
+                    </Form.Item>
+                    <Form.Item
+                      name={[field.name, "source"]}
+                      label={t`参考来源`}
+                      style={{ marginBottom: 0 }}
+                    >
+                      <Input placeholder={t`参考来源（可选）`} />
+                    </Form.Item>
+                  </div>
+                ))}
+                <Button
+                  type="dashed"
+                  onClick={() => add({ title: "", content: "", source: "" })}
+                  icon={<Plus size={14} />}
+                  block
+                >
+                  {t`添加延伸解读`}
+                </Button>
+              </Space>
+            )}
+          </Form.List>
+        </Form.Item>
+      )}
     </BaseFormModal>
   );
 }

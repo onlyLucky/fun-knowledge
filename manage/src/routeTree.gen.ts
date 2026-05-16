@@ -16,6 +16,7 @@ import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as R404IndexRouteImport } from './routes/404/index'
 import { Route as AuthUsersIndexRouteImport } from './routes/_auth/users/index'
 import { Route as AuthUserReviewIndexRouteImport } from './routes/_auth/user-review/index'
+import { Route as AuthSystemIndexRouteImport } from './routes/_auth/system/index'
 import { Route as AuthLogsIndexRouteImport } from './routes/_auth/logs/index'
 import { Route as AuthKnowledgeIndexRouteImport } from './routes/_auth/knowledge/index'
 import { Route as AuthDashboardIndexRouteImport } from './routes/_auth/dashboard/index'
@@ -57,6 +58,11 @@ const AuthUsersIndexRoute = AuthUsersIndexRouteImport.update({
 const AuthUserReviewIndexRoute = AuthUserReviewIndexRouteImport.update({
   id: '/user-review/',
   path: '/user-review/',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthSystemIndexRoute = AuthSystemIndexRouteImport.update({
+  id: '/system/',
+  path: '/system/',
   getParentRoute: () => AuthRoute,
 } as any)
 const AuthLogsIndexRoute = AuthLogsIndexRouteImport.update({
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/': typeof AuthDashboardIndexRoute
   '/knowledge/': typeof AuthKnowledgeIndexRoute
   '/logs/': typeof AuthLogsIndexRoute
+  '/system/': typeof AuthSystemIndexRoute
   '/user-review/': typeof AuthUserReviewIndexRoute
   '/users/': typeof AuthUsersIndexRoute
 }
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthDashboardIndexRoute
   '/knowledge': typeof AuthKnowledgeIndexRoute
   '/logs': typeof AuthLogsIndexRoute
+  '/system': typeof AuthSystemIndexRoute
   '/user-review': typeof AuthUserReviewIndexRoute
   '/users': typeof AuthUsersIndexRoute
 }
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/_auth/dashboard/': typeof AuthDashboardIndexRoute
   '/_auth/knowledge/': typeof AuthKnowledgeIndexRoute
   '/_auth/logs/': typeof AuthLogsIndexRoute
+  '/_auth/system/': typeof AuthSystemIndexRoute
   '/_auth/user-review/': typeof AuthUserReviewIndexRoute
   '/_auth/users/': typeof AuthUsersIndexRoute
 }
@@ -165,6 +174,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
     | '/knowledge/'
     | '/logs/'
+    | '/system/'
     | '/user-review/'
     | '/users/'
   fileRoutesByTo: FileRoutesByTo
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/knowledge'
     | '/logs'
+    | '/system'
     | '/user-review'
     | '/users'
   id:
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/_auth/dashboard/'
     | '/_auth/knowledge/'
     | '/_auth/logs/'
+    | '/_auth/system/'
     | '/_auth/user-review/'
     | '/_auth/users/'
   fileRoutesById: FileRoutesById
@@ -259,6 +271,13 @@ declare module '@tanstack/react-router' {
       path: '/user-review'
       fullPath: '/user-review/'
       preLoaderRoute: typeof AuthUserReviewIndexRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/system/': {
+      id: '/_auth/system/'
+      path: '/system'
+      fullPath: '/system/'
+      preLoaderRoute: typeof AuthSystemIndexRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/logs/': {
@@ -329,6 +348,7 @@ interface AuthRouteChildren {
   AuthDashboardIndexRoute: typeof AuthDashboardIndexRoute
   AuthKnowledgeIndexRoute: typeof AuthKnowledgeIndexRoute
   AuthLogsIndexRoute: typeof AuthLogsIndexRoute
+  AuthSystemIndexRoute: typeof AuthSystemIndexRoute
   AuthUserReviewIndexRoute: typeof AuthUserReviewIndexRoute
   AuthUsersIndexRoute: typeof AuthUsersIndexRoute
 }
@@ -342,6 +362,7 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthDashboardIndexRoute: AuthDashboardIndexRoute,
   AuthKnowledgeIndexRoute: AuthKnowledgeIndexRoute,
   AuthLogsIndexRoute: AuthLogsIndexRoute,
+  AuthSystemIndexRoute: AuthSystemIndexRoute,
   AuthUserReviewIndexRoute: AuthUserReviewIndexRoute,
   AuthUsersIndexRoute: AuthUsersIndexRoute,
 }

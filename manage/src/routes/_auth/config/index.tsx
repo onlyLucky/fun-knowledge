@@ -14,6 +14,7 @@ import {
 import type { SystemConfig, CreateConfigRequest } from "@/api/config";
 import { z } from "zod/v4";
 import { FormModal } from "./-FormModal";
+import { formatStorage } from "@/utils/utils";
 
 const SearchParamsSchema = z.object({});
 
@@ -184,32 +185,6 @@ function ConfigPage() {
       />
     </Flex>
   );
-}
-
-/* ---- storage display ---- */
-
-const STORAGE_UNITS = ["B", "KB", "MB", "GB", "TB"] as const;
-const UNIT_BYTES: Record<string, number> = {
-  B: 1,
-  KB: 1024,
-  MB: 1024 ** 2,
-  GB: 1024 ** 3,
-  TB: 1024 ** 4,
-};
-
-function formatStorage(bytes: number): string {
-  if (bytes <= 0) return "0 B";
-  let best = "B";
-  let bestVal = bytes;
-  for (const u of STORAGE_UNITS) {
-    const v = bytes / UNIT_BYTES[u];
-    if (v >= 1) {
-      best = u;
-      bestVal = v;
-    }
-  }
-  const display = bestVal % 1 === 0 ? String(bestVal) : bestVal.toFixed(2);
-  return `${display} ${best}`;
 }
 
 function formatConfigValue(item: SystemConfig): string {

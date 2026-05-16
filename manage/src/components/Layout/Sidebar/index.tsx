@@ -15,6 +15,7 @@ import {
   FolderTree,
   Users,
   UserCheck,
+  Wrench,
   Zap,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -39,6 +40,7 @@ const MENU_LABELS: Record<string, ReturnType<typeof msg>> = {
   Admin: msg`管理员`,
   Config: msg`系统配置`,
   Logs: msg`操作日志`,
+  SystemManagement: msg`系统管理`,
 };
 
 type AntMenuItem = Required<MenuProps>["items"][number];
@@ -60,6 +62,7 @@ const MENU_ICON_MAP: Record<string, LucideIcon> = {
   IconLucideScrollText: ScrollText,
   IconLucideSettings: SlidersHorizontal,
   IconLucideSparkles: Zap,
+  IconLucideWrench: Wrench,
 };
 
 function renderMenuIcon(icon: string | null, size = 16) {

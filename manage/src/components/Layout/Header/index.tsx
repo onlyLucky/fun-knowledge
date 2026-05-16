@@ -16,6 +16,7 @@ import {
   ShieldCheck,
   SlidersHorizontal,
   ScrollText,
+  Wrench,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
@@ -33,6 +34,7 @@ const PATH_LABEL: Record<string, string> = {
   "/admin": "Admin",
   "/config": "Config",
   "/logs": "Logs",
+  "/system": "SystemManagement",
   "/403": "403",
 };
 
@@ -96,6 +98,7 @@ export function Header({ showBreadcrumb: showBreadcrumbProp = true }: HeaderProp
     "/admin": ShieldCheck,
     "/config": SlidersHorizontal,
     "/logs": ScrollText,
+    "/system": Wrench,
     "/403": ShieldAlert,
   };
   const leafIcon: LucideIcon = ICON_MAP[firstSegmentPath] ?? Home;
@@ -110,6 +113,7 @@ export function Header({ showBreadcrumb: showBreadcrumbProp = true }: HeaderProp
     Admin: () => t`管理员`,
     Config: () => t`系统配置`,
     Logs: () => t`操作日志`,
+    SystemManagement: () => t`系统管理`,
     "403": () => t`403`,
   };
   const leafLabel = (LEAF_LABEL_MAP[leafLabelKey] ?? (() => leafLabelKey))();

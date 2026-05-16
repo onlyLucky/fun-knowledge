@@ -13,3 +13,5 @@ alwaysApply: false
 编辑符合 `globs` 的文件时，遵守该文件中的 Do / Do Not / Validation；如有冲突，以 `.instructions.md` 为准。
 
 需要全文进上下文时，在对话里引用：`@manage/.github/instructions/frontend.instructions.md`。
+
+注释使用中文

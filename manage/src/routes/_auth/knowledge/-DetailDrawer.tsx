@@ -1,6 +1,6 @@
-import { Drawer, Descriptions, Tag, Image, Typography, Divider } from "antd";
+import { Drawer, Descriptions, Tag, Image, Typography, Divider, Collapse } from "antd";
 import { useLingui } from "@lingui/react/macro";
-import { KnowledgeStatus } from "@/api/knowledge";
+import { KnowledgeStatus, AiExtendType } from "@/api/knowledge";
 import type { Knowledge } from "@/api/knowledge";
 import { API_BASE_URL } from "@/utils/constants";
 
@@ -91,6 +91,39 @@ export function DetailDrawer({ open, knowledge, onClose }: DetailDrawerProps) {
 
         <Descriptions.Item label={t`排序权重`}>{knowledge.sort_weight ?? 0}</Descriptions.Item>
       </Descriptions>
+
+      <Divider plain style={{ margin: "16px 0" }}>{t`AI延伸解读配置`}</Divider>
+
+      <Descriptions column={1} size="small" bordered styles={{ label: { whiteSpace: "nowrap" } }}>
+        <Descriptions.Item label={t`解读方式`}>
+          <Tag color={knowledge.ai_extend_type === AiExtendType.STATIC_DATA ? "blue" : "green"}>
+            {knowledge.ai_extend_type === AiExtendType.STATIC_DATA ? t`静态数据` : t`AI大模型`}
+          </Tag>
+        </Descriptions.Item>
+      </Descriptions>
+
+      {knowledge.ai_extend_type === AiExtendType.STATIC_DATA &&
+        knowledge.ai_extend_data &&
+        knowledge.ai_extend_data.length > 0 && (
+          <Collapse
+            size="small"
+            style={{ marginTop: 8 }}
+            items={knowledge.ai_extend_data.map((item, index) => ({
+              key: String(index),
+              label: item.title,
+              children: (
+                <div>
+                  <Typography.Paragraph style={{ marginBottom: 8, whiteSpace: "pre-wrap" }}>
+                    {item.content}
+                  </Typography.Paragraph>
+                  {item.source && (
+                    <Typography.Text type="secondary">{t`来源：${item.source}`}</Typography.Text>
+                  )}
+                </div>
+              ),
+            }))}
+          />
+        )}
 
       <Divider plain style={{ margin: "16px 0" }}>{t`数据统计`}</Divider>
 

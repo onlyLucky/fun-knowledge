@@ -108,7 +108,7 @@ export const APP_MENU_TREE: MenuItem[] = [
         icon: "IconLucideSlidersHorizontal",
         children: null,
         permissions: ["config:view"],
-        sort: 2,
+        sort: 3,
         hidden: false,
       },
       {
@@ -119,7 +119,18 @@ export const APP_MENU_TREE: MenuItem[] = [
         icon: "IconLucideScrollText",
         children: null,
         permissions: ["log:view"],
-        sort: 3,
+        sort: 4,
+        hidden: false,
+      },
+      {
+        id: "10",
+        kind: "item",
+        name: "SystemManagement",
+        path: "/system",
+        icon: "IconLucideWrench",
+        children: null,
+        permissions: ["system:view"],
+        sort: 2,
         hidden: false,
       },
     ],
@@ -181,6 +192,7 @@ export function requiredPermissionForPath(pathname: string): string | null {
     "/admin": "admin:view",
     "/config": "config:view",
     "/logs": "log:view",
+    "/system": "system:view",
     "/403": null,
   };
   return map[p] ?? null;
