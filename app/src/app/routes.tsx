@@ -3,7 +3,7 @@ import { Layout } from "./components/Layout";
 import { SubPageWrapper } from "./components/SubPageWrapper";
 import { useAuth } from "./context/AuthContext";
 import { Home, CardDetailPage, CategoryDetail } from "./pages/home";
-import { Discover } from "./pages/discover";
+import { Discover, HotSearchPage } from "./pages/discover";
 import { Profile, ProfileEditPage, Favorites, CalendarPage } from "./pages/profile";
 import { SettingsPage, AboutPage, ContactUsPage, PrivacyPolicyPage, UserAgreementPage } from "./pages/settings";
 import { ErrorReportPage, ErrorReportDetailPage, ReportContentPage } from "./pages/report";
@@ -70,4 +70,5 @@ export const router = createBrowserRouter([
   { path: "/privacy-policy",    Component: wrap(PrivacyPolicyPage) },
   { path: "/report-content",    Component: wrap(ReportContentPage) },
   { path: "/contact-us",        Component: wrap(ContactUsPage) },
+  { path: "/hot-searches",      Component: wrap(HotSearchPage) },
 ]);

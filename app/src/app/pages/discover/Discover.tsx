@@ -1,19 +1,13 @@
-import { useNavigate } from 'react-router';
-import { CATEGORIES, MOCK_CARDS } from '../../data/mock';
+import { useNavigate, useSearchParams } from 'react-router';
+import { MOCK_CARDS, KnowledgeCard, HOT_SEARCHES, HotSearchItem } from '../../data/mock';
 import {
-  Camera, Sparkles, Lightbulb, Leaf, FlaskConical,
-  Calculator, BookOpen, User, Globe, Utensils, Map, Palette, Search,
+  Camera, Search, X, Clock, TrendingUp, TrendingDown, Minus, ChevronRight, Flame,
 } from 'lucide-react';
-import { createElement, useState } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { PageHeader } from '../../components/PageHeader';
 
-const iconMap: Record<string, any> = {
-  Sparkles, Lightbulb, Leaf, FlaskConical,
-  Calculator, BookOpen, User, Globe, Utensils, Map, Palette,
-};
-
-const cardCounts = [38, 54, 27, 61, 19, 42, 33, 75, 22, 48];
+const MAX_RECENT = 8;
 
 // ─── AI Recognition Overlay ───────────────────────────────────────────────────
 
@@ -29,28 +23,18 @@ function AIRecognitionOverlay({ visible }: { visible: boolean }) {
           transition={{ duration: 0.25 }}
           className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#292526]/92 backdrop-blur-sm"
         >
-          {/* Scanning frame */}
           <div className="relative flex items-center justify-center mb-8">
-            {/* Corner brackets */}
             <div className="absolute w-[160px] h-[160px]">
-              {/* Top-left */}
               <div className="absolute top-0 left-0 w-7 h-7 border-t-2 border-l-2 border-[#FDFDFD] rounded-tl-[6px]" />
-              {/* Top-right */}
               <div className="absolute top-0 right-0 w-7 h-7 border-t-2 border-r-2 border-[#FDFDFD] rounded-tr-[6px]" />
-              {/* Bottom-left */}
               <div className="absolute bottom-0 left-0 w-7 h-7 border-b-2 border-l-2 border-[#FDFDFD] rounded-bl-[6px]" />
-              {/* Bottom-right */}
               <div className="absolute bottom-0 right-0 w-7 h-7 border-b-2 border-r-2 border-[#FDFDFD] rounded-br-[6px]" />
             </div>
-
-            {/* Scan line */}
             <motion.div
               className="absolute left-[10px] right-[10px] h-[2px] bg-gradient-to-r from-transparent via-[#FDFDFD]/80 to-transparent rounded-full"
               animate={{ top: ['10px', '148px', '10px'] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
             />
-
-            {/* Camera icon */}
             <div className="w-[160px] h-[160px] bg-white/5 rounded-[20px] flex items-center justify-center">
               <motion.div
                 animate={{ scale: [1, 1.08, 1] }}
@@ -60,8 +44,6 @@ function AIRecognitionOverlay({ visible }: { visible: boolean }) {
               </motion.div>
             </div>
           </div>
-
-          {/* Status text */}
           <motion.p
             className="text-[#FDFDFD] text-[16px] font-bold mb-2"
             animate={{ opacity: [1, 0.5, 1] }}
@@ -70,8 +52,6 @@ function AIRecognitionOverlay({ visible }: { visible: boolean }) {
             AI 识别中…
           </motion.p>
           <p className="text-[#FDFDFD]/50 text-[12px]">正在分析图片内容，发现知识</p>
-
-          {/* Dots */}
           <div className="flex gap-1.5 mt-5">
             {[0, 1, 2].map((i) => (
               <motion.div
@@ -88,22 +68,142 @@ function AIRecognitionOverlay({ visible }: { visible: boolean }) {
   );
 }
 
+// ─── Search Result Card ──────────────────────────────────────────────────────
+
+function SearchResultCard({ card, onClick }: { card: KnowledgeCard; onClick: () => void }) {
+  return (
+    <motion.button
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={onClick}
+      className="w-full bg-[#FDFDFD] rounded-[16px] p-3 flex items-center gap-3 border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)] text-left"
+    >
+      <div className="w-[60px] h-[60px] rounded-[12px] bg-[#F2F2F2] overflow-hidden shrink-0">
+        <img src={card.image} alt={card.title} className="w-full h-full object-cover" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-[14px] font-medium text-[#121111] truncate">{card.title}</p>
+        <p className="text-[11px] text-[#878787] mt-0.5 line-clamp-2">{card.description}</p>
+        <div className="flex items-center gap-1.5 mt-1.5">
+          <span className="text-[10px] px-2 py-0.5 bg-[#F2F2F2] rounded-[100px] text-[#878787]">{card.category}</span>
+        </div>
+      </div>
+    </motion.button>
+  );
+}
+
+// ─── Hot Search Item ─────────────────────────────────────────────────────────
+
+function HotSearchItemRow({ item, onClick }: { item: HotSearchItem; onClick: () => void }) {
+  const TrendIcon = item.trend === 'up' ? TrendingUp : item.trend === 'down' ? TrendingDown : Minus;
+  const trendColor = item.trend === 'up' ? 'text-[#FF4D4F]' : item.trend === 'down' ? 'text-[#52C41A]' : 'text-[#878787]';
+  const isTop3 = item.rank <= 3;
+
+  return (
+    <motion.button
+      whileTap={{ scale: 0.98 }}
+      onClick={onClick}
+      className="w-full flex items-center gap-3 py-2.5 px-1 text-left"
+    >
+      <span className={`text-[14px] font-bold w-5 text-center ${isTop3 ? 'text-[#FF4D4F]' : 'text-[#878787]'}`}>
+        {item.rank}
+      </span>
+      <div className="flex-1 min-w-0">
+        <p className="text-[14px] text-[#121111] truncate">{item.keyword}</p>
+      </div>
+      <div className="flex items-center gap-1 shrink-0">
+        {isTop3 && <Flame size={12} strokeWidth={2} className="text-[#FF4D4F]" />}
+        <TrendIcon size={12} strokeWidth={2} className={trendColor} />
+      </div>
+    </motion.button>
+  );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export function Discover() {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [inputValue, setInputValue] = useState(() => searchParams.get('q') || '');
+  const [submittedQuery, setSubmittedQuery] = useState(() => searchParams.get('q') || '');
   const [isRecognizing, setIsRecognizing] = useState(false);
-  const gridCategories = CATEGORIES.filter((c) => c.id !== 'all');
+  const [recentSearches, setRecentSearches] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('recentSearches') || '[]');
+    } catch {
+      return [];
+    }
+  });
 
-  const filtered = searchQuery.trim()
-    ? gridCategories.filter((c) => c.name.includes(searchQuery.trim()))
-    : gridCategories;
+  const top10HotSearches = HOT_SEARCHES.slice(0, 10);
+
+  const searchResults = useMemo(() => {
+    const q = submittedQuery.trim().toLowerCase();
+    if (!q) return [];
+    return MOCK_CARDS.filter(
+      (card) =>
+        card.title.toLowerCase().includes(q) ||
+        card.description.toLowerCase().includes(q) ||
+        card.category.toLowerCase().includes(q)
+    );
+  }, [submittedQuery]);
+
+  const addRecentSearch = useCallback((query: string) => {
+    const q = query.trim();
+    if (!q) return;
+    setRecentSearches((prev) => {
+      const next = [q, ...prev.filter((s) => s !== q)].slice(0, MAX_RECENT);
+      localStorage.setItem('recentSearches', JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
+  const clearRecentSearches = () => {
+    setRecentSearches([]);
+    localStorage.removeItem('recentSearches');
+  };
+
+  const executeSearch = useCallback(() => {
+    const q = inputValue.trim();
+    if (!q) return;
+    setSubmittedQuery(q);
+    setSearchParams({ q }, { replace: true });
+    addRecentSearch(q);
+  }, [inputValue, addRecentSearch, setSearchParams]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      executeSearch();
+    }
+  };
+
+  const handleHotItemClick = (item: HotSearchItem) => {
+    if (item.cardId) {
+      navigate(`/card/${item.cardId}`);
+    } else {
+      setInputValue(item.keyword);
+      setSubmittedQuery(item.keyword);
+      setSearchParams({ q: item.keyword }, { replace: true });
+      addRecentSearch(item.keyword);
+    }
+  };
+
+  const handleRecentClick = (term: string) => {
+    setInputValue(term);
+    setSubmittedQuery(term);
+    setSearchParams({ q: term }, { replace: true });
+  };
+
+  const handleClearInput = () => {
+    setInputValue('');
+    setSubmittedQuery('');
+    setSearchParams({}, { replace: true });
+  };
 
   const handleAIRecognize = () => {
     if (isRecognizing) return;
     setIsRecognizing(true);
-    // Mock recognition: pick a random card after ~2.5s
     setTimeout(() => {
       const randomCard = MOCK_CARDS[Math.floor(Math.random() * MOCK_CARDS.length)];
       setIsRecognizing(false);
@@ -111,13 +211,24 @@ export function Discover() {
     }, 2500);
   };
 
+  const isSearching = submittedQuery.trim().length > 0;
+
   return (
     <div className="flex flex-col h-full bg-[#F2F2F2] relative">
-      {/* Header */}
+      {/* Header with AI button */}
       <PageHeader
         title="发现"
-        subtitle="探索所有知识分类"
+        subtitle="搜索所有知识卡片"
         showBack={false}
+        right={
+          <motion.button
+            whileTap={{ scale: 0.88 }}
+            onClick={handleAIRecognize}
+            className="w-[38px] h-[38px] bg-[#292526] rounded-[12px] flex items-center justify-center shadow-[0_4px_12px_rgba(41,37,38,0.2)]"
+          >
+            <Camera size={18} strokeWidth={2} className="text-[#FDFDFD]" />
+          </motion.button>
+        }
       />
 
       {/* Search bar */}
@@ -126,64 +237,130 @@ export function Discover() {
           <Search size={16} strokeWidth={2} className="text-[#878787] shrink-0" />
           <input
             type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="搜索分类…"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="搜索知识卡片…"
             className="flex-1 bg-transparent text-[14px] text-[#121111] placeholder:text-[#DFDEDE] outline-none"
           />
+          {inputValue && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              whileTap={{ scale: 0.8 }}
+              onClick={handleClearInput}
+              className="w-5 h-5 rounded-full bg-[#DFDEDE] flex items-center justify-center shrink-0"
+            >
+              <X size={12} strokeWidth={2.5} className="text-[#878787]" />
+            </motion.button>
+          )}
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={executeSearch}
+            className="px-3 py-1 bg-[#292526] text-[#FDFDFD] text-[13px] font-medium rounded-[100px] shrink-0"
+          >
+            搜索
+          </motion.button>
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pb-6">
-        {/* AI Camera Banner */}
-        <motion.button
-          whileTap={{ scale: 0.97 }}
-          onClick={handleAIRecognize}
-          className="w-full bg-[#292526] rounded-[20px] p-5 flex items-center justify-between mb-5 shadow-[0_6px_20px_rgba(41,37,38,0.22)] active:opacity-90 transition-opacity"
-        >
-          <div className="text-left">
-            <h3 className="text-[#FDFDFD] text-[15px] font-bold mb-1">AI 图片识别</h3>
-            <p className="text-[#FDFDFD]/60 text-[12px]">拍一拍，发现未知世界</p>
-          </div>
-          <div className="w-[46px] h-[46px] bg-white/10 rounded-[100px] border border-white/15 flex items-center justify-center">
-            <Camera size={22} strokeWidth={2} className="text-[#FDFDFD]" />
-          </div>
-        </motion.button>
-
-        {/* Category Grid */}
-        <p className="text-[11px] font-medium text-[#878787] uppercase tracking-wider mb-3">
-          所有类目 · {filtered.length} 个
-        </p>
-
-        {filtered.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-[#878787]">
-            <p className="text-[14px]">没有找到「{searchQuery}」相关分类</p>
+        {isSearching ? (
+          /* Search Results */
+          <div>
+            <p className="text-[11px] font-medium text-[#878787] uppercase tracking-wider mb-3">
+              搜索结果 · {searchResults.length} 张
+            </p>
+            {searchResults.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-[#878787]">
+                <Search size={32} strokeWidth={1.5} className="text-[#DFDEDE] mb-3" />
+                <p className="text-[14px]">没有找到「{submittedQuery}」相关卡片</p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2.5">
+                {searchResults.map((card) => (
+                  <SearchResultCard
+                    key={card.id}
+                    card={card}
+                    onClick={() => navigate(`/card/${card.id}`)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-3">
-            {filtered.map((cat, index) => (
-              <motion.button
-                key={cat.id}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => navigate(`/category/${cat.id}`)}
-                className="bg-[#FDFDFD] rounded-[18px] p-4 flex items-center gap-3 shadow-[0_2px_8px_rgba(41,37,38,0.05)] border border-[#DFDEDE]/50 active:bg-[#F2F2F2] transition-colors text-left"
-              >
-                <div className="w-10 h-10 bg-[#F2F2F2] rounded-[12px] flex items-center justify-center shrink-0">
-                  {createElement(iconMap[cat.icon] || Sparkles, {
-                    size: 20,
-                    strokeWidth: 2,
-                    className: 'text-[#292526]',
-                  })}
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[14px] font-medium text-[#121111] truncate">{cat.name}</p>
-                  <p className="text-[11px] text-[#878787] mt-0.5">
-                    {cardCounts[index % cardCounts.length]} 张
+          <>
+            {/* Recent Searches */}
+            {recentSearches.length > 0 && (
+              <div className="mb-5">
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-[11px] font-medium text-[#878787] uppercase tracking-wider">
+                    最近搜索
                   </p>
+                  <button
+                    onClick={clearRecentSearches}
+                    className="text-[11px] text-[#878787] active:text-[#121111]"
+                  >
+                    清除
+                  </button>
                 </div>
-              </motion.button>
-            ))}
-          </div>
+                <div className="flex flex-wrap gap-2">
+                  {recentSearches.map((term) => (
+                    <motion.button
+                      key={term}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleRecentClick(term)}
+                      className="flex items-center gap-1.5 px-3 py-2 bg-[#FDFDFD] border border-[#DFDEDE] rounded-[100px] text-[13px] text-[#121111] shadow-[0_1px_4px_rgba(41,37,38,0.04)]"
+                    >
+                      <Clock size={12} strokeWidth={2} className="text-[#878787]" />
+                      {term}
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Hot Search Ranking */}
+            <div className="bg-[#FDFDFD] rounded-[20px] border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)] overflow-hidden">
+              <div className="flex items-center justify-between px-4 pt-4 pb-2">
+                <div className="flex items-center gap-2">
+                  <Flame size={16} strokeWidth={2} className="text-[#FF4D4F]" />
+                  <p className="text-[15px] font-bold text-[#121111]">热搜榜单</p>
+                </div>
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => navigate('/hot-searches')}
+                  className="flex items-center gap-0.5 text-[12px] text-[#878787]"
+                >
+                  查看全部
+                  <ChevronRight size={14} strokeWidth={2} />
+                </motion.button>
+              </div>
+
+              <div className="grid grid-cols-2 divide-x divide-[#F2F2F2]">
+                {/* Left column: rank 1-5 */}
+                <div className="px-3 pb-2">
+                  {top10HotSearches.slice(0, 5).map((item) => (
+                    <HotSearchItemRow
+                      key={item.rank}
+                      item={item}
+                      onClick={() => handleHotItemClick(item)}
+                    />
+                  ))}
+                </div>
+                {/* Right column: rank 6-10 */}
+                <div className="px-3 pb-2">
+                  {top10HotSearches.slice(5, 10).map((item) => (
+                    <HotSearchItemRow
+                      key={item.rank}
+                      item={item}
+                      onClick={() => handleHotItemClick(item)}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </>
         )}
       </div>
 

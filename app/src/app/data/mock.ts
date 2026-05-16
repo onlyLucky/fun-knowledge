@@ -21,6 +21,32 @@ export const CATEGORIES = [
   { id: 'art', name: '艺术人文', icon: 'Palette' }
 ];
 
+export interface HotSearchItem {
+  rank: number;
+  keyword: string;
+  heat: number;
+  trend: 'up' | 'down' | 'same';
+  cardId?: string;
+}
+
+export const HOT_SEARCHES: HotSearchItem[] = [
+  { rank: 1, keyword: '为什么天空是蓝色的', heat: 9876, trend: 'up', cardId: '3' },
+  { rank: 2, keyword: '章鱼三颗心脏', heat: 8654, trend: 'up', cardId: '2' },
+  { rank: 3, keyword: '手机屏幕伤眼', heat: 7532, trend: 'same', cardId: '1' },
+  { rank: 4, keyword: '宇宙有声音吗', heat: 6421, trend: 'up', cardId: '4' },
+  { rank: 5, keyword: '蒙娜丽莎眉毛', heat: 5987, trend: 'down', cardId: '5' },
+  { rank: 6, keyword: '黑洞是什么', heat: 5432, trend: 'up' },
+  { rank: 7, keyword: '光速有多快', heat: 4987, trend: 'same' },
+  { rank: 8, keyword: '人类起源', heat: 4532, trend: 'down' },
+  { rank: 9, keyword: '恐龙灭绝原因', heat: 4123, trend: 'up' },
+  { rank: 10, keyword: '海水为什么是咸的', heat: 3876, trend: 'same' },
+  { rank: 11, keyword: '地球年龄', heat: 3543, trend: 'down' },
+  { rank: 12, keyword: '金字塔之谜', heat: 3210, trend: 'up' },
+  { rank: 13, keyword: '百慕大三角', heat: 2987, trend: 'down' },
+  { rank: 14, keyword: '量子纠缠', heat: 2654, trend: 'up' },
+  { rank: 15, keyword: '相对论简单解释', heat: 2432, trend: 'same' },
+];
+
 export const MOCK_CARDS: KnowledgeCard[] = [
   {
     id: '1',
