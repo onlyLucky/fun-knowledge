@@ -3,7 +3,7 @@ import { RouterProvider } from 'react-router';
 import { router } from './routes';
 import { UserProvider } from './context/UserContext';
 import { AuthProvider } from './context/AuthContext';
-import { SplashScreen } from './pages/auth/SplashScreen';
+import { SplashScreen } from './pages/auth/splash/SplashScreen';
 
 function App() {
   const [splashDone, setSplashDone] = useState(false);

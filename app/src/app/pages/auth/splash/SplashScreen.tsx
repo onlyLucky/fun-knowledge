@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { motion } from 'motion/react';
-import { AppLogo } from '../../components/AppLogo';
+import { AppLogo } from '../../../components/AppLogo';
 
 interface SplashScreenProps {
   onComplete: () => void;
