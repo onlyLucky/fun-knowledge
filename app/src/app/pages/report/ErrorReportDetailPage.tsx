@@ -1,50 +1,13 @@
-import { useParams, useNavigate } from 'react-router';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router';
 import { motion } from 'motion/react';
 import { CheckCircle2, Clock, XCircle, MessageSquare, FileText } from 'lucide-react';
-import { MOCK_CARDS } from '../../data/mock';
 import { PageHeader } from '../../components/PageHeader';
+import { correctionService } from '../../api';
+import { correctionTypeLabel, mapCorrectionStatus, resolveImageUrl } from '../../api/mappers';
+import type { ServerCorrection } from '../../api/types';
 
 type Status = 'pending' | 'resolved' | 'rejected';
-
-const MOCK_REPORTS: {
-  id: string;
-  cardId: string;
-  reason: string;
-  note: string;
-  status: Status;
-  date: string;
-  reviewDate?: string;
-  reviewComment?: string;
-}[] = [
-  {
-    id: '1',
-    cardId: '3',
-    reason: '内容描述不准确',
-    note: '瑞利散射还涉及到其他波长的散射，描述过于简化',
-    status: 'resolved',
-    date: '2026-04-20',
-    reviewDate: '2026-04-22',
-    reviewComment: '感谢反馈！我们已补充了关于其他波长散射的说明，内容更新已发布。',
-  },
-  {
-    id: '2',
-    cardId: '1',
-    reason: '数据或数字有误',
-    note: '蓝光伤害说法有争议，缺乏具体研究引用',
-    status: 'pending',
-    date: '2026-04-28',
-  },
-  {
-    id: '3',
-    cardId: '5',
-    reason: '内容已过时',
-    note: '关于修复过程的描述存在歧义，建议参考最新研究',
-    status: 'rejected',
-    date: '2026-04-15',
-    reviewDate: '2026-04-17',
-    reviewComment: '经团队核实，目前内容描述符合主流学术观点，暂不做修改，感谢你的反馈！',
-  },
-];
 
 const STATUS_CONFIG: Record<Status, { label: string; icon: typeof CheckCircle2; color: string; bg: string; border: string }> = {
   resolved: {
@@ -93,7 +56,15 @@ const TIMELINE: Record<Status, { step: string; done: boolean }[]> = {
 
 export function ErrorReportDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const report = MOCK_REPORTS.find((r) => r.id === id);
+  const [report, setReport] = useState<ServerCorrection | null>(null);
+
+  useEffect(() => {
+    if (!id) return;
+    correctionService.getCorrections({ pageSize: 100 }).then((res) => {
+      const found = res.list.find((r) => r.id === id);
+      setReport(found || null);
+    }).catch(() => {});
+  }, [id]);
 
   if (!report) {
     return (
@@ -106,13 +77,14 @@ export function ErrorReportDetailPage() {
     );
   }
 
-  const card = MOCK_CARDS.find((c) => c.id === report.cardId);
-  const cfg = STATUS_CONFIG[report.status];
-  const timeline = TIMELINE[report.status];
+  const card = report.knowledge;
+  const status = mapCorrectionStatus(report.status);
+  const cfg = STATUS_CONFIG[status];
+  const timeline = TIMELINE[status];
 
   return (
     <div className="flex flex-col h-full bg-[#F2F2F2]">
-      <PageHeader title="纠错详情" subtitle={`提交于 ${report.date}`} />
+      <PageHeader title="纠错详情" subtitle={`提交于 ${report.created_at.slice(0, 10)}`} />
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pb-8 space-y-4">
         {/* Status banner */}
@@ -127,7 +99,7 @@ export function ErrorReportDetailPage() {
           <div>
             <p className={`text-[14px] font-bold ${cfg.color}`}>{cfg.label}</p>
             <p className="text-[11px] text-[#878787] mt-0.5">
-              {report.status === 'pending' ? '正在审核中，请耐心等待' : `审核完成于 ${report.reviewDate}`}
+              {status === 'pending' ? '正在审核中，请耐心等待' : `审核完成于 ${report.review_time?.slice(0, 10) || ''}`}
             </p>
           </div>
         </motion.div>
@@ -144,13 +116,13 @@ export function ErrorReportDetailPage() {
           </div>
           <div className="flex items-center gap-3 px-4 pb-4">
             <div className="w-14 h-14 rounded-[12px] overflow-hidden bg-[#F2F2F2] shrink-0">
-              {card && <img src={card.image} alt="" className="w-full h-full object-cover" />}
+              {card && <img src={resolveImageUrl(card.resource_url)} alt="" className="w-full h-full object-cover" />}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-[14px] font-bold text-[#121111] line-clamp-2 leading-snug">
                 {card?.title || '未知卡片'}
               </p>
-              <span className="text-[10px] text-[#878787] mt-1 inline-block">{card?.category}</span>
+              <span className="text-[10px] text-[#878787] mt-1 inline-block">{card?.category?.name || '未分类'}</span>
             </div>
           </div>
         </motion.div>
@@ -165,11 +137,11 @@ export function ErrorReportDetailPage() {
           <p className="text-[10px] font-medium text-[#878787] uppercase tracking-wider mb-3">纠错内容</p>
           <div className="flex items-center gap-2 mb-3">
             <FileText size={14} strokeWidth={2} className="text-[#292526] shrink-0" />
-            <span className="text-[13px] font-medium text-[#292526]">{report.reason}</span>
+            <span className="text-[13px] font-medium text-[#292526]">{correctionTypeLabel(report.type)}</span>
           </div>
-          {report.note && (
+          {report.description && (
             <div className="bg-[#F2F2F2] rounded-[12px] p-3">
-              <p className="text-[13px] text-[#787676] leading-relaxed">{report.note}</p>
+              <p className="text-[13px] text-[#787676] leading-relaxed">{report.description}</p>
             </div>
           )}
         </motion.div>
@@ -182,6 +154,7 @@ export function ErrorReportDetailPage() {
           className="bg-[#FDFDFD] rounded-[20px] p-4 border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]"
         >
           <p className="text-[10px] font-medium text-[#878787] uppercase tracking-wider mb-4">处理进度</p>
+
           <div className="flex items-start gap-0">
             {timeline.map((item, i) => (
               <div key={i} className="flex-1 flex flex-col items-center">
@@ -224,7 +197,7 @@ export function ErrorReportDetailPage() {
         </motion.div>
 
         {/* Review comment */}
-        {report.reviewComment && (
+        {report.review_remark && (
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -236,9 +209,9 @@ export function ErrorReportDetailPage() {
               <p className="text-[10px] font-medium text-[#878787] uppercase tracking-wider">编辑团队回复</p>
             </div>
             <div className="bg-[#F2F2F2] rounded-[12px] p-3">
-              <p className="text-[13px] text-[#787676] leading-relaxed">{report.reviewComment}</p>
+              <p className="text-[13px] text-[#787676] leading-relaxed">{report.review_remark}</p>
             </div>
-            <p className="text-[10px] text-[#DFDEDE] mt-2 text-right">{report.reviewDate}</p>
+            <p className="text-[10px] text-[#DFDEDE] mt-2 text-right">{report.review_time?.slice(0, 10)}</p>
           </motion.div>
         )}
 

@@ -10,7 +10,7 @@ export interface AuthUser {
 interface AuthContextType {
   user: AuthUser | null;
   isLoggedIn: boolean;
-  login: (user: AuthUser) => void;
+  login: (user: AuthUser, token: string) => void;
   logout: () => void;
 }
 
@@ -31,14 +31,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   });
 
-  const login = (userData: AuthUser) => {
+  const login = (userData: AuthUser, token: string) => {
     setUser(userData);
     localStorage.setItem('auth_user', JSON.stringify(userData));
+    localStorage.setItem('access_token', token);
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('auth_user');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
   };
 
   return (

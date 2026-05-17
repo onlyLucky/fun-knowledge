@@ -1,22 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Star, Sparkles, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router';
-import { MOCK_CARDS } from '../../data/mock';
+import { favoriteService, mapKnowledgeToCard } from '../../api';
+import type { KnowledgeCard } from '../../types';
 import { PageHeader } from '../../components/PageHeader';
 import { AIBottomSheet } from '../../components/AIBottomSheet';
 
-// Simulate saved cards (first 3 + last card)
-const INITIAL_SAVED = [MOCK_CARDS[0], MOCK_CARDS[1], MOCK_CARDS[3], MOCK_CARDS[4]];
-
 export function Favorites() {
   const navigate = useNavigate();
-  const [saved, setSaved] = useState(INITIAL_SAVED);
+  const [saved, setSaved] = useState<KnowledgeCard[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    favoriteService.getFavorites()
+      .then((data) => {
+        if (!cancelled) setSaved(data.list.map(mapKnowledgeToCard));
+      })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, []);
   const [removing, setRemoving] = useState<string | null>(null);
   const [aiSheet, setAiSheet] = useState<{ open: boolean; title: string }>({ open: false, title: '' });
 
-  const handleRemove = (id: string) => {
+  const handleRemove = async (id: string) => {
     setRemoving(id);
+    try {
+      await favoriteService.removeFavorite(id);
+    } catch {
+      // ignore
+    }
     setTimeout(() => {
       setSaved((prev) => prev.filter((c) => c.id !== id));
       setRemoving(null);

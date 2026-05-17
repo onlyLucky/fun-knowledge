@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, Check, Camera, X } from 'lucide-react';
 import { useUser } from '../../context/UserContext';
+import { authService } from '../../api';
 
 // ─── Preset Avatars ───────────────────────────────────────────────────────────
 
@@ -95,8 +96,17 @@ export function ProfileEditPage() {
   const [pickerTab, setPickerTab] = useState<'photo' | 'emoji'>('photo');
   const [saved, setSaved] = useState(false);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     updateProfile({ nickname, bio, usePhoto, avatarUrl, avatarEmoji, avatarBg });
+    try {
+      await authService.updateProfile({
+        nickname,
+        signature: bio,
+        avatar: usePhoto ? avatarUrl : undefined,
+      });
+    } catch {
+      // local state already updated, server sync failed silently
+    }
     setSaved(true);
     setTimeout(() => navigate(-1), 800);
   };

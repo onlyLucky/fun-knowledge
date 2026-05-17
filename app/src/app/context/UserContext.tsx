@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { authService, categoryService, setCategoryMap } from '../api';
 
 export interface UserProfile {
   nickname: string;
@@ -21,11 +22,13 @@ const DEFAULT_PROFILE: UserProfile = {
 interface UserContextType {
   profile: UserProfile;
   updateProfile: (updates: Partial<UserProfile>) => void;
+  initProfile: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType>({
   profile: DEFAULT_PROFILE,
   updateProfile: () => {},
+  initProfile: async () => {},
 });
 
 export function UserProvider({ children }: { children: ReactNode }) {
@@ -46,8 +49,26 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setProfile((prev) => ({ ...prev, ...updates }));
   };
 
+  const initProfile = useCallback(async () => {
+    try {
+      const [serverUser, cats] = await Promise.all([
+        authService.getProfile(),
+        categoryService.getCategories(),
+      ]);
+      setProfile((prev) => ({
+        ...prev,
+        nickname: serverUser.nickname || prev.nickname,
+        avatarUrl: serverUser.avatar || prev.avatarUrl,
+        bio: serverUser.signature || prev.bio,
+      }));
+      setCategoryMap(cats);
+    } catch {
+      // Server unavailable, keep localStorage defaults
+    }
+  }, []);
+
   return (
-    <UserContext.Provider value={{ profile, updateProfile }}>
+    <UserContext.Provider value={{ profile, updateProfile, initProfile }}>
       {children}
     </UserContext.Provider>
   );

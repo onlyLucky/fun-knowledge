@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Send, CheckCircle2 } from 'lucide-react';
+import { correctionService } from '../api';
+import { mapReasonToType } from '../api/mappers';
 
 const ERROR_REASONS = [
   '内容描述不准确',
@@ -14,24 +16,38 @@ const ERROR_REASONS = [
 interface ErrorReportSheetProps {
   isOpen: boolean;
   onClose: () => void;
+  knowledgeId: string;
 }
 
-export function ErrorReportSheet({ isOpen, onClose }: ErrorReportSheetProps) {
+export function ErrorReportSheet({ isOpen, onClose, knowledgeId }: ErrorReportSheetProps) {
   const [selectedReason, setSelectedReason] = useState('');
   const [extraNote, setExtraNote] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!selectedReason) return;
-    setSubmitted(true);
-    setTimeout(() => {
-      onClose();
+    setSubmitting(true);
+    try {
+      await correctionService.submitCorrection({
+        knowledge_id: knowledgeId,
+        type: mapReasonToType(selectedReason),
+        description: extraNote ? `${selectedReason}：${extraNote}` : selectedReason,
+      });
+      setSubmitted(true);
       setTimeout(() => {
-        setSubmitted(false);
-        setSelectedReason('');
-        setExtraNote('');
-      }, 300);
-    }, 1800);
+        onClose();
+        setTimeout(() => {
+          setSubmitted(false);
+          setSelectedReason('');
+          setExtraNote('');
+        }, 300);
+      }, 1800);
+    } catch {
+      // keep form open on error
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleClose = () => {
@@ -127,15 +143,15 @@ export function ErrorReportSheet({ isOpen, onClose }: ErrorReportSheetProps) {
                   <motion.button
                     whileTap={{ scale: 0.97 }}
                     onClick={handleSubmit}
-                    disabled={!selectedReason}
+                    disabled={!selectedReason || submitting}
                     className={`w-full py-3.5 rounded-[100px] flex items-center justify-center gap-2 text-[14px] font-bold transition-all ${
-                      selectedReason
+                      selectedReason && !submitting
                         ? 'bg-[#292526] text-[#FDFDFD] shadow-[0_4px_16px_rgba(41,37,38,0.2)]'
                         : 'bg-[#F2F2F2] text-[#DFDEDE]'
                     }`}
                   >
                     <Send size={15} strokeWidth={2.5} />
-                    提交纠错
+                    {submitting ? '提交中...' : '提交纠错'}
                   </motion.button>
                 </>
               )}

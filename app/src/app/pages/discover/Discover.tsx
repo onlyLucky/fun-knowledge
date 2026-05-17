@@ -1,9 +1,10 @@
 import { useNavigate, useSearchParams } from 'react-router';
-import { MOCK_CARDS, KnowledgeCard, HOT_SEARCHES, HotSearchItem } from '../../data/mock';
+import { knowledgeService, discoverService, mapKnowledgeToCard } from '../../api';
+import type { KnowledgeCard, HotSearchItem } from '../../types';
 import {
   Camera, Search, X, Clock, TrendingUp, TrendingDown, Minus, ChevronRight, Flame,
 } from 'lucide-react';
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { PageHeader } from '../../components/PageHeader';
 
@@ -136,17 +137,26 @@ export function Discover() {
     }
   });
 
-  const top10HotSearches = HOT_SEARCHES.slice(0, 10);
+  const [hotSearches, setHotSearches] = useState<HotSearchItem[]>([]);
 
-  const searchResults = useMemo(() => {
-    const q = submittedQuery.trim().toLowerCase();
-    if (!q) return [];
-    return MOCK_CARDS.filter(
-      (card) =>
-        card.title.toLowerCase().includes(q) ||
-        card.description.toLowerCase().includes(q) ||
-        card.category.toLowerCase().includes(q)
-    );
+  useEffect(() => {
+    discoverService.getHotSearches().then(setHotSearches).catch(() => {});
+  }, []);
+
+  const top10HotSearches = hotSearches.slice(0, 10);
+
+  const [searchResults, setSearchResults] = useState<KnowledgeCard[]>([]);
+
+  useEffect(() => {
+    const q = submittedQuery.trim();
+    if (!q) { setSearchResults([]); return; }
+    let cancelled = false;
+    knowledgeService.getKnowledgeList({ title: q, pageSize: 20 })
+      .then((data) => {
+        if (!cancelled) setSearchResults(data.list.map(mapKnowledgeToCard));
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
   }, [submittedQuery]);
 
   const addRecentSearch = useCallback((query: string) => {
@@ -163,6 +173,38 @@ export function Discover() {
     setRecentSearches([]);
     localStorage.removeItem('recentSearches');
   };
+
+  const removeRecentSearch = useCallback((term: string) => {
+    setRecentSearches((prev) => {
+      const next = prev.filter((s) => s !== term);
+      localStorage.setItem('recentSearches', JSON.stringify(next));
+      return next;
+    });
+    setPressedTerm(null);
+  }, []);
+
+  const [pressedTerm, setPressedTerm] = useState<string | null>(null);
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handlePointerDown = useCallback((term: string) => {
+    longPressTimer.current = setTimeout(() => {
+      setPressedTerm(term);
+    }, 500);
+  }, []);
+
+  const clearLongPressTimer = useCallback(() => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!pressedTerm) return;
+    const dismiss = () => setPressedTerm(null);
+    document.addEventListener('click', dismiss);
+    return () => document.removeEventListener('click', dismiss);
+  }, [pressedTerm]);
 
   const executeSearch = useCallback(() => {
     const q = inputValue.trim();
@@ -204,11 +246,16 @@ export function Discover() {
   const handleAIRecognize = () => {
     if (isRecognizing) return;
     setIsRecognizing(true);
-    setTimeout(() => {
-      const randomCard = MOCK_CARDS[Math.floor(Math.random() * MOCK_CARDS.length)];
-      setIsRecognizing(false);
-      navigate(`/card/${randomCard.id}`);
-    }, 2500);
+    knowledgeService.getKnowledgeList({ pageSize: 50 })
+      .then((data) => {
+        const cards = data.list.map(mapKnowledgeToCard);
+        if (cards.length > 0) {
+          const randomCard = cards[Math.floor(Math.random() * cards.length)];
+          navigate(`/card/${randomCard.id}`);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setIsRecognizing(false));
   };
 
   const isSearching = submittedQuery.trim().length > 0;
@@ -304,16 +351,42 @@ export function Discover() {
                     清除
                   </button>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 max-h-[calc(3*2.56rem+2*0.25rem)] overflow-y-auto">
                   {recentSearches.map((term) => (
                     <motion.button
                       key={term}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => handleRecentClick(term)}
-                      className="flex items-center gap-1.5 px-3 py-2 bg-[#FDFDFD] border border-[#DFDEDE] rounded-[100px] text-[13px] text-[#121111] shadow-[0_1px_4px_rgba(41,37,38,0.04)]"
+                      onClick={(e) => {
+                        if (pressedTerm === term) {
+                          e.stopPropagation();
+                          return;
+                        }
+                        handleRecentClick(term);
+                      }}
+                      onPointerDown={() => handlePointerDown(term)}
+                      onPointerUp={clearLongPressTimer}
+                      onPointerLeave={clearLongPressTimer}
+                      className="flex items-center gap-1.5 px-3 py-2 bg-[#FDFDFD] border border-[#DFDEDE] rounded-[100px] text-[13px] text-[#121111] shadow-[0_1px_4px_rgba(41,37,38,0.04)] max-w-full"
                     >
-                      <Clock size={12} strokeWidth={2} className="text-[#878787]" />
-                      {term}
+                      {pressedTerm === term ? (
+                        <>
+                          <X
+                            size={12}
+                            strokeWidth={2}
+                            className="text-[#FF4D4F] shrink-0"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              removeRecentSearch(term);
+                            }}
+                          />
+                          <span className="truncate">{term.length > 8 ? term.slice(0, 8) + '...' : term}</span>
+                        </>
+                      ) : (
+                        <>
+                          <Clock size={12} strokeWidth={2} className="text-[#878787] shrink-0" />
+                          <span className="truncate">{term.length > 8 ? term.slice(0, 8) + '...' : term}</span>
+                        </>
+                      )}
                     </motion.button>
                   ))}
                 </div>

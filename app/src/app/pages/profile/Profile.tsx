@@ -1,8 +1,10 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { Star, Calendar, AlertCircle, Settings, Info, ChevronRight, BookOpen, Flame, Pencil } from 'lucide-react';
 import { motion } from 'motion/react';
 import { PageHeader } from '../../components/PageHeader';
 import { useUser } from '../../context/UserContext';
+import { authService, favoriteService, checkinService } from '../../api';
 
 // ─── Avatar display ───────────────────────────────────────────────────────────
 
@@ -69,12 +71,44 @@ export function Profile() {
   const navigate = useNavigate();
   const { profile } = useUser();
 
-  const streak = 12;
-  const total = 45;
-  const saved = 28;
+  const [streak, setStreak] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [saved, setSaved] = useState(0);
+  const [checkedDays, setCheckedDays] = useState<boolean[]>([false, false, false, false, false, false, false]);
+
+  useEffect(() => {
+    authService.getProfile().then((u) => {
+      setStreak(u.streak_days);
+      setTotal(u.total_check_in_days);
+    }).catch(() => {});
+
+    favoriteService.getFavorites({ pageSize: 1 }).then((res) => {
+      setSaved(res.total);
+    }).catch(() => {});
+
+    // Compute this week's check-in days
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0=Sun
+    const weekStart = new Date(today);
+    weekStart.setDate(today.getDate() - dayOfWeek);
+    weekStart.setHours(0, 0, 0, 0);
+    const monthStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+    checkinService.getCheckInHistory({ month: monthStr, pageSize: 31 }).then((res) => {
+      const checked = new Set(
+        res.list.map((c) => c.check_in_date.slice(0, 10))
+      );
+      const week: boolean[] = [];
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(weekStart);
+        d.setDate(weekStart.getDate() + i);
+        const key = d.toISOString().slice(0, 10);
+        week.push(checked.has(key));
+      }
+      setCheckedDays(week);
+    }).catch(() => {});
+  }, []);
 
   const days = ['日', '一', '二', '三', '四', '五', '六'];
-  const checkedDays = [true, true, true, true, false, true, true];
 
   return (
     <div className="flex flex-col h-full bg-[#F2F2F2] overflow-y-auto no-scrollbar">
@@ -205,7 +239,7 @@ export function Profile() {
           <MenuRow
             icon={<Star size={18} strokeWidth={2} className="text-[#292526]" />}
             title="我的收藏"
-            value="28"
+            value={String(saved)}
             onClick={() => navigate('/favorites')}
           />
           <div className="h-[1px] bg-[#F2F2F2] mx-4" />

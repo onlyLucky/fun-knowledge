@@ -1,22 +1,46 @@
 import { useParams, useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { Star, Sparkles } from 'lucide-react';
-import { CATEGORIES, MOCK_CARDS } from '../../data/mock';
+import { knowledgeService, categoryService, mapKnowledgeToCard, mapServerCategory } from '../../api';
+import type { KnowledgeCard } from '../../types';
 import { PageHeader } from '../../components/PageHeader';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export function CategoryDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [saved, setSaved] = useState<Set<string>>(new Set());
 
-  const category = CATEGORIES.find((c) => c.id === id);
-  const cards = id === 'all'
-    ? MOCK_CARDS
-    : MOCK_CARDS.filter((c) => c.category === category?.name);
+  const [categoryName, setCategoryName] = useState('分类');
+  const [displayCards, setDisplayCards] = useState<KnowledgeCard[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Pad with all cards if category has few
-  const displayCards = cards.length > 0 ? cards : MOCK_CARDS;
+  useEffect(() => {
+    if (!id) return;
+    let cancelled = false;
+    async function load() {
+      try {
+        const [serverCats, serverCards] = await Promise.all([
+          categoryService.getCategories(),
+          knowledgeService.getKnowledgeList({
+            category_id: id === 'all' ? undefined : id,
+          }),
+        ]);
+        if (cancelled) return;
+        const cats = serverCats.map(mapServerCategory);
+        const cat = cats.find((c) => c.id === id);
+        setCategoryName(id === 'all' ? '浏览历史' : (cat?.name || '分类'));
+        const mapped = serverCards.list.map(mapKnowledgeToCard);
+        setDisplayCards(mapped.length > 0 ? mapped : []);
+      } catch {
+        // keep empty
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => { cancelled = true; };
+  }, [id]);
 
   const toggleSave = (cardId: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -34,8 +58,8 @@ export function CategoryDetail() {
   return (
     <div className="flex flex-col h-full bg-[#F2F2F2]">
       <PageHeader
-        title={id === 'all' ? '浏览历史' : (category?.name || '分类')}
-        subtitle={`${displayCards.length} 张卡片`}
+        title={categoryName}
+        subtitle={loading ? '加载中...' : `${displayCards.length} 张卡片`}
       />
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pb-6 space-y-3">

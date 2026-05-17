@@ -5,7 +5,8 @@ import {
   Sparkles, Lightbulb, Leaf, FlaskConical,
   Calculator, BookOpen, User, Globe, Utensils, Map, Palette,
 } from 'lucide-react';
-import { CATEGORIES, MOCK_CARDS } from '../../data/mock';
+import { knowledgeService, categoryService, mapKnowledgeToCard, mapServerCategory } from '../../api';
+import type { KnowledgeCard as KnowledgeCardType } from '../../types';
 import { KnowledgeCard } from '../../components/KnowledgeCard';
 import { AIBottomSheet } from '../../components/AIBottomSheet';
 import { PageHeader } from '../../components/PageHeader';
@@ -23,11 +24,13 @@ function CategoryModal({
   selected,
   onSelect,
   onClose,
+  categories,
 }: {
   open: boolean;
   selected: string;
   onSelect: (id: string) => void;
   onClose: () => void;
+  categories: { id: string; name: string; icon: string }[];
 }) {
   return (
     <AnimatePresence>
@@ -64,7 +67,7 @@ function CategoryModal({
 
             {/* Grid */}
             <div className="px-5 py-4 grid grid-cols-3 gap-2.5 max-h-[52vh] overflow-y-auto no-scrollbar">
-              {CATEGORIES.map((cat) => {
+              {categories.map((cat) => {
                 const isActive = selected === cat.id;
                 const IconComp = iconMap[cat.icon] || Sparkles;
                 return (
@@ -131,19 +134,43 @@ export function Home() {
   const [viewedCount, setViewedCount] = useState(0);
 
   const [isAISheetOpen, setIsAISheetOpen] = useState(false);
+  const [activeCardId, setActiveCardId] = useState('');
   const [activeCardTitle, setActiveCardTitle] = useState('');
 
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [categories, setCategories] = useState<{ id: string; name: string; icon: string }[]>([]);
+  const [cards, setCards] = useState<KnowledgeCardType[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredCards =
-    activeCategory === 'all'
-      ? MOCK_CARDS
-      : MOCK_CARDS.filter(
-          (c) =>
-            CATEGORIES.find((cat) => cat.id === activeCategory)?.name ===
-            c.category
-        );
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      setLoading(true);
+      try {
+        const [serverCats, serverCards] = await Promise.all([
+          categoryService.getCategories(),
+          activeCategory === 'all'
+            ? knowledgeService.getRecommendations({ pageSize: 20 })
+            : knowledgeService.getKnowledgeList({ category_id: activeCategory, pageSize: 20 }),
+        ]);
+        if (cancelled) return;
+        setCategories([
+          { id: 'all', name: '全部', icon: 'Sparkles' },
+          ...serverCats.map(mapServerCategory),
+        ]);
+        setCards(serverCards.list.map(mapKnowledgeToCard));
+      } catch {
+        // keep empty
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => { cancelled = true; };
+  }, [activeCategory]);
+
+  const filteredCards = cards;
 
   const handleSwipeUp = () => {
     if (currentIndex < filteredCards.length - 1) {
@@ -163,7 +190,8 @@ export function Home() {
     }
   };
 
-  const openAISheet = (title: string) => {
+  const openAISheet = (id: string, title: string) => {
+    setActiveCardId(id);
     setActiveCardTitle(title);
     setIsAISheetOpen(true);
   };
@@ -189,7 +217,7 @@ export function Home() {
   };
 
   const activeCategoryName =
-    CATEGORIES.find((c) => c.id === activeCategory)?.name ?? '全部';
+    categories.find((c) => c.id === activeCategory)?.name ?? '全部';
 
   return (
     <div className="flex flex-col h-full bg-[#F2F2F2] relative">
@@ -212,7 +240,7 @@ export function Home() {
       {/* Categories */}
       <div className="overflow-x-auto no-scrollbar px-5 pb-3 shrink-0">
         <div className="flex space-x-2">
-          {CATEGORIES.map((category) => (
+          {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => handleSelectCategory(category.id)}
@@ -311,6 +339,7 @@ export function Home() {
         isOpen={isAISheetOpen}
         onClose={() => setIsAISheetOpen(false)}
         title={activeCardTitle}
+        knowledgeId={activeCardId}
       />
 
       {/* Category Filter Modal */}
@@ -319,6 +348,7 @@ export function Home() {
         selected={activeCategory}
         onSelect={handleSelectCategory}
         onClose={() => setShowCategoryModal(false)}
+        categories={categories}
       />
     </div>
   );

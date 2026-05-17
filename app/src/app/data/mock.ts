@@ -1,33 +1,4 @@
-export interface KnowledgeCard {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  category: string;
-  source: string;
-}
-
-export const CATEGORIES = [
-  { id: 'all', name: '全部', icon: 'Sparkles' },
-  { id: 'daily_life', name: '生活常识', icon: 'Lightbulb' },
-  { id: 'nature', name: '大自然奥秘', icon: 'Leaf' },
-  { id: 'science', name: '科学原理', icon: 'FlaskConical' },
-  { id: 'math', name: '数学趣题', icon: 'Calculator' },
-  { id: 'history', name: '历史故事', icon: 'BookOpen' },
-  { id: 'body', name: '人体奥秘', icon: 'User' },
-  { id: 'universe', name: '宇宙探索', icon: 'Globe' },
-  { id: 'food', name: '美食文化', icon: 'Utensils' },
-  { id: 'geography', name: '地理奇观', icon: 'Map' },
-  { id: 'art', name: '艺术人文', icon: 'Palette' }
-];
-
-export interface HotSearchItem {
-  rank: number;
-  keyword: string;
-  heat: number;
-  trend: 'up' | 'down' | 'same';
-  cardId?: string;
-}
+import type { KnowledgeCard, HotSearchItem } from '../types';
 
 export const HOT_SEARCHES: HotSearchItem[] = [
   { rank: 1, keyword: '为什么天空是蓝色的', heat: 9876, trend: 'up', cardId: '3' },

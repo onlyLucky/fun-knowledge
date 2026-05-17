@@ -1,16 +1,13 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { CheckCircle2, Clock, XCircle, ChevronRight } from 'lucide-react';
 import { PageHeader } from '../../components/PageHeader';
-import { MOCK_CARDS } from '../../data/mock';
+import { correctionService } from '../../api';
+import { correctionTypeLabel, mapCorrectionStatus, resolveImageUrl } from '../../api/mappers';
+import type { ServerCorrection } from '../../api/types';
 
 type Status = 'pending' | 'resolved' | 'rejected';
-
-const MOCK_REPORTS: { id: string; cardId: string; reason: string; status: Status; date: string }[] = [
-  { id: '1', cardId: '3', reason: '内容描述不够准确，瑞利散射还涉及到其他波长的散射', status: 'resolved', date: '2026-04-20' },
-  { id: '2', cardId: '1', reason: '蓝光伤害说法有争议，缺乏具体研究引用', status: 'pending', date: '2026-04-28' },
-  { id: '3', cardId: '5', reason: '关于修复过程的描述存在歧义', status: 'rejected', date: '2026-04-15' },
-];
 
 const STATUS_CONFIG: Record<Status, { label: string; icon: typeof CheckCircle2; color: string; bg: string }> = {
   resolved: { label: '已采纳', icon: CheckCircle2, color: 'text-green-600', bg: 'bg-green-50' },
@@ -20,23 +17,32 @@ const STATUS_CONFIG: Record<Status, { label: string; icon: typeof CheckCircle2; 
 
 export function ErrorReportPage() {
   const navigate = useNavigate();
+  const [reports, setReports] = useState<ServerCorrection[]>([]);
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    correctionService.getCorrections({ pageSize: 50 }).then((res) => {
+      setReports(res.list);
+      setTotal(res.total);
+    }).catch(() => {});
+  }, []);
 
   return (
     <div className="flex flex-col h-full bg-[#F2F2F2]">
       <PageHeader
         title="纠错记录"
-        subtitle={`共提交 ${MOCK_REPORTS.length} 条纠错`}
+        subtitle={`共提交 ${total} 条纠错`}
       />
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pb-6 space-y-3">
-        {MOCK_REPORTS.length === 0 ? (
+        {reports.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-48 text-[#878787]">
             <p className="text-[14px]">还没有提交过纠错</p>
           </div>
         ) : (
-          MOCK_REPORTS.map((report, i) => {
-            const card = MOCK_CARDS.find((c) => c.id === report.cardId);
-            const cfg = STATUS_CONFIG[report.status];
+          reports.map((report, i) => {
+            const card = report.knowledge;
+            const cfg = STATUS_CONFIG[mapCorrectionStatus(report.status)];
             return (
               <motion.div
                 key={report.id}
@@ -49,7 +55,7 @@ export function ErrorReportPage() {
                 {/* Card reference */}
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-8 h-8 rounded-[10px] overflow-hidden bg-[#F2F2F2] shrink-0">
-                    {card && <img src={card.image} alt="" className="w-full h-full object-cover" />}
+                    {card && <img src={resolveImageUrl(card.resource_url)} alt="" className="w-full h-full object-cover" />}
                   </div>
                   <p className="text-[12px] font-medium text-[#121111] line-clamp-1 flex-1">
                     {card?.title || '未知卡片'}
@@ -58,12 +64,12 @@ export function ErrorReportPage() {
 
                 {/* Reason */}
                 <p className="text-[13px] text-[#787676] leading-relaxed mb-3 line-clamp-2">
-                  {report.reason}
+                  {correctionTypeLabel(report.type)}：{report.description}
                 </p>
 
                 {/* Footer */}
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-[#878787]">{report.date}</span>
+                  <span className="text-[10px] text-[#878787]">{report.created_at.slice(0, 10)}</span>
                   <div className="flex items-center gap-2">
                     <div className={`flex items-center gap-1 px-2.5 py-1 rounded-[100px] ${cfg.bg}`}>
                       <cfg.icon size={12} strokeWidth={2.5} className={cfg.color} />

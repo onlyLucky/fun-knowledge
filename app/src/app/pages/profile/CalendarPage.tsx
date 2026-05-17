@@ -1,16 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { ChevronLeft, ChevronRight, Flame } from 'lucide-react';
 import { PageHeader } from '../../components/PageHeader';
+import { checkinService } from '../../api';
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六'];
 const MONTHS = ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
-
-// Simulated check-in days (day numbers)
-const CHECKED_DAYS: Record<string, number[]> = {
-  '2026-4': [1,2,3,5,6,7,8,9,12,13,14,15,17,18,19,22,23,24,25,26,28,29,30],
-  '2026-3': [1,2,4,5,6,7,10,11,14,15,18,19,20,21,25,26,28,29,30,31],
-};
 
 function getDaysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate();
@@ -24,11 +19,20 @@ export function CalendarPage() {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth()); // 0-indexed
+  const [checkedDays, setCheckedDays] = useState<Set<number>>(new Set());
 
   const daysInMonth = getDaysInMonth(year, month);
   const firstDay = getFirstDayOfMonth(year, month);
-  const key = `${year}-${month + 1}`;
-  const checkedSet = new Set(CHECKED_DAYS[key] || []);
+
+  useEffect(() => {
+    const monthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
+    checkinService.getCheckInHistory({ month: monthStr, pageSize: 31 }).then((res) => {
+      const days = new Set(
+        res.list.map((c) => new Date(c.check_in_date).getDate())
+      );
+      setCheckedDays(days);
+    }).catch(() => setCheckedDays(new Set()));
+  }, [year, month]);
 
   const prevMonth = () => {
     if (month === 0) { setYear(y => y - 1); setMonth(11); }
@@ -55,11 +59,11 @@ export function CalendarPage() {
   // pad to complete last row
   while (cells.length % 7 !== 0) cells.push(null);
 
-  const checkedCount = checkedSet.size;
+  const checkedCount = checkedDays.size;
   // Streak: count from today backwards
   let streak = 0;
   for (let d = today.getDate(); d >= 1; d--) {
-    if (checkedSet.has(d)) streak++;
+    if (checkedDays.has(d)) streak++;
     else break;
   }
 
@@ -120,7 +124,7 @@ export function CalendarPage() {
           <div className="grid grid-cols-7 gap-y-1.5">
             {cells.map((day, i) => {
               if (!day) return <div key={`empty-${i}`} />;
-              const checked = checkedSet.has(day);
+              const checked = checkedDays.has(day);
               const future = isFuture(day);
               const today_ = isToday(day);
               return (

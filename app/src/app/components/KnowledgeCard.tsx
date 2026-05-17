@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { Star, AlertCircle, Sparkles, ChevronUp } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useNavigate } from 'react-router';
-import { KnowledgeCard as KnowledgeCardType } from '../data/mock';
+import type { KnowledgeCard as KnowledgeCardType } from '../types';
 import { ErrorReportSheet } from './ErrorReportSheet';
 
 interface KnowledgeCardProps {
@@ -11,7 +11,7 @@ interface KnowledgeCardProps {
   isActive: boolean;
   onSwipeUp: () => void;
   onSwipeDown: () => void;
-  onAIOpen: (title: string) => void;
+  onAIOpen: (id: string, title: string) => void;
   onSave?: () => void;
   zIndex: number;
 }
@@ -165,7 +165,7 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
           {/* AI button */}
           <motion.button
             whileTap={{ scale: 0.92 }}
-            onClick={() => onAIOpen(card.title)}
+            onClick={() => onAIOpen(card.id, card.title)}
             className="flex items-center gap-2 bg-[#292526] text-[#FDFDFD] px-5 py-2.5 rounded-[100px] shadow-[0_4px_12px_rgba(41,37,38,0.25)]"
           >
             <Sparkles size={15} strokeWidth={2} />
@@ -184,7 +184,7 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
       </motion.div>
 
       {/* Error Report Sheet */}
-      <ErrorReportSheet isOpen={showReport} onClose={() => setShowReport(false)} />
+      <ErrorReportSheet isOpen={showReport} onClose={() => setShowReport(false)} knowledgeId={card.id} />
     </motion.div>
   );
 }

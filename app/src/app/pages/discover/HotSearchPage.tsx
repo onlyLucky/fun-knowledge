@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router';
-import { HOT_SEARCHES, HotSearchItem } from '../../data/mock';
+import { discoverService } from '../../api';
+import type { HotSearchItem } from '../../types';
+import { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown, Minus, Flame } from 'lucide-react';
 import { motion } from 'motion/react';
 import { PageHeader } from '../../components/PageHeader';
@@ -36,6 +38,11 @@ function HotSearchItemRow({ item, onClick }: { item: HotSearchItem; onClick: () 
 
 export function HotSearchPage() {
   const navigate = useNavigate();
+  const [hotSearches, setHotSearches] = useState<HotSearchItem[]>([]);
+
+  useEffect(() => {
+    discoverService.getHotSearches().then(setHotSearches).catch(() => {});
+  }, []);
 
   const handleItemClick = (item: HotSearchItem) => {
     if (item.cardId) {
@@ -58,7 +65,7 @@ export function HotSearchPage() {
           </div>
 
           <div className="px-4 pb-3">
-            {HOT_SEARCHES.map((item) => (
+            {hotSearches.map((item) => (
               <HotSearchItemRow
                 key={item.rank}
                 item={item}
