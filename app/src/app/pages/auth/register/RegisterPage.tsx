@@ -2,41 +2,11 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, Eye, EyeOff, Phone, Mail, CheckSquare, Square } from 'lucide-react';
-import { AppLogo } from '../../components/AppLogo';
-import { useAuth } from '../../context/AuthContext';
+import { AppLogo } from '../../../components/AppLogo';
+import { useAuth } from '../../../context/AuthContext';
+import { Field } from '../components/Field';
 
 type Tab = 'phone' | 'email';
-
-// ─── Field Component ──────────────────────────────────────────────────────────
-
-function Field({
-  label, placeholder, value, onChange, type = 'text', error, right,
-}: {
-  label?: string;
-  placeholder: string;
-  value: string;
-  onChange: (v: string) => void;
-  type?: string;
-  error?: string;
-  right?: React.ReactNode;
-}) {
-  return (
-    <div className="space-y-1.5">
-      {label && <p className="text-[12px] font-medium text-[#878787] px-1">{label}</p>}
-      <div className={`flex items-center bg-[#FDFDFD] rounded-[14px] border px-4 h-[52px] transition-colors ${error ? 'border-red-300' : 'border-[#DFDEDE]'} shadow-[0_2px_6px_rgba(41,37,38,0.04)]`}>
-        <input
-          type={type}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          className="flex-1 bg-transparent text-[14px] text-[#121111] placeholder:text-[#DFDEDE] outline-none"
-        />
-        {right}
-      </div>
-      {error && <p className="text-[11px] text-red-500 px-1">{error}</p>}
-    </div>
-  );
-}
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
