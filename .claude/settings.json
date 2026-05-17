@@ -12,7 +12,18 @@
       "Bash(npx jest *)",
       "Bash(psql -h localhost -U postgres -d funfact -c \"SELECT username, password FROM t_admin LIMIT 5;\")",
       "Bash(docker exec *)",
-      "Bash(npx ts-node -e ' *)"
+      "Bash(npx ts-node -e ' *)",
+      "Bash(pnpm vite *)",
+      "Bash(pnpm --dir /Users/feynman/Documents/code/2026/@IDEA/FunFact/app vite build)",
+      "Bash(pnpm -C app vite build)",
+      "Bash(git restore *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git rm *)",
+      "Bash(pkill -f \"vite --host\")",
+      "Skill(superpowers:finishing-a-development-branch)",
+      "Skill(superpowers:finishing-a-development-branch:*)",
+      "Bash(npm test *)"
     ]
   },
   "enabledPlugins": {

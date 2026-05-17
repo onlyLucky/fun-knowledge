@@ -112,7 +112,17 @@ src/
 ├── api/                          # API 层
 │   ├── schemas.ts                # Zod Schema 定义（User, Auth, Menu, 分页等）
 │   ├── auth.ts                   # 认证端点常量
-│   └── user.ts                   # 用户端点常量
+│   ├── user.ts                   # 用户端点常量
+│   ├── knowledge.ts              # 知识卡片端点常量
+│   ├── category.ts               # 分类端点常量
+│   ├── correction.ts             # 纠错端点常量
+│   ├── admin.ts                  # 管理员端点常量
+│   ├── config.ts                 # 系统配置端点常量
+│   ├── upload.ts                 # 文件上传端点常量
+│   ├── log.ts                    # 操作日志端点常量
+│   ├── user-review.ts            # 资料审核端点常量
+│   ├── dashboard.ts              # 仪表盘端点常量
+│   └── system.ts                 # 系统管理端点常量
 │
 ├── stores/                       # Zustand 状态管理
 │   ├── auth.ts                   # 认证状态（tokens, user, menus, permissions）
@@ -123,7 +133,8 @@ src/
 │   ├── http.ts                   # HTTP 客户端（自动 token 刷新、401/403 处理）
 │   ├── session.ts                # 会话初始化（获取 user + permissions + menus）
 │   ├── appMenu.ts                # 菜单树定义 + 权限过滤
-│   └── constants.ts              # 常量（API_BASE_URL, APP_BRAND_NAME 等）
+│   ├── constants.ts              # 常量（API_BASE_URL, APP_BRAND_NAME 等）
+│   └── utils.ts                  # 公共工具函数（存储单位换算等）
 │
 ├── hooks/                        # 自定义 Hooks
 │   ├── useResourceCRUD.ts        # 通用 CRUD Hook（支持乐观更新）
@@ -156,10 +167,39 @@ src/
 │   ├── login/index.tsx           # 登录页
 │   ├── register/index.tsx        # 注册页
 │   └── _auth/
-│       ├── dashboard/index.tsx   # 仪表盘（统计卡片、时间线、最近销售）
-│       ├── users/index.tsx       # 用户管理（CRUD 表格）
-│       ├── users/-Toolbar.tsx    # 用户筛选工具栏
-│       ├── users/-FormModal.tsx  # 用户表单弹窗
+│       ├── dashboard/            # 仪表盘（推荐效果统计、图表展示）
+│       │   ├── index.tsx
+│       │   └── index.css
+│       ├── knowledge/            # 知识卡片管理（CRUD + 批量导入 + 状态切换）
+│       │   ├── index.tsx
+│       │   ├── -Toolbar.tsx
+│       │   ├── -FormModal.tsx
+│       │   ├── -DetailDrawer.tsx
+│       │   └── -ImportModal.tsx
+│       ├── category/             # 分类管理（CRUD + 排序）
+│       │   ├── index.tsx
+│       │   └── -FormModal.tsx
+│       ├── correction/           # 纠错审核（列表 + 详情 + 审核操作）
+│       │   ├── index.tsx
+│       │   └── -DetailDrawer.tsx
+│       ├── users/                # 用户管理（CRUD + 详情 + 画像展示）
+│       │   ├── index.tsx
+│       │   ├── -Toolbar.tsx
+│       │   ├── -FormModal.tsx
+│       │   └── -DetailDrawer.tsx
+│       ├── admin/                # 管理员管理（CRUD + 角色分配）
+│       │   ├── index.tsx
+│       │   └── -FormModal.tsx
+│       ├── config/               # 系统配置管理（CRUD + 分组Tab + 类型适配）
+│       │   ├── index.tsx
+│       │   └── -FormModal.tsx
+│       ├── logs/                 # 操作日志（列表 + 详情 + 筛选）
+│       │   └── index.tsx
+│       ├── user-review/          # 资料审核（列表 + 详情 + 审核操作）
+│       │   ├── index.tsx
+│       │   └── -DetailDrawer.tsx
+│       ├── system/               # 系统管理（存储统计 + 未使用资源清理）
+│       │   └── index.tsx
 │       └── 403/index.tsx         # 无权限页面
 │
 ├── mocks/                        # MSW Mock 系统
@@ -296,14 +336,22 @@ const { data, isLoading, createMutation, updateMutation, deleteMutation } = useR
 
 ## 页面路由
 
-| 路由         | 说明                                   |
-| ------------ | -------------------------------------- |
-| `/login`     | 登录页（表单校验、Aurora 背景动画）    |
-| `/register`  | 注册页                                 |
-| `/dashboard` | 仪表盘（统计卡片、时间线、最近销售）   |
-| `/users`     | 用户管理（搜索、分页、创建/编辑/删除） |
-| `/403`       | 无权限页面                             |
-| `/404`       | 页面未找到                             |
+| 路由           | 说明                                       |
+| -------------- | ------------------------------------------ |
+| `/login`       | 登录页（表单校验、Aurora 背景动画）        |
+| `/register`    | 注册页                                     |
+| `/dashboard`   | 仪表盘（推荐效果统计、图表展示）           |
+| `/knowledge`   | 知识卡片管理（CRUD + 批量导入 + 状态切换） |
+| `/category`    | 分类管理（CRUD + 排序）                    |
+| `/correction`  | 纠错审核（列表 + 详情 + 审核操作）         |
+| `/users`       | 用户管理（搜索、分页、创建/编辑/删除）     |
+| `/admin`       | 管理员管理（CRUD + 角色分配）              |
+| `/config`      | 系统配置管理（CRUD + 分组Tab + 类型适配）  |
+| `/logs`        | 操作日志（列表 + 详情 + 筛选）             |
+| `/user-review` | 资料审核（列表 + 详情 + 审核操作）         |
+| `/system`      | 系统管理（存储统计 + 未使用资源清理）      |
+| `/403`         | 无权限页面                                 |
+| `/404`         | 页面未找到                                 |
 
 ## 国际化
 

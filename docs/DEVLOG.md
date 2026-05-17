@@ -9,6 +9,14 @@
 | 版本 | 日期 | 说明 |
 |------|------|------|
 | v0.1.0 | - | MVP 版本（规划中） |
+| v0.0.9 | 2026-05-17 | 系统管理模块与AI延伸解读 |
+| v0.0.8 | 2026-05-15 | 推荐系统与用户画像种子数据 |
+| v0.0.7 | 2026-05-14 | 系统配置、仪表盘、资料审核 |
+| v0.0.6 | 2026-05-12 | 批量导入、文件上传、操作日志 |
+| v0.0.5 | 2026-05-10 | 分类管理、纠错审核、用户管理 |
+| v0.0.4 | 2026-05-08 | 知识卡片CRUD与后台管理前端 |
+| v0.0.3 | 2026-05-05 | 后台管理前端框架搭建 |
+| v0.0.2 | 2026-05-03 | 后端服务基础架构 |
 | v0.0.1 | 2026-05-01 | 项目初始化 |
 
 ---
@@ -112,6 +120,191 @@ FunFact/
 | docs/DEVLOG.md | 开发日志，按日期版本追溯 |
 | docs/冷知识星球-软件需求规格说明-v1.0.md | PRD 文档 |
 | docs/冷知识星球-用户交互设计规范.md | 设计规范 |
+
+---
+
+### 2026-05-03 - v0.0.2
+
+**后端服务基础架构**
+
+#### 完成任务
+
+- [x] NestJS 项目初始化与模块化架构搭建
+- [x] PostgreSQL + TypeORM 数据库集成（UUID 主键）
+- [x] Redis + Bull 任务队列集成
+- [x] MongoDB 操作日志存储
+- [x] JWT 认证与 Passport 策略
+- [x] 接口限流中间件（Throttler）
+- [x] Swagger API 文档自动生成
+- [x] Docker Compose 基础设施编排
+
+#### 相关文件
+
+- `server/src/app.module.ts` — 应用主模块
+- `server/src/modules/auth/` — 认证模块
+- `server/src/modules/user/` — 用户模块
+- `server/docker-compose.yml` — 基础设施编排
+
+---
+
+### 2026-05-05 - v0.0.3
+
+**后台管理前端框架搭建**
+
+#### 完成任务
+
+- [x] React 19 + Ant Design 6 + Vite 项目初始化
+- [x] TanStack Router 文件路由与类型安全
+- [x] TanStack Query v5 异步状态管理
+- [x] Zustand 持久化状态（auth/settings）
+- [x] LinguiJS 国际化（中英文）
+- [x] JWT 认证流程（access/refresh token）
+- [x] RBAC 权限控制与动态菜单
+- [x] 暗色模式切换
+- [x] MSW Mock 数据支持
+
+#### 相关文件
+
+- `manage/src/stores/auth.ts` — 认证状态管理
+- `manage/src/utils/appMenu.ts` — 菜单权限配置
+- `manage/src/components/Layout/` — 布局组件
+
+---
+
+### 2026-05-08 - v0.0.4
+
+**知识卡片CRUD与后台管理前端**
+
+#### 完成任务
+
+- [x] 知识卡片实体设计（PostgreSQL）
+- [x] 知识卡片 CRUD 接口（创建、编辑、删除、查询）
+- [x] 卡片列表页（分页、搜索、筛选、排序）
+- [x] 卡片表单弹窗（创建/编辑）
+- [x] 卡片详情抽屉
+- [x] 卡片状态管理（上架/下架）
+- [x] 资源上传接口（图片、视频、音频、3D模型）
+
+#### 相关文件
+
+- `server/src/modules/knowledge/` — 知识卡片模块
+- `manage/src/routes/_auth/knowledge/` — 知识管理页面
+
+---
+
+### 2026-05-10 - v0.0.5
+
+**分类管理、纠错审核、用户管理**
+
+#### 完成任务
+
+- [x] 分类（Category）CRUD 接口与管理页面
+- [x] 纠错（Correction）提交、审核流程与管理页面
+- [x] 用户管理 CRUD 接口与管理页面
+- [x] 管理员角色与权限管理
+- [x] 表格组件统一封装（DataTable）
+
+#### 相关文件
+
+- `server/src/modules/category/` — 分类模块
+- `server/src/modules/correction/` — 纠错模块
+- `server/src/modules/admin/` — 管理员模块
+- `manage/src/routes/_auth/category/` — 分类管理页面
+- `manage/src/routes/_auth/correction/` — 纠错审核页面
+- `manage/src/routes/_auth/users/` — 用户管理页面
+- `manage/src/routes/_auth/admin/` — 管理员页面
+
+---
+
+### 2026-05-12 - v0.0.6
+
+**批量导入、文件上传、操作日志**
+
+#### 完成任务
+
+- [x] ZIP 批量导入知识卡片（Excel + 资源文件夹）
+- [x] 文件上传模块（本地存储 + 阿里云OSS）
+- [x] 操作日志装饰器与拦截器（MongoDB 存储）
+- [x] 日志查询与详情页面
+- [x] 批量删除功能
+
+#### 相关文件
+
+- `server/src/modules/import/` — 导入模块
+- `server/src/modules/upload/` — 上传模块
+- `server/src/modules/log/` — 日志模块
+- `manage/src/routes/_auth/logs/` — 日志页面
+
+---
+
+### 2026-05-14 - v0.0.7
+
+**系统配置、仪表盘、资料审核**
+
+#### 完成任务
+
+- [x] 系统配置模块（键值对，支持分组和类型）
+- [x] 仪表盘页面（运营数据统计、图表展示）
+- [x] 用户资料审核模块（头像昵称变更审核）
+- [x] 配置管理前端（CRUD + 分组Tab + 类型适配）
+
+#### 相关文件
+
+- `server/src/modules/config/` — 配置模块
+- `server/src/modules/dashboard/` — 仪表盘模块
+- `server/src/modules/user-review/` — 资料审核模块
+- `manage/src/routes/_auth/config/` — 配置管理页面
+- `manage/src/routes/_auth/dashboard/` — 仪表盘页面
+- `manage/src/routes/_auth/user-review/` — 资料审核页面
+
+---
+
+### 2026-05-15 - v0.0.8
+
+**推荐系统与用户画像种子数据**
+
+#### 完成任务
+
+- [x] 推荐模块（基于用户兴趣的个性化推荐）
+- [x] 用户画像种子数据初始化（分类+标签维度兴趣数据）
+- [x] 推荐系统运营统计功能
+- [x] 热搜榜单页面（小程序端）
+- [x] 发现页搜索功能优化
+
+#### 相关文件
+
+- `server/src/modules/recommend/` — 推荐模块
+- `server/src/database/seeds/seed.ts` — 种子数据
+- `app/src/app/pages/discover/HotSearchPage.tsx` — 热搜页面
+
+---
+
+### 2026-05-17 - v0.0.9
+
+**系统管理模块与AI延伸解读**
+
+#### 完成任务
+
+- [x] 系统管理模块（通用框架：分组+类型+JSON数据）
+- [x] 存储统计功能（文件数、大小、类型分布、使用率）
+- [x] 未使用资源清理功能（扫描、统计、一键清理）
+- [x] 上传资源分类目录管理（knowledge/image/、avatar/ 等）
+- [x] AI 延伸解读双模式（AI模型调用 + 静态数据）
+- [x] 知识卡片批量导入模板更新（新增AI延伸字段）
+- [x] 后台管理系统管理页面（存储统计卡片+清理按钮）
+- [x] 菜单国际化修复与图标调整
+- [x] 存储工具函数提取为公共模块
+
+#### 相关文件
+
+- `server/src/modules/system/` — 系统管理模块
+- `server/src/common/enums/system-manage-type.enum.ts` — 系统管理类型枚举
+- `server/src/common/enums/ai-extend-type.enum.ts` — AI延伸类型枚举
+- `server/src/modules/knowledge/entities/knowledge.entity.ts` — 新增AI延伸字段
+- `server/src/modules/upload/upload.service.ts` — 上传路径分类
+- `manage/src/api/system.ts` — 系统管理API定义
+- `manage/src/routes/_auth/system/index.tsx` — 系统管理页面
+- `manage/src/utils/utils.ts` — 公共存储工具函数
 
 ---
 
@@ -305,4 +498,4 @@ Closes #123
 
 ---
 
-*最后更新: 2026-05-01*
+*最后更新: 2026-05-17*

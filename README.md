@@ -16,124 +16,132 @@
 - **收藏功能** - 收藏喜欢的知识卡片，随时回顾
 - **纠错功能** - 用户可提交内容修正意见
 
-## 技术栈
-
-| 技术 | 版本 | 说明 |
-|------|------|------|
-| React | 18.3.1 | UI 框架 |
-| TypeScript | 5.x | 类型安全 |
-| Vite | 6.3.5 | 构建工具 |
-| Tailwind CSS | 4.1.12 | 样式框架 |
-| React Router | 7.13.0 | 路由管理 |
-| Radix UI | - | 无样式组件库 |
-| MUI | 7.3.5 | Material Design 组件 |
-| Framer Motion | 12.x | 动画库 |
-| Lucide React | 0.487.0 | 图标库 |
-
 ## 项目结构
 
 ```
 FunFact/
-├── app/                          # 前端应用
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── components/       # 通用组件
-│   │   │   │   ├── ui/           # UI 基础组件 (Radix UI)
-│   │   │   │   ├── Layout.tsx    # 布局组件
-│   │   │   │   └── ...
-│   │   │   ├── context/          # React Context
-│   │   │   │   ├── AuthContext.tsx
-│   │   │   │   └── UserContext.tsx
-│   │   │   ├── data/             # Mock 数据
-│   │   │   ├── pages/            # 页面组件
-│   │   │   │   ├── auth/         # 认证相关页面
-│   │   │   │   ├── Home.tsx      # 首页
-│   │   │   │   ├── Discover.tsx  # 发现页
-│   │   │   │   └── Profile.tsx   # 个人中心
-│   │   │   ├── App.tsx           # 应用入口
-│   │   │   └── routes.tsx        # 路由配置
-│   │   ├── imports/              # Figma 导入资源
-│   │   ├── styles/               # 样式文件
-│   │   └── main.tsx              # 主入口
-│   ├── index.html                # HTML 模板
-│   ├── package.json
-│   ├── vite.config.ts
-│   └── postcss.config.mjs
+├── app/                          # 小程序端（React 18 + Vite + Tailwind CSS）
+├── manage/                       # 后台管理系统（React 19 + Ant Design 6 + Vite+）
+├── server/                       # 后端服务（NestJS + TypeORM + PostgreSQL）
 ├── docs/                         # 项目文档
+│   ├── TASK.md                   # 开发任务清单
+│   ├── DEVLOG.md                 # 开发日志
 │   ├── 冷知识星球-软件需求规格说明-v1.0.md
 │   └── 冷知识星球-用户交互设计规范.md
-└── server/                       # 后端服务 (待开发)
+└── README.md                     # 本文件
 ```
+
+## 技术栈
+
+### 小程序端 (app/)
+
+| 技术 | 版本 | 说明 |
+|------|------|------|
+| React | 18.x | UI 框架 |
+| TypeScript | 5.x | 类型安全 |
+| Vite | 6.x | 构建工具 |
+| Tailwind CSS | 4.x | 样式框架 |
+| React Router | 7.x | 路由管理 |
+| Radix UI + MUI | - | UI 组件库 |
+| Framer Motion | 12.x | 动画库 |
+
+### 后台管理 (manage/)
+
+| 技术 | 版本 | 说明 |
+|------|------|------|
+| React | 19.x | UI 框架 |
+| Ant Design | 6.x | 企业级 UI 组件库 |
+| TanStack Router | - | 文件路由，类型安全 |
+| TanStack Query | v5 | 异步状态管理 |
+| Zustand | - | 本地状态管理 |
+| Zod | v4 | 数据校验 |
+| LinguiJS | - | 国际化（中英文） |
+| Playwright | - | E2E 测试 |
+
+### 后端服务 (server/)
+
+| 技术 | 版本 | 说明 |
+|------|------|------|
+| NestJS | 10.x | 企业级 Node.js 框架 |
+| TypeScript | 5.x | 类型安全 |
+| PostgreSQL | 16.x | 主数据库 |
+| Redis | 7.x | 缓存、队列、限流 |
+| MongoDB | 7.x | 操作日志存储 |
+| TypeORM | 0.3.x | PostgreSQL ORM |
+| Bull | 4.x | 任务队列 |
+| Passport + JWT | - | 身份认证 |
+| Swagger | - | API 文档 |
 
 ## 快速开始
 
 ### 环境要求
 
 - Node.js >= 18
-- npm / yarn / pnpm
+- Docker & Docker Compose（后端基础设施）
+- pnpm (推荐)
 
-### 安装依赖
+### 启动后端服务
+
+```bash
+cd server
+
+# 启动 PostgreSQL、Redis、MongoDB
+docker-compose up -d
+
+# 安装依赖
+pnpm install
+
+# 配置环境变量
+cp .env.example .env
+
+# 初始化数据库
+pnpm run seed
+
+# 启动开发服务器
+pnpm run start:dev
+```
+
+### 启动后台管理
+
+```bash
+cd manage
+pnpm install
+pnpm run dev
+```
+
+访问 http://localhost:5173，使用 `admin` / `admin` 登录。
+
+### 启动小程序端
 
 ```bash
 cd app
-npm install
-```
-
-### 启动开发服务器
-
-```bash
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 访问 http://localhost:5173 查看应用。
 
-### 构建生产版本
+## 文档
 
-```bash
-npm run build
-```
+| 文档 | 说明 |
+|------|------|
+| [开发任务清单](docs/TASK.md) | 166 个任务，按模块跟踪进度 |
+| [开发日志](docs/DEVLOG.md) | 按日期和版本记录开发过程 |
+| [PRD 文档](docs/冷知识星球-软件需求规格说明-v1.0.md) | 产品需求规格说明 |
+| [设计规范](docs/冷知识星球-用户交互设计规范.md) | 用户交互设计规范 |
+| [小程序端 README](app/README.md) | 小程序端详细说明 |
+| [后台管理 README](manage/README.md) | 后台管理系统详细说明 |
+| [后端服务 README](server/README.md) | 后端服务详细说明及 API 文档 |
 
-## 页面结构
+## 版本规划
 
-| 页面 | 路径 | 说明 |
+| 版本 | 目标 | 说明 |
 |------|------|------|
-| 启动页 | - | 应用启动动画 |
-| 欢迎页 | /welcome | 登录引导 |
-| 登录页 | /login | 用户登录 |
-| 注册页 | /register | 用户注册 |
-| 首页 | / | 知识卡片流 |
-| 发现页 | /discover | 类目浏览 |
-| 个人中心 | /profile | 用户信息 |
-| 收藏列表 | /favorites | 已收藏卡片 |
-| 打卡日历 | /calendar | 打卡记录 |
-| 设置页 | /settings | 应用设置 |
-| 关于页 | /about | 产品信息 |
-
-## 设计规范
-
-- **主色调**: `#4A90D9` (蓝色)
-- **背景色**: `#1C1A1B` (深色)
-- **卡片背景**: `#FFFFFF`
-- **文字颜色**: `#333333` / `#666666` / `#999999`
-- **圆角**: 16rpx (卡片) / 12rpx (图片)
-- **移动端适配**: 414px × 896px 设计稿
-
-## 相关文档
-
-- [软件需求规格说明 (PRD)](docs/冷知识星球-软件需求规格说明-v1.0.md)
-- [用户交互设计规范](docs/冷知识星球-用户交互设计规范.md)
-
-## 开发说明
-
-本项目由 Figma Make 生成，使用 React + Vite + TypeScript + Tailwind CSS 技术栈。前端采用单页应用 (SPA) 架构，使用 React Router 进行路由管理。
-
-### 主要依赖
-
-- **Radix UI** - 无样式、可访问的 UI 组件
-- **MUI** - Material Design 组件库
-- **Lucide React** - 轻量级图标库
-- **Framer Motion** - 声明式动画库
-- **date-fns** - 日期处理工具
+| v0.1.0 | MVP 版本 | 用户系统、首页卡片流、知识详情页、基础打卡 |
+| v0.2.0 | 核心功能 | 收藏、纠错、类目筛选、个人中心 |
+| v0.3.0 | AI 功能 | AI 延伸解读、AI 图片识别、广告激励 |
+| v0.4.0 | 完善优化 | 性能优化、兼容性适配、安全加固 |
+| v1.0.0 | 正式发布 | 全功能上线、生产环境部署 |
 
 ## License
 

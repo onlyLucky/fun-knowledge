@@ -108,7 +108,11 @@ server/
 │   │   ├── admin/                 # 管理员模块
 │   │   ├── config/                # 系统配置模块
 │   │   ├── import/                # 批量导入模块
-│   │   └── log/                   # 操作日志模块
+│   │   ├── upload/                # 文件上传模块
+│   │   ├── log/                   # 操作日志模块
+│   │   ├── user-review/           # 用户资料审核模块
+│   │   ├── dashboard/             # 仪表盘统计模块
+│   │   └── system/                # 系统管理模块
 │   └── database/                  # 数据库
 │       ├── data-source.ts         # TypeORM 数据源
 │       └── seeds/                 # 种子数据
@@ -128,6 +132,8 @@ server/
 | 模块 | 接口 | 说明 | 状态码 |
 |------|------|------|--------|
 | 认证 | POST /v1/auth/login | 登录（微信/多平台） | 200 |
+| 认证 | POST /v1/auth/register | 注册（手机号/邮箱） | 201 |
+| 认证 | POST /v1/auth/sms/send | 发送短信验证码 | 200 |
 | 认证 | GET /v1/auth/profile | 获取用户信息 | 200 |
 | 认证 | PUT /v1/auth/profile | 更新用户信息 | 200 |
 | 认证 | POST /v1/auth/bind/:platform | 绑定平台账号 | 200 |
@@ -136,6 +142,7 @@ server/
 | 知识 | GET /v1/knowledge/:id | 卡片详情 | 200 |
 | 知识 | GET /v1/knowledge/recommend | 推荐卡片 | 200 |
 | 知识 | POST /v1/knowledge/recommend/feedback | 推荐反馈 | 201 |
+| 知识 | POST /v1/knowledge/recommend/behavior | 推荐行为上报 | 201 |
 | 类目 | GET /v1/category/list | 类目列表 | 200 |
 | 收藏 | POST /v1/favorite | 添加收藏 | 201 |
 | 收藏 | DELETE /v1/favorite/:knowledge_id | 取消收藏 | 200 |
@@ -147,6 +154,8 @@ server/
 | 打卡 | GET /v1/check-in/history | 打卡历史 | 200 |
 | AI | POST /v1/ai/extend | AI 延伸解读 | 201 |
 | AI | POST /v1/ai/image-recognize | AI 图片识别 | 201 |
+| 资料审核 | POST /v1/user-review | 提交资料审核 | 201 |
+| 资料审核 | GET /v1/user-review/list | 我的审核记录 | 200 |
 | 上传 | POST /v1/upload?type=avatar | 上传文件 | 201 |
 | 配置 | GET /v1/config | 获取系统配置 | 200 |
 
@@ -192,6 +201,14 @@ server/
 | 日志 | GET /admin/v1/log/:id | 日志详情 | 200 |
 | 日志 | DELETE /admin/v1/log/:id | 删除日志 | 200 |
 | 日志 | DELETE /admin/v1/log/batch-delete | 批量删除日志 | 200 |
+| 资料审核 | GET /admin/v1/user-review/list | 审核列表 | 200 |
+| 资料审核 | GET /admin/v1/user-review/:id | 审核详情 | 200 |
+| 资料审核 | PUT /admin/v1/user-review/:id/review | 审核操作 | 200 |
+| 资料审核 | DELETE /admin/v1/user-review/:id | 删除审核记录 | 200 |
+| 资料审核 | DELETE /admin/v1/user-review/batch-delete | 批量删除审核记录 | 200 |
+| 仪表盘 | GET /admin/v1/dashboard/recommend-stats | 推荐效果统计 | 200 |
+| 系统管理 | GET /admin/v1/system/data | 获取系统管理数据 | 200 |
+| 系统管理 | POST /admin/v1/system/action | 执行系统管理操作 | 200 |
 
 ### 通用错误响应
 
