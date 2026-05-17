@@ -177,6 +177,7 @@ server/
 | 用户 | GET /admin/v1/user/list | 用户列表 | 200 |
 | 用户 | GET /admin/v1/user/:id | 用户详情 | 200 |
 | 用户 | PUT /admin/v1/user/:id/status | 用户状态 | 200 |
+| 用户 | DELETE /admin/v1/user/:id | 删除用户 | 200 |
 | 类目 | GET /admin/v1/category/list | 类目列表 | 200 |
 | 类目 | POST /admin/v1/category/create | 创建类目 | 201 |
 | 类目 | PUT /admin/v1/category/:id | 更新类目 | 200 |

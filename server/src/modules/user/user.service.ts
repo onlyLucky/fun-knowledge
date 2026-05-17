@@ -89,6 +89,18 @@ export class UserService {
   }
 
   /**
+   * 删除用户（软删除）
+   */
+  async remove(id: string): Promise<void> {
+    const user = await this.userRepo.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('用户不存在');
+    }
+    await this.userRepo.softDelete(id);
+    this.logger.log(`用户 ${id} 已删除`);
+  }
+
+  /**
    * 更新用户状态
    */
   async updateStatus(id: string, dto: UpdateUserStatusDto): Promise<User> {

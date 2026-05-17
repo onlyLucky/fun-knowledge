@@ -1,4 +1,4 @@
-import { Controller, Get, Put, Param, Body, Query, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Put, Delete, Param, Body, Query, Req, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
 import { Request } from 'express';
 import { AdminAuthGuard } from '../../common/guards/admin-auth.guard';
@@ -33,6 +33,25 @@ export class UserController {
   @ApiParam({ name: 'id', description: '用户 UUID' })
   async findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
+  }
+
+  @Delete(':id')
+  @Roles(AdminRole.SUPER_ADMIN)
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: '删除用户' })
+  @ApiParam({ name: 'id', description: '用户 UUID' })
+  async remove(
+    @Param('id') id: string,
+    @Req() request: Request,
+  ) {
+    await this.userService.remove(id);
+    recordOperationLog(this.logService, request, {
+      module: 'user',
+      action: 'delete',
+      description: '删除用户',
+      targetId: id,
+    });
+    return { code: 0, message: '删除成功' };
   }
 
   @Put(':id/status')
