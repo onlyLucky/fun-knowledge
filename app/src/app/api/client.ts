@@ -18,7 +18,7 @@ client.interceptors.request.use((config) => {
 client.interceptors.response.use(
   (res) => {
     const body = res.data;
-    if (body.code !== undefined && body.code !== 0) {
+    if (body.code !== undefined && body.code !== 200) {
       return Promise.reject(new Error(body.message || 'Request failed'));
     }
     return body.data !== undefined ? body.data : body;

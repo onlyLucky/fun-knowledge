@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, Eye, EyeOff, Phone, Mail, CheckSquare, Square } from 'lucide-react';
 import { AppLogo } from '../../../components/AppLogo';
 import { useAuth } from '../../../context/AuthContext';
+import { authService } from '../../../api';
 import { Field } from '../components/Field';
 
 type Tab = 'phone' | 'email';
@@ -52,25 +53,31 @@ export function RegisterPage() {
     return () => { if (countdownRef.current) clearInterval(countdownRef.current); };
   }, [countdown]);
 
-  const handleSendOTP = () => {
+  const handleSendOTP = async () => {
     const errs: Record<string, string> = {};
-    if (!phone || phone.length < 11) errs.phone = '请输入正确的手机号';
+    if (!phone || !/^1[3-9]\d{9}$/.test(phone)) errs.phone = '请输入正确的手机号';
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setErrors({});
-    setOtpSent(true);
-    setCountdown(60);
+    try {
+      await authService.sendSmsCode(phone);
+      setOtpSent(true);
+      setCountdown(60);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : '发送失败，请重试';
+      setErrors({ phone: msg });
+    }
   };
 
   const handleRegister = async () => {
     const errs: Record<string, string> = {};
-    if (!nickname.trim()) errs.nickname = '请输入昵称';
+    if (!nickname.trim() || nickname.trim().length < 2) errs.nickname = '昵称需要 2-20 个字符';
 
     if (tab === 'phone') {
-      if (!phone || phone.length < 11) errs.phone = '请输入正确的手机号';
-      if (!otp || otp.length < 4) errs.otp = '请输入验证码';
+      if (!phone || !/^1[3-9]\d{9}$/.test(phone)) errs.phone = '请输入正确的手机号';
+      if (!otp || otp.length !== 6) errs.otp = '请输入 6 位验证码';
     } else {
-      if (!email || !email.includes('@')) errs.email = '请输入正确的邮箱地址';
-      if (!password || password.length < 6) errs.password = '密码不能少于 6 位';
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errs.email = '请输入正确的邮箱地址';
+      if (!password || password.length < 6 || password.length > 50) errs.password = '密码需要 6-50 个字符';
       if (password !== confirmPwd) errs.confirmPwd = '两次密码输入不一致';
     }
 
@@ -79,14 +86,28 @@ export function RegisterPage() {
 
     setErrors({});
     setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 900));
 
-    login({
-      name: nickname,
-      ...(tab === 'phone' ? { phone } : { email }),
-      loginType: tab,
-    });
-    setIsLoading(false);
+    try {
+      const result = await authService.register({
+        platform: tab,
+        nickname: nickname.trim(),
+        ...(tab === 'phone' ? { phone, smsCode: otp } : { email, password }),
+      });
+      login(
+        {
+          name: result.user.nickname,
+          phone: result.user.phone || undefined,
+          email: result.user.email || undefined,
+          loginType: tab,
+        },
+        result.tokens.accessToken
+      );
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : '注册失败，请重试';
+      setErrors({ form: msg });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -276,6 +297,7 @@ export function RegisterPage() {
             />
           ) : '注 册'}
         </motion.button>
+        {errors.form && <p className="text-[12px] text-red-500 text-center mt-3">{errors.form}</p>}
 
         {/* Login link */}
         <div className="flex items-center justify-center gap-1.5 mt-5">

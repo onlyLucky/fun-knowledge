@@ -14,6 +14,15 @@ export interface LoginParams {
   avatar?: string;
 }
 
+export interface RegisterParams {
+  platform: 'phone' | 'email';
+  nickname: string;
+  phone?: string;
+  smsCode?: string;
+  email?: string;
+  password?: string;
+}
+
 export async function login(params: LoginParams): Promise<{ user: ServerUser; tokens: LoginTokens }> {
   if (USE_MOCK) {
     await new Promise((r) => setTimeout(r, 800));
@@ -29,7 +38,7 @@ export async function login(params: LoginParams): Promise<{ user: ServerUser; to
         ai_usage_count: 0,
         created_at: new Date().toISOString(),
       },
-      tokens: { access_token: 'mock-token' },
+      tokens: { accessToken: 'mock-token' },
     };
   }
 
@@ -41,6 +50,49 @@ export async function login(params: LoginParams): Promise<{ user: ServerUser; to
   if (params.avatar) body.avatar = params.avatar;
 
   return client.post('/v1/auth/login', body);
+}
+
+export async function register(params: RegisterParams): Promise<{ user: ServerUser; tokens: LoginTokens }> {
+  if (USE_MOCK) {
+    await new Promise((r) => setTimeout(r, 900));
+    return {
+      user: {
+        id: 'mock-new',
+        nickname: params.nickname,
+        avatar: null,
+        phone: params.phone || null,
+        email: params.email || null,
+        streak_days: 0,
+        total_check_in_days: 0,
+        ai_usage_count: 0,
+        created_at: new Date().toISOString(),
+      },
+      tokens: { accessToken: 'mock-token' },
+    };
+  }
+
+  const body: Record<string, unknown> = {
+    platform: params.platform,
+    nickname: params.nickname,
+  };
+  if (params.platform === 'phone') {
+    body.phone = params.phone;
+    body.smsCode = params.smsCode;
+  }
+  if (params.platform === 'email') {
+    body.email = params.email;
+    body.password = params.password;
+  }
+
+  return client.post('/v1/auth/register', body);
+}
+
+export async function sendSmsCode(phone: string): Promise<void> {
+  if (USE_MOCK) {
+    await new Promise((r) => setTimeout(r, 500));
+    return;
+  }
+  return client.post('/v1/auth/sms/send', { phone });
 }
 
 export async function getProfile(): Promise<ServerUser> {

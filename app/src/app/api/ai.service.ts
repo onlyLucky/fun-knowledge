@@ -16,7 +16,16 @@ export async function extendKnowledge(knowledgeId: string): Promise<AIExtendResu
       { title: '进化压力与器官分工', content: '器官的分化与特化是进化过程中最引人入胜的现象之一。当生物面临特定的生存压力时，器官会朝着更高效的方向演化。', source: '进化生物学概论' },
     ];
   }
-  return client.post('/v1/ai/extend', { knowledge_id: knowledgeId });
+  const data = await client.post('/v1/ai/extend', { knowledge_id: knowledgeId });
+  // 服务端返回 { ai_content: string }，需要解析为 AIExtendResult[]
+  const raw: string = data.ai_content;
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) return parsed as AIExtendResult[];
+  } catch {
+    // 非 JSON 格式，按纯文本处理
+  }
+  return [{ title: 'AI 延伸解读', content: raw }];
 }
 
 export async function recognizeImage(imageUrl: string): Promise<{ knowledge_id?: string; result?: string }> {

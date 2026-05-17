@@ -86,7 +86,7 @@ export function LoginPage() {
           email: result.user.email || undefined,
           loginType: tab,
         },
-        result.tokens.access_token
+        result.tokens.accessToken
       );
     } catch {
       setErrors({ form: '登录失败，请重试' });
