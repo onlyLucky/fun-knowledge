@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
-import { AppLogo } from '../../components/AppLogo';
-import { useAuth } from '../../context/AuthContext';
+import { AppLogo } from '../../../components/AppLogo';
+import { useAuth } from '../../../context/AuthContext';
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
