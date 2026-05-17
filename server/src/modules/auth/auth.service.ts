@@ -17,6 +17,8 @@ import { LoginPlatform, Status } from '../../common/enums/status.enum';
 import { LoginDto } from './dto/login.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { BindPlatformDto } from './dto/bind-platform.dto';
+import { RegisterDto, RegisterPlatform } from './dto/register.dto';
+import { SmsService } from '../sms/sms.service';
 
 /**
  * 令牌响应接口
@@ -50,6 +52,7 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly smsService: SmsService,
   ) {}
 
   /**
@@ -75,6 +78,50 @@ export class AuthService {
         break;
       default:
         throw new BadRequestException('不支持的登录平台');
+    }
+
+    const tokens = await this.generateTokens(user.id);
+    return { user, tokens };
+  }
+
+  /**
+   * 用户注册
+   */
+  async register(dto: RegisterDto): Promise<{ user: User; tokens: TokenResponse }> {
+    let user: User;
+
+    if (dto.platform === RegisterPlatform.PHONE) {
+      const existing = await this.userRepository.findOne({ where: { phone: dto.phone } });
+      if (existing) {
+        throw new ConflictException('该手机号已注册');
+      }
+
+      const isValid = await this.smsService.verifyCode(dto.phone!, dto.smsCode!);
+      if (!isValid) {
+        throw new BadRequestException('验证码错误或已过期');
+      }
+
+      user = this.userRepository.create({
+        phone: dto.phone,
+        nickname: dto.nickname,
+        user_auths: { phone: { phone: dto.phone } },
+      });
+      user = await this.userRepository.save(user);
+      this.logger.log(`新用户注册：${user.id}（手机号）`);
+    } else {
+      const existing = await this.userRepository.findOne({ where: { email: dto.email } });
+      if (existing) {
+        throw new ConflictException('该邮箱已注册');
+      }
+
+      const passwordHash = await bcrypt.hash(dto.password!, 10);
+      user = this.userRepository.create({
+        email: dto.email,
+        nickname: dto.nickname,
+        user_auths: { email: { email: dto.email, passwordHash } },
+      });
+      user = await this.userRepository.save(user);
+      this.logger.log(`新用户注册：${user.id}（邮箱）`);
     }
 
     const tokens = await this.generateTokens(user.id);
@@ -207,9 +254,8 @@ export class AuthService {
       throw new BadRequestException('验证码不能为空');
     }
 
-    // TODO: 验证短信验证码（从 Redis 中校验）
-    // const isValid = await this.smsService.verifyCode(phone, smsCode);
-    // if (!isValid) throw new BadRequestException('验证码错误或已过期');
+    const isValid = await this.smsService.verifyCode(phone, smsCode);
+    if (!isValid) throw new BadRequestException('验证码错误或已过期');
 
     // 查找已有用户
     let user = await this.userRepository.findOne({ where: { phone } });
@@ -340,7 +386,13 @@ export class AuthService {
         break;
       }
       case LoginPlatform.PHONE: {
-        // TODO: 验证短信验证码
+        if (!dto.smsCode) {
+          throw new BadRequestException('验证码不能为空');
+        }
+        const isPhoneValid = await this.smsService.verifyCode(dto.phone!, dto.smsCode);
+        if (!isPhoneValid) {
+          throw new BadRequestException('验证码错误或已过期');
+        }
         platformData = { phone: dto.phone };
         const existingPhoneUser = await this.userRepository.findOne({
           where: { phone: dto.phone },

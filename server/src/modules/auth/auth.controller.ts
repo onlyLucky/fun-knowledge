@@ -26,7 +26,10 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { BindPlatformDto } from './dto/bind-platform.dto';
+import { RegisterDto } from './dto/register.dto';
+import { SendSmsDto } from './dto/send-sms.dto';
 import { UserReviewService } from '../user-review/user-review.service';
+import { SmsService } from '../sms/sms.service';
 
 @ApiTags('客户端认证')
 @UseGuards(JwtAuthGuard)
@@ -35,6 +38,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly userReviewService: UserReviewService,
+    private readonly smsService: SmsService,
   ) {}
 
   /**
@@ -57,6 +61,55 @@ export class AuthController {
     return {
       code: 0,
       message: '登录成功',
+      data: {
+        user: {
+          id: result.user.id,
+          nickname: result.user.nickname,
+          avatar: result.user.avatar,
+          phone: result.user.phone,
+          email: result.user.email,
+        },
+        tokens: result.tokens,
+      },
+    };
+  }
+
+  /**
+   * 发送短信验证码
+   */
+  @Post('sms/send')
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: '发送短信验证码', description: '向指定手机号发送 6 位验证码，有效期 5 分钟' })
+  @ApiResponse({ status: 200, description: '发送成功' })
+  @ApiResponse({ status: 400, description: '手机号格式错误或发送过于频繁' })
+  async sendSmsCode(@Body() dto: SendSmsDto) {
+    await this.smsService.sendCode(dto.phone);
+    return {
+      code: 0,
+      message: '验证码发送成功',
+      data: null,
+    };
+  }
+
+  /**
+   * 用户注册
+   */
+  @Post('register')
+  @Public()
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({
+    summary: '用户注册',
+    description: '支持手机号+验证码注册和邮箱+密码注册两种方式',
+  })
+  @ApiResponse({ status: 201, description: '注册成功' })
+  @ApiResponse({ status: 400, description: '参数错误或验证码错误' })
+  @ApiResponse({ status: 409, description: '手机号或邮箱已注册' })
+  async register(@Body() dto: RegisterDto) {
+    const result = await this.authService.register(dto);
+    return {
+      code: 0,
+      message: '注册成功',
       data: {
         user: {
           id: result.user.id,
