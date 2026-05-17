@@ -3,8 +3,8 @@ import { Avatar, theme, Flex, Switch, App, Button } from "antd";
 import type { TablePaginationConfig } from "antd/es/table/interface";
 import { useLingui } from "@lingui/react/macro";
 import { useMemo, useRef, useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Eye } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Eye, Trash2 } from "lucide-react";
 import { httpClient } from "@/utils/http";
 import { USER_ENDPOINTS } from "@/api/user";
 import { PaginatedResponseSchema, UserSchema } from "@/api/schemas";
@@ -40,7 +40,7 @@ function UsersPage() {
   const navigate = useNavigate({ from: Route.fullPath });
   const { t } = useLingui();
   const { token } = theme.useToken();
-  const { message } = App.useApp();
+  const { message, modal } = App.useApp();
   const queryClient = useQueryClient();
   const pageShellRef = useRef<HTMLDivElement>(null);
   const toolbarRowRef = useRef<HTMLDivElement>(null);
@@ -49,6 +49,26 @@ function UsersPage() {
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selected, setSelected] = useState<User | null>(null);
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => httpClient.delete(USER_ENDPOINTS.delete(id)),
+    onSuccess: () => {
+      message.success(t`删除成功`);
+      void queryClient.invalidateQueries({ queryKey: ["users"] });
+    },
+    onError: (err: Error) => message.error(err.message || t`删除失败`),
+  });
+
+  const confirmDelete = (record: User) => {
+    modal.confirm({
+      title: t`确定要删除该用户吗？`,
+      content: t`删除后用户数据将无法恢复`,
+      okText: t`删除`,
+      okType: "danger",
+      cancelText: t`取消`,
+      onOk: () => deleteMutation.mutateAsync(record.id),
+    });
+  };
 
   const toggleStatus = async (record: User) => {
     setTogglingId(record.id);
@@ -182,17 +202,26 @@ function UsersPage() {
     {
       title: t`操作`,
       key: "actions",
-      width: 60,
+      width: 100,
       align: "right" as const,
       render: (_: unknown, record: User) => (
-        <Button
-          type="text"
-          icon={<Eye size={token.fontSize} />}
-          onClick={() => {
-            setSelected(record);
-            setDrawerOpen(true);
-          }}
-        />
+        <Flex gap={token.marginXXS} justify="flex-end">
+          <Button
+            type="text"
+            icon={<Eye size={token.fontSize} />}
+            onClick={() => {
+              setSelected(record);
+              setDrawerOpen(true);
+            }}
+          />
+          <Button
+            type="text"
+            danger
+            icon={<Trash2 size={token.fontSize} />}
+            loading={deleteMutation.isPending}
+            onClick={() => confirmDelete(record)}
+          />
+        </Flex>
       ),
     },
   ];
