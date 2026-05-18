@@ -9,6 +9,7 @@
 | 版本 | 日期 | 说明 |
 |------|------|------|
 | v0.1.0 | - | MVP 版本（规划中） |
+| v0.0.10 | 2026-05-18 | 首页卡片分页加载优化 |
 | v0.0.9 | 2026-05-17 | 系统管理模块与AI延伸解读 |
 | v0.0.8 | 2026-05-15 | 推荐系统与用户画像种子数据 |
 | v0.0.7 | 2026-05-14 | 系统配置、仪表盘、资料审核 |
@@ -305,6 +306,37 @@ FunFact/
 - `manage/src/api/system.ts` — 系统管理API定义
 - `manage/src/routes/_auth/system/index.tsx` — 系统管理页面
 - `manage/src/utils/utils.ts` — 公共存储工具函数
+
+---
+
+### 2026-05-18 - v0.0.10
+
+**首页卡片交互优化**
+
+#### 完成任务
+
+- [x] 2.2.7 实现预加载机制（滑动到 pageSize/2 时触发）
+- [x] 2.2.8 实现自动请求下一批卡片（追加到现有列表）
+- [x] 2.2.9 实现上滑到底提示"已经到底啦"（仅在无更多数据时显示）
+- [x] 2.3.1 实现收藏按钮（调用收藏/取消收藏 API）
+- [x] 2.3.2 实现纠错按钮（弹窗交互修复）
+- [x] 2.3.3 实现 AI 延伸解读按钮
+
+#### 技术实现
+
+- 添加分页状态管理：`page`、`hasMore`、`loadingMore`、`loadingMoreRef`
+- 预加载阈值：`PAGE_SIZE / 2`（10 条）
+- 使用 `useRef` 防止重复加载请求
+- 切换分类时重置分页状态
+- 加载中状态显示
+- 收藏功能：调用 `favoriteService.addFavorite` / `removeFavorite` API
+- 纠错弹窗：禁用卡片拖拽、阻止事件冒泡、防止底层滚动
+
+#### 相关文件
+
+- `app/src/pages/home/Home.tsx` — 首页组件（分页加载逻辑）
+- `app/src/components/KnowledgeCard.tsx` — 卡片组件（收藏、纠错交互修复）
+- `app/src/components/ErrorReportSheet.tsx` — 纠错弹窗（事件冒泡阻止）
 
 ---
 
