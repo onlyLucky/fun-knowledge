@@ -51,7 +51,7 @@ export class UserController {
       description: '删除用户',
       targetId: id,
     });
-    return { code: 0, message: '删除成功' };
+    return { code: 200, message: '删除成功' };
   }
 
   @Put(':id/status')

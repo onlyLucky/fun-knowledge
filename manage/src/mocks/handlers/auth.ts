@@ -100,17 +100,17 @@ export const authHandlers = [
     }
     const parsed = RefreshTokenRequestSchema.safeParse(json);
     if (!parsed.success) {
-      return errorResponse(ERROR_CODES.BAD_REQUEST, "refreshToken is required");
+      return errorResponse(ERROR_CODES.BAD_REQUEST, "refresh_token is required");
     }
-    if (parsed.data.refreshToken === GUEST_REFRESH) {
+    if (parsed.data.refresh_token === GUEST_REFRESH) {
       return successWithSchema(AuthTokensSchema, {
         accessToken: "mock-guest-access-refreshed",
         refreshToken: "mock-guest-refresh-refreshed",
       });
     }
     if (
-      parsed.data.refreshToken === REGISTERED_REFRESH ||
-      parsed.data.refreshToken.startsWith(`${REGISTERED_REFRESH}-`)
+      parsed.data.refresh_token === REGISTERED_REFRESH ||
+      parsed.data.refresh_token.startsWith(`${REGISTERED_REFRESH}-`)
     ) {
       return successWithSchema(AuthTokensSchema, {
         accessToken: `${REGISTERED_ACCESS}-refreshed`,

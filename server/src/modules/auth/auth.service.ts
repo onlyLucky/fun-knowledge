@@ -3,6 +3,7 @@ import {
   UnauthorizedException,
   BadRequestException,
   ConflictException,
+  NotFoundException,
   Logger,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -179,7 +180,7 @@ export class AuthService {
     if (user) {
       // 已有用户，检查状态
       if (user.status === Status.DISABLED) {
-        throw new UnauthorizedException('账号已被禁用');
+        throw new BadRequestException('账号已被禁用');
       }
       return user;
     }
@@ -223,7 +224,7 @@ export class AuthService {
 
     if (user) {
       if (user.status === Status.DISABLED) {
-        throw new UnauthorizedException('账号已被禁用');
+        throw new BadRequestException('账号已被禁用');
       }
       return user;
     }
@@ -262,7 +263,7 @@ export class AuthService {
 
     if (user) {
       if (user.status === Status.DISABLED) {
-        throw new UnauthorizedException('账号已被禁用');
+        throw new BadRequestException('账号已被禁用');
       }
       return user;
     }
@@ -295,22 +296,22 @@ export class AuthService {
     const user = await this.userRepository.findOne({ where: { email } });
 
     if (!user) {
-      throw new UnauthorizedException('邮箱或密码错误');
+      throw new BadRequestException('邮箱或密码错误');
     }
 
     if (user.status === Status.DISABLED) {
-      throw new UnauthorizedException('账号已被禁用');
+      throw new BadRequestException('账号已被禁用');
     }
 
     // 验证密码（存储在 user_auths.email.passwordHash 中）
     const passwordHash = user.user_auths?.email?.passwordHash;
     if (!passwordHash) {
-      throw new UnauthorizedException('该邮箱未设置密码，请使用其他方式登录');
+      throw new BadRequestException('该邮箱未设置密码，请使用其他方式登录');
     }
 
     const isPasswordValid = await bcrypt.compare(password, passwordHash);
     if (!isPasswordValid) {
-      throw new UnauthorizedException('邮箱或密码错误');
+      throw new BadRequestException('邮箱或密码错误');
     }
 
     return user;
@@ -323,7 +324,7 @@ export class AuthService {
     const user = await this.userRepository.findOne({ where: { id: userId } });
 
     if (!user) {
-      throw new UnauthorizedException('用户不存在');
+      throw new NotFoundException('用户不存在');
     }
 
     return user;
@@ -336,7 +337,7 @@ export class AuthService {
     const user = await this.userRepository.findOne({ where: { id: userId } });
 
     if (!user) {
-      throw new UnauthorizedException('用户不存在');
+      throw new NotFoundException('用户不存在');
     }
 
     if (dto.nickname !== undefined) {
@@ -356,7 +357,7 @@ export class AuthService {
     const user = await this.userRepository.findOne({ where: { id: userId } });
 
     if (!user) {
-      throw new UnauthorizedException('用户不存在');
+      throw new NotFoundException('用户不存在');
     }
 
     if (!user.user_auths) {
@@ -445,7 +446,7 @@ export class AuthService {
     const user = await this.userRepository.findOne({ where: { id: userId } });
 
     if (!user) {
-      throw new UnauthorizedException('用户不存在');
+      throw new NotFoundException('用户不存在');
     }
 
     if (!user.user_auths || !user.user_auths[platform]) {

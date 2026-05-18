@@ -1,7 +1,9 @@
 import {
   Injectable,
   UnauthorizedException,
+  BadRequestException,
   ForbiddenException,
+  NotFoundException,
   Logger,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -39,7 +41,7 @@ export class AuthAdminService {
     ip: string,
   ): Promise<{ admin: Omit<Admin, 'password'>; tokens: TokenResponse }> {
     if (!username || !password) {
-      throw new UnauthorizedException('用户名和密码不能为空');
+      throw new BadRequestException('用户名和密码不能为空');
     }
 
     // 查找管理员（包含密码字段用于验证）
@@ -50,7 +52,7 @@ export class AuthAdminService {
       .getOne();
 
     if (!admin) {
-      throw new UnauthorizedException('用户名或密码错误');
+      throw new BadRequestException('用户名或密码错误');
     }
 
     if (admin.status === Status.DISABLED) {
@@ -61,7 +63,7 @@ export class AuthAdminService {
     const isPasswordValid = await bcrypt.compare(password, admin.password);
     if (!isPasswordValid) {
       this.logger.warn(`管理员登录失败：${username}（密码错误，IP: ${ip}）`);
-      throw new UnauthorizedException('用户名或密码错误');
+      throw new BadRequestException('用户名或密码错误');
     }
 
     // 更新最后登录信息
@@ -90,7 +92,7 @@ export class AuthAdminService {
     const admin = await this.adminRepository.findOne({ where: { id: adminId } });
 
     if (!admin) {
-      throw new UnauthorizedException('管理员不存在');
+      throw new NotFoundException('管理员不存在');
     }
 
     this.logger.log(`管理员登出：${admin.username}（ID: ${admin.id}）`);

@@ -172,7 +172,7 @@ export function DetailDrawer({ open, correction, onClose, onReviewSuccess }: Det
             )}
             {knowledge.resource_url && (
               <Descriptions.Item label={t`资源`}>
-                {knowledge.resource_type === "image" ? (
+                {knowledge.resource_type === "image" || knowledge.resource_type === "svg" ? (
                   <Image src={knowledge.resource_url} width={120} style={{ borderRadius: 4 }} />
                 ) : (
                   <a href={knowledge.resource_url} target="_blank" rel="noreferrer">

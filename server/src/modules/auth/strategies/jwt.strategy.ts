@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ForbiddenException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -53,7 +53,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     }
 
     if (user.status === Status.DISABLED) {
-      throw new UnauthorizedException('账号已被禁用');
+      throw new ForbiddenException('账号已被禁用');
     }
 
     return user;

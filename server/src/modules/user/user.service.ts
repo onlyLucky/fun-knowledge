@@ -25,7 +25,7 @@ export class UserService {
    * 分页查询用户列表
    */
   async findAll(query: QueryUserDto): Promise<PaginatedResponseDto<User>> {
-    const { page = 1, pageSize = 10, nickname, status } = query;
+    const { page = 1, pageSize = 10, nickname, status, sortField, sortOrder } = query;
 
     const where: any = {};
     if (nickname) {
@@ -35,9 +35,14 @@ export class UserService {
       where.status = status;
     }
 
+    const order: Record<string, 'ASC' | 'DESC'> =
+      sortField && sortOrder
+        ? { [sortField]: sortOrder === 'ascend' ? 'ASC' : 'DESC' }
+        : { created_at: 'DESC' };
+
     const [list, total] = await this.userRepo.findAndCount({
       where,
-      order: { created_at: 'DESC' },
+      order,
       skip: (page - 1) * pageSize,
       take: pageSize,
     });

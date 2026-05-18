@@ -14,7 +14,7 @@ const MIME_TO_RESOURCE_TYPE: Record<string, ResourceType> = {
   'image/png': ResourceType.IMAGE,
   'image/gif': ResourceType.IMAGE,
   'image/webp': ResourceType.IMAGE,
-  'image/svg+xml': ResourceType.IMAGE,
+  'image/svg+xml': ResourceType.SVG,
   'video/mp4': ResourceType.VIDEO,
   'video/webm': ResourceType.VIDEO,
   'video/quicktime': ResourceType.VIDEO,
@@ -34,7 +34,7 @@ const EXT_TO_RESOURCE_TYPE: Record<string, ResourceType> = {
   '.png': ResourceType.IMAGE,
   '.gif': ResourceType.IMAGE,
   '.webp': ResourceType.IMAGE,
-  '.svg': ResourceType.IMAGE,
+  '.svg': ResourceType.SVG,
   '.mp4': ResourceType.VIDEO,
   '.webm': ResourceType.VIDEO,
   '.mov': ResourceType.VIDEO,
@@ -62,6 +62,7 @@ const DEFAULT_UPLOAD_LIMITS: Record<string, number> = {
   video: 50 * 1024 * 1024,     // 50MB
   model_3d: 30 * 1024 * 1024,  // 30MB
   audio: 10 * 1024 * 1024,     // 10MB
+  svg: 5 * 1024 * 1024,        // 5MB
 };
 
 /** 头像默认大小限制 */

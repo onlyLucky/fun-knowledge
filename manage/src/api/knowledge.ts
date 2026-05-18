@@ -29,6 +29,7 @@ export const ResourceType = {
   VIDEO: "video",
   AUDIO: "audio",
   MODEL_3D: "model_3d",
+  SVG: "svg",
   WEBPAGE: "webpage",
 } as const;
 

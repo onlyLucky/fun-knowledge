@@ -14,6 +14,7 @@ const RESOURCE_TYPE_MAP: Record<string, string> = {
   video: "视频",
   audio: "音频",
   model_3d: "3D模型",
+  svg: "SVG动画",
   webpage: "网页",
 };
 
@@ -61,7 +62,7 @@ export function DetailDrawer({ open, knowledge, onClose }: DetailDrawerProps) {
         </Descriptions.Item>
         {knowledge.resource_url && (
           <Descriptions.Item label={t`资源`}>
-            {knowledge.resource_type === "image" ? (
+            {knowledge.resource_type === "image" || knowledge.resource_type === "svg" ? (
               <Image
                 src={resolveUrl(knowledge.resource_url)}
                 width={200}

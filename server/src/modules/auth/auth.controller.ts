@@ -59,7 +59,7 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto) {
     const result = await this.authService.login(loginDto);
     return {
-      code: 0,
+      code: 200,
       message: '登录成功',
       data: {
         user: {
@@ -86,7 +86,7 @@ export class AuthController {
   async sendSmsCode(@Body() dto: SendSmsDto) {
     await this.smsService.sendCode(dto.phone);
     return {
-      code: 0,
+      code: 200,
       message: '验证码发送成功',
       data: null,
     };
@@ -108,7 +108,7 @@ export class AuthController {
   async register(@Body() dto: RegisterDto) {
     const result = await this.authService.register(dto);
     return {
-      code: 0,
+      code: 200,
       message: '注册成功',
       data: {
         user: {
@@ -124,6 +124,24 @@ export class AuthController {
   }
 
   /**
+   * 刷新令牌
+   */
+  @Post('refresh')
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: '刷新令牌', description: '使用旧的 refresh token 换取新的 token 对' })
+  @ApiResponse({ status: 200, description: '刷新成功' })
+  @ApiResponse({ status: 401, description: '刷新令牌无效或已过期' })
+  async refresh(@Body('refresh_token') refreshToken: string) {
+    const tokens = await this.authService.refreshToken(refreshToken);
+    return {
+      code: 200,
+      message: '刷新成功',
+      data: { tokens },
+    };
+  }
+
+  /**
    * 获取当前用户资料
    */
   @Get('profile')
@@ -134,7 +152,7 @@ export class AuthController {
   async getProfile(@CurrentUser() user: User) {
     const profile = await this.authService.getProfile(user.id);
     return {
-      code: 0,
+      code: 200,
       message: '获取成功',
       data: {
         id: profile.id,
@@ -165,7 +183,7 @@ export class AuthController {
   ) {
     const review = await this.userReviewService.create(user.id, dto);
     return {
-      code: 0,
+      code: 200,
       message: '提交成功，等待管理员审核',
       data: {
         id: review.id,
@@ -203,7 +221,7 @@ export class AuthController {
     dto.platform = platform;
     const updated = await this.authService.bindPlatform(user.id, dto);
     return {
-      code: 0,
+      code: 200,
       message: '绑定成功',
       data: {
         id: updated.id,
@@ -236,7 +254,7 @@ export class AuthController {
   ) {
     const updated = await this.authService.unbindPlatform(user.id, platform);
     return {
-      code: 0,
+      code: 200,
       message: '解绑成功',
       data: {
         id: updated.id,

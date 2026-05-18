@@ -26,7 +26,7 @@ describe("successWithSchema", () => {
     };
     const res = successWithSchema(UserSchema, row);
     const body = (await res.json()) as { code: number; data: typeof row };
-    expect(body.code).toBe(0);
+    expect(body.code).toBe(200);
     expect(body.data.nickname).toBe("u");
   });
 });
@@ -61,6 +61,6 @@ describe("successWithNullBody", () => {
     const res = successWithNullBody();
     const body = (await res.json()) as { code: number; data: null };
     expect(body.data).toBeNull();
-    expect(body.code).toBe(0);
+    expect(body.code).toBe(200);
   });
 });

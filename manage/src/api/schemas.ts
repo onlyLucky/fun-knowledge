@@ -140,7 +140,7 @@ export const AuthUserResponseSchema = UserSchema;
 export type AuthUserResponse = z.infer<typeof AuthUserResponseSchema>;
 
 export const RefreshTokenRequestSchema = z.object({
-  refreshToken: z.string().min(1),
+  refresh_token: z.string().min(1),
 });
 
 export type RefreshTokenRequest = z.infer<typeof RefreshTokenRequestSchema>;

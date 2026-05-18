@@ -180,8 +180,6 @@ function UsersPage() {
       dataIndex: "favorites_count",
       key: "favorites_count",
       width: 100,
-      sorter: true,
-      sortOrder: search.sortField === "favorites_count" ? search.sortOrder : null,
       render: (val: number | undefined) => val ?? 0,
     },
     {

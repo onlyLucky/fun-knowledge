@@ -30,14 +30,17 @@ const RESOURCE_TYPE_OPTIONS = [
   { label: "视频", value: "video" },
   { label: "音频", value: "audio" },
   { label: "3D模型", value: "model_3d" },
+  { label: "SVG动画", value: "svg" },
   { label: "网页", value: "webpage" },
 ];
 
-const IMAGE_EXTS = /\.(jpg|jpeg|png|gif|webp|svg|bmp|ico)(\?.*)?$/i;
+const SVG_EXTS = /\.(svg)(\?.*)?$/i;
+const IMAGE_EXTS = /\.(jpg|jpeg|png|gif|webp|bmp|ico)(\?.*)?$/i;
 const VIDEO_EXTS = /\.(mp4|webm|ogg|mov|avi|mkv)(\?.*)?$/i;
 
 function guessResourceType(url: string): string | undefined {
   if (!url) return undefined;
+  if (SVG_EXTS.test(url)) return "svg";
   if (IMAGE_EXTS.test(url)) return "image";
   if (VIDEO_EXTS.test(url)) return "video";
   return undefined;

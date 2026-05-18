@@ -1,6 +1,16 @@
 {
   "permissions": {
+    "defaultMode": "bypassPermissions",
     "allow": [
+      "Edit(src/**)",
+      "Edit(tests/**)",
+      "Bash(npm test)",
+      "Bash(npm run build)",
+      "Bash(git status)",
+      "Bash(git diff*)",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Read(*)",
       "Bash(kill %1)",
       "Bash(wait)",
       "Bash(npx nest *)",
@@ -23,7 +33,14 @@
       "Bash(pkill -f \"vite --host\")",
       "Skill(superpowers:finishing-a-development-branch)",
       "Skill(superpowers:finishing-a-development-branch:*)",
-      "Bash(npm test *)"
+      "Bash(npm test *)",
+      "Skill(superpowers:brainstorming)",
+      "Skill(superpowers:brainstorming:*)",
+      "Bash(cp -r /Users/feynman/Documents/code/2026/@IDEA/FunFact/app/src/app/components/ui /Users/feynman/Documents/code/2026/@IDEA/FunFact/app/src/components/)",
+      "Bash(cp -r /Users/feynman/Documents/code/2026/@IDEA/FunFact/app/src/app/components/figma /Users/feynman/Documents/code/2026/@IDEA/FunFact/app/src/components/)",
+      "Bash(cp -r /Users/feynman/Documents/code/2026/@IDEA/FunFact/app/src/app/types /Users/feynman/Documents/code/2026/@IDEA/FunFact/app/src/)",
+      "Bash(cp -r /Users/feynman/Documents/code/2026/@IDEA/FunFact/app/src/app/pages /Users/feynman/Documents/code/2026/@IDEA/FunFact/app/src/)",
+      "Bash(cp -r /Users/feynman/Documents/code/2026/@IDEA/FunFact/app/src/app/data /Users/feynman/Documents/code/2026/@IDEA/FunFact/app/src/)"
     ]
   },
   "enabledPlugins": {

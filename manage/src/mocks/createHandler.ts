@@ -14,7 +14,7 @@ export async function withDelay(ms: number = 200): Promise<void> {
 
 export function successResponse<T>(data: T, message: string = "ok") {
   return HttpResponse.json({
-    code: 0,
+    code: 200,
     data,
     message,
   });

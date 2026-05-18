@@ -58,5 +58,29 @@
     "icon": "https://cdn.funfact.com/icons/culture.png",
     "description": "文化与艺术中的冷知识",
     "sort_order": 10
+  },
+  {
+    "name": "宇宙天文",
+    "icon": "https://cdn.funfact.com/icons/astronomy.png",
+    "description": "浩瀚宇宙中的天文奇观与太空冷知识",
+    "sort_order": 11
+  },
+  {
+    "name": "动漫游戏",
+    "icon": "https://cdn.funfact.com/icons/anime-game.png",
+    "description": "动漫与游戏中的趣味冷知识和幕后故事",
+    "sort_order": 12
+  },
+  {
+    "name": "文娱热点",
+    "icon": "https://cdn.funfact.com/icons/entertainment.png",
+    "description": "影视、音乐、综艺等文娱领域的冷知识",
+    "sort_order": 13
+  },
+  {
+    "name": "数字科学",
+    "icon": "https://cdn.funfact.com/icons/digital-science.png",
+    "description": "计算机、人工智能等数字科技前沿知识",
+    "sort_order": 14
   }
 ]

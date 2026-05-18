@@ -46,7 +46,7 @@ export class AuthAdminController {
     const ip = this.getClientIp(req);
     const result = await this.authAdminService.login(dto.username, dto.password, ip);
     return {
-      code: 0,
+      code: 200,
       message: '登录成功',
       data: {
         admin: {
@@ -75,8 +75,26 @@ export class AuthAdminController {
   async logout(@CurrentUser() admin: Admin) {
     await this.authAdminService.logout(admin.id);
     return {
-      code: 0,
+      code: 200,
       message: '登出成功',
+    };
+  }
+
+  /**
+   * 刷新管理员令牌
+   */
+  @Post('refresh')
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: '刷新管理员令牌', description: '使用旧的 refresh token 换取新的 token 对' })
+  @ApiResponse({ status: 200, description: '刷新成功' })
+  @ApiResponse({ status: 401, description: '刷新令牌无效或已过期' })
+  async refresh(@Body('refresh_token') refreshToken: string) {
+    const tokens = await this.authAdminService.refreshToken(refreshToken);
+    return {
+      code: 200,
+      message: '刷新成功',
+      data: { tokens },
     };
   }
 
