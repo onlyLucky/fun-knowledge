@@ -1,11 +1,28 @@
 import { createBrowserRouter } from "react-router";
 import { AuthGuard, wrap } from "./index";
+import { ModalRoute } from "@/components/ModalRoute";
 import { Home, CardDetailPage, CategoryDetail } from "@/pages/home";
 import { Discover, HotSearchPage } from "@/pages/discover";
 import { Profile, ProfileEditPage, Favorites, CalendarPage } from "@/pages/profile";
 import { SettingsPage, AboutPage, ContactUsPage, PrivacyPolicyPage, UserAgreementPage } from "@/pages/settings";
 import { ErrorReportPage, ErrorReportDetailPage, ReportContentPage } from "@/pages/report";
 import { WelcomePage, LoginPage, RegisterPage } from "@/pages/auth";
+
+function CardModal() {
+  return <ModalRoute><CardDetailPage /></ModalRoute>;
+}
+
+function CategoryModal() {
+  return <ModalRoute><CategoryDetail /></ModalRoute>;
+}
+
+function FavoritesModal() {
+  return <ModalRoute><Favorites /></ModalRoute>;
+}
+
+function HotSearchModal() {
+  return <ModalRoute><HotSearchPage /></ModalRoute>;
+}
 
 export const router = createBrowserRouter([
   // Auth routes (always accessible)
@@ -21,22 +38,23 @@ export const router = createBrowserRouter([
       { index: true,         Component: Home },
       { path: "discover",    Component: Discover },
       { path: "profile",     Component: Profile },
+      // Modal routes - Home stays mounted
+      { path: "card/:id",    Component: CardModal },
+      { path: "category/:id", Component: CategoryModal },
+      { path: "favorites",   Component: FavoritesModal },
+      { path: "hot-searches", Component: HotSearchModal },
     ],
   },
 
   // Sub-pages (protected)
   { path: "/profile/edit",      Component: wrap(ProfileEditPage) },
-  { path: "/favorites",         Component: wrap(Favorites) },
   { path: "/calendar",          Component: wrap(CalendarPage) },
   { path: "/settings",          Component: wrap(SettingsPage) },
   { path: "/about",             Component: wrap(AboutPage) },
-  { path: "/category/:id",      Component: wrap(CategoryDetail) },
-  { path: "/card/:id",          Component: wrap(CardDetailPage) },
   { path: "/error-reports",     Component: wrap(ErrorReportPage) },
   { path: "/error-reports/:id", Component: wrap(ErrorReportDetailPage) },
   { path: "/user-agreement",    Component: wrap(UserAgreementPage) },
   { path: "/privacy-policy",    Component: wrap(PrivacyPolicyPage) },
   { path: "/report-content",    Component: wrap(ReportContentPage) },
   { path: "/contact-us",        Component: wrap(ContactUsPage) },
-  { path: "/hot-searches",      Component: wrap(HotSearchPage) },
 ]);

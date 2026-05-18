@@ -13,7 +13,7 @@ export function AuthGuard() {
 
 // ─── Auth wrapper for sub-pages ───────────────────────────────────────────────
 
-function AuthSubGuard({ children }: { children: React.ReactNode }) {
+export function AuthSubGuard({ children }: { children: React.ReactNode }) {
   const { isLoggedIn } = useAuth();
   if (!isLoggedIn) return <Navigate to="/welcome" replace />;
   return <>{children}</>;

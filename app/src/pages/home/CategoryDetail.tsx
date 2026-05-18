@@ -5,11 +5,12 @@ import { knowledgeService, categoryService, mapKnowledgeToCard, mapServerCategor
 import type { KnowledgeCard } from '@/types';
 import { PageHeader } from '@/components/PageHeader';
 import { useState, useEffect } from 'react';
+import { useFavorites } from '@/providers/FavoritesContext';
 
 export function CategoryDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [saved, setSaved] = useState<Set<string>>(new Set());
+  const { isSaved, toggleSave } = useFavorites();
 
   const [categoryName, setCategoryName] = useState('分类');
   const [displayCards, setDisplayCards] = useState<KnowledgeCard[]>([]);
@@ -42,17 +43,9 @@ export function CategoryDetail() {
     return () => { cancelled = true; };
   }, [id]);
 
-  const toggleSave = (cardId: string, e: React.MouseEvent) => {
+  const handleToggleSave = (cardId: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    setSaved(prev => {
-      const next = new Set(prev);
-      if (next.has(cardId)) {
-        next.delete(cardId);
-      } else {
-        next.add(cardId);
-      }
-      return next;
-    });
+    toggleSave(cardId);
   };
 
   return (
@@ -102,13 +95,13 @@ export function CategoryDetail() {
                 <div className="flex gap-2">
                   <motion.button
                     whileTap={{ scale: 0.8 }}
-                    onClick={(e) => toggleSave(card.id, e)}
+                    onClick={(e) => handleToggleSave(card.id, e)}
                     className="w-8 h-8 bg-[#F2F2F2] rounded-[10px] flex items-center justify-center"
                   >
                     <Star
                       size={15}
                       strokeWidth={2}
-                      className={saved.has(card.id) ? 'text-[#292526] fill-[#292526]' : 'text-[#878787]'}
+                      className={isSaved(card.id) ? 'text-[#292526] fill-[#292526]' : 'text-[#878787]'}
                     />
                   </motion.button>
                   <motion.button

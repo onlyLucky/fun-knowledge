@@ -15,7 +15,7 @@ function App() {
         <div className="bg-[#101010] w-full h-screen flex justify-center items-center">
           {/* Mobile container */}
           {/* <* className="w-full h-full max-w-[414px] max-h-[896px] bg-[#1C1A1B] relative sm:rounded-[44px] sm:shadow-[0_32px_80px_rgba(0,0,0,0.6)] sm:border-[8px] border-[#1a1a1a] flex flex-col overflow-hidden">*/}
-          <div className="w-full h-full max-w-[414px] max-h-[100vh] bg-[#1C1A1B] relative sm:shadow-[0_32px_80px_rgba(0,0,0,0.6)] flex flex-col overflow-hidden">
+          <div id="app-container" className="w-full h-full max-w-[414px] max-h-[100vh] bg-[#1C1A1B] relative sm:shadow-[0_32px_80px_rgba(0,0,0,0.6)] flex flex-col overflow-hidden">
             <Toaster
               position="bottom-center"
               gap={12}
