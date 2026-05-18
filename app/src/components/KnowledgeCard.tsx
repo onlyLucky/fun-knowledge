@@ -4,6 +4,7 @@ import { Star, AlertCircle, Sparkles, ChevronUp } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useNavigate } from 'react-router';
 import type { KnowledgeCard as KnowledgeCardType } from '@/types';
+import { favoriteService } from '@/api';
 import { ErrorReportSheet } from './ErrorReportSheet';
 
 interface KnowledgeCardProps {
@@ -21,6 +22,7 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
   const [showReport, setShowReport] = useState(false);
   const dragConstraintsRef = useRef(null);
   const navigate = useNavigate();
+  const [savingFavorite, setSavingFavorite] = useState(false);
 
   // Track drag state to distinguish tap from swipe
   const isDragging = useRef(false);
@@ -72,8 +74,11 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
 
   return (
     <motion.div
-      className="absolute inset-0 w-full h-full px-4 py-3 flex flex-col pointer-events-none"
-      style={{ zIndex }}
+      className={clsx(
+        "absolute inset-0 w-full h-full px-4 py-3 flex flex-col",
+        showReport ? "pointer-events-auto" : "pointer-events-none"
+      )}
+      style={{ zIndex: showReport ? 100 : zIndex }}
       initial={{ opacity: 0, y: 40 }}
       animate={{
         opacity: isActive ? 1 : 0,
@@ -90,7 +95,7 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
           "bg-[#FDFDFD] rounded-[20px] flex flex-col overflow-hidden h-full w-full shadow-[0_4px_20px_rgba(41,37,38,0.08)]",
           isActive ? "pointer-events-auto" : "pointer-events-none"
         )}
-        drag={isActive ? "y" : false}
+        drag={isActive && !showReport ? "y" : false}
         dragConstraints={{ top: 0, bottom: 0 }}
         dragElastic={0.15}
         onDragStart={handleDragStart}
@@ -144,10 +149,23 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
           {/* Save */}
           <motion.button
             whileTap={{ scale: 0.78 }}
-            onClick={() => {
-              if (!isSaved) {
-                setIsSaved(true);
-                onSave?.();
+            onClick={async (e) => {
+              e.stopPropagation();
+              if (savingFavorite) return;
+              setSavingFavorite(true);
+              try {
+                if (isSaved) {
+                  await favoriteService.removeFavorite(card.id);
+                  setIsSaved(false);
+                } else {
+                  await favoriteService.addFavorite(card.id);
+                  setIsSaved(true);
+                  onSave?.();
+                }
+              } catch {
+                // keep state on error
+              } finally {
+                setSavingFavorite(false);
               }
             }}
             className="w-[40px] h-[40px] rounded-[100px] border border-[#DFDEDE] flex items-center justify-center"

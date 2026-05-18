@@ -69,6 +69,7 @@ export function ErrorReportSheet({ isOpen, onClose, knowledgeId }: ErrorReportSh
             exit={{ opacity: 0 }}
             className="absolute inset-0 bg-black/40 z-[200]"
             onClick={handleClose}
+            onTouchMove={(e) => e.stopPropagation()}
           />
           <motion.div
             initial={{ y: '100%' }}
@@ -76,6 +77,8 @@ export function ErrorReportSheet({ isOpen, onClose, knowledgeId }: ErrorReportSh
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 26, stiffness: 300 }}
             className="absolute bottom-0 left-0 right-0 bg-[#FDFDFD] rounded-t-[28px] z-[201] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+            onTouchMove={(e) => e.stopPropagation()}
           >
             {/* Handle */}
             <div className="flex justify-center pt-3 pb-1">

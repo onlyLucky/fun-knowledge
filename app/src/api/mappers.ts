@@ -46,7 +46,7 @@ export function mapServerCategory(c: ServerCategory) {
   return {
     id: c.id,
     name: c.name,
-    icon: ICON_MAP[c.name] || 'Sparkles',
+    icon: c.icon || 'Sparkles',
   };
 }
 

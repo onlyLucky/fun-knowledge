@@ -2,8 +2,8 @@ import { createElement, useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   SlidersHorizontal, CheckCircle2, Check,
-  Sparkles, Lightbulb, Leaf, FlaskConical,
-  Calculator, BookOpen, User, Globe, Utensils, Map, Palette,
+  Sparkles, Leaf, Atom,Layers,CloudSun,
+  Calculator, User, Utensils, Map, Palette,PawPrint,Volleyball,Earth,Gamepad2,Cpu,
 } from 'lucide-react';
 import { knowledgeService, categoryService, mapKnowledgeToCard, mapServerCategory } from '@/api';
 import type { KnowledgeCard as KnowledgeCardType } from '@/types';
@@ -13,8 +13,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { clsx } from 'clsx';
 
 const iconMap: Record<string, any> = {
-  Sparkles, Lightbulb, Leaf, FlaskConical,
-  Calculator, BookOpen, User, Globe, Utensils, Map, Palette,
+  Layers,Utensils,CloudSun,Atom, Calculator, Map, PawPrint, Leaf, User,Volleyball,Palette,Earth,Gamepad2,Cpu,Sparkles,
 };
 
 // ─── Category Filter Modal ────────────────────────────────────────────────────
@@ -140,26 +139,37 @@ export function Home() {
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [categories, setCategories] = useState<{ id: string; name: string; icon: string }[]>([]);
+  const PAGE_SIZE = 20;
+  const PRELOAD_THRESHOLD = PAGE_SIZE / 2; // 预加载阈值：10
+
   const [cards, setCards] = useState<KnowledgeCardType[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const loadingMoreRef = useRef(false);
 
+  // 加载首页数据
   useEffect(() => {
     let cancelled = false;
     async function load() {
       setLoading(true);
+      setPage(1);
+      setHasMore(true);
       try {
         const [serverCats, serverCards] = await Promise.all([
           categoryService.getCategories(),
           activeCategory === 'all'
-            ? knowledgeService.getRecommendations({ pageSize: 20 })
-            : knowledgeService.getKnowledgeList({ category_id: activeCategory, pageSize: 20 }),
+            ? knowledgeService.getRecommendations({ page: 1, pageSize: PAGE_SIZE })
+            : knowledgeService.getKnowledgeList({ category_id: activeCategory, page: 1, pageSize: PAGE_SIZE }),
         ]);
         if (cancelled) return;
         setCategories([
-          { id: 'all', name: '全部', icon: 'Sparkles' },
+          { id: 'all', name: '全部', icon: 'Layers' },
           ...serverCats.map(mapServerCategory),
         ]);
         setCards(serverCards.list.map(mapKnowledgeToCard));
+        setHasMore(serverCards.list.length === PAGE_SIZE);
       } catch {
         // keep empty
       } finally {
@@ -170,12 +180,43 @@ export function Home() {
     return () => { cancelled = true; };
   }, [activeCategory]);
 
+  // 加载更多数据
+  const loadMore = async () => {
+    if (loadingMoreRef.current || !hasMore) return;
+    loadingMoreRef.current = true;
+    setLoadingMore(true);
+    try {
+      const nextPage = page + 1;
+      const result = activeCategory === 'all'
+        ? await knowledgeService.getRecommendations({ page: nextPage, pageSize: PAGE_SIZE })
+        : await knowledgeService.getKnowledgeList({ category_id: activeCategory, page: nextPage, pageSize: PAGE_SIZE });
+      const newCards = result.list.map(mapKnowledgeToCard);
+      if (newCards.length > 0) {
+        setCards((prev) => [...prev, ...newCards]);
+        setPage(nextPage);
+        setHasMore(newCards.length === PAGE_SIZE);
+      } else {
+        setHasMore(false);
+      }
+    } catch {
+      // ignore load more errors
+    } finally {
+      loadingMoreRef.current = false;
+      setLoadingMore(false);
+    }
+  };
+
   const filteredCards = cards;
 
   const handleSwipeUp = () => {
     if (currentIndex < filteredCards.length - 1) {
-      setCurrentIndex((prev) => prev + 1);
+      const nextIndex = currentIndex + 1;
+      setCurrentIndex(nextIndex);
       if (viewedCount < 5) setViewedCount((prev) => prev + 1);
+      // 预加载：当滑动到当前页一半时加载下一页
+      if (nextIndex >= page * PAGE_SIZE - PRELOAD_THRESHOLD && hasMore) {
+        loadMore();
+      }
     }
   };
 
@@ -328,9 +369,14 @@ export function Home() {
           </div>
         )}
 
-        {currentIndex === filteredCards.length - 1 && filteredCards.length > 0 && (
+        {currentIndex === filteredCards.length - 1 && filteredCards.length > 0 && !hasMore && (
           <div className="absolute bottom-5 left-0 right-0 text-center text-[#878787] text-[11px] pointer-events-none z-0">
             已经到底啦，换个类目看看吧～
+          </div>
+        )}
+        {loadingMore && (
+          <div className="absolute bottom-5 left-0 right-0 text-center text-[#878787] text-[11px] pointer-events-none z-0">
+            加载中...
           </div>
         )}
       </div>
