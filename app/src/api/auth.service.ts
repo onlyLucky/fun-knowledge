@@ -119,3 +119,11 @@ export async function updateProfile(data: { nickname?: string; avatar?: string; 
   if (USE_MOCK) return { id: 'mock-1', status: 'pending' };
   return client.put('/v1/auth/profile', data);
 }
+
+export async function refreshToken(refreshToken: string): Promise<LoginTokens> {
+  if (USE_MOCK) {
+    await new Promise((r) => setTimeout(r, 500));
+    return { accessToken: 'mock-new-token', refreshToken: 'mock-new-refresh-token', expiresIn: 7200 };
+  }
+  return client.post('/v1/auth/refresh', { refresh_token: refreshToken });
+}

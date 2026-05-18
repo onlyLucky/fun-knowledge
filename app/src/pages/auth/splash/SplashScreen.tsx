@@ -8,6 +8,7 @@ interface SplashScreenProps {
 
 export function SplashScreen({ onComplete }: SplashScreenProps) {
   useEffect(() => {
+    console.log("speen")
     const timer = setTimeout(onComplete, 2000);
     return () => clearTimeout(timer);
   }, [onComplete]);
@@ -28,9 +29,9 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
         initial={{ scale: 0.65, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.7, ease: [0.34, 1.56, 0.64, 1] }}
-        className="relative z-10 flex flex-col items-center"
+        className="relative z-10 flex flex-col items-center pb-54"
       >
-        <AppLogo size={90} color="white" />
+        <AppLogo size={90} />
 
         <motion.div
           initial={{ opacity: 0, y: 10 }}

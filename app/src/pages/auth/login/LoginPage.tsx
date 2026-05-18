@@ -86,7 +86,8 @@ export function LoginPage() {
           email: result.user.email || undefined,
           loginType: tab,
         },
-        result.tokens.accessToken
+        result.tokens.accessToken,
+        result.tokens.refreshToken
       );
     } catch {
       setErrors({ form: '登录失败，请重试' });
@@ -112,10 +113,10 @@ export function LoginPage() {
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pb-8">
         {/* Logo + Title */}
         <div className="flex flex-col items-center pt-4 pb-8">
-          <div className="w-[52px] h-[52px] bg-[#292526] rounded-[18px] flex items-center justify-center mb-4 shadow-[0_6px_20px_rgba(41,37,38,0.22)]">
-            <AppLogo size={32} color="white" />
+          <div className="w-[72px] h-[72px] bg-[#292526] rounded-[18px] flex items-center justify-center mb-4 shadow-[0_6px_20px_rgba(41,37,38,0.22)]">
+            <AppLogo size={58} />
           </div>
-          <h1 className="text-[22px] font-bold text-[#121111] mb-1">欢迎回来 👋</h1>
+          <h1 className="text-[22px] font-bold text-[#121111] mb-1">欢迎回来</h1>
           <p className="text-[13px] text-[#878787]">登录以继续探索冷知识</p>
         </div>
 

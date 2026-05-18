@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 import { toast } from 'sonner';
 
 const client = axios.create({
@@ -7,7 +7,25 @@ const client = axios.create({
 });
 
 // Auth endpoints that should not trigger redirect on 401
-const AUTH_ENDPOINTS = ['/v1/auth/login', '/v1/auth/register', '/v1/auth/sms/send'];
+const AUTH_ENDPOINTS = ['/v1/auth/login', '/v1/auth/register', '/v1/auth/sms/send', '/v1/auth/refresh'];
+
+// Token refresh state
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (value: unknown) => void;
+  reject: (reason?: unknown) => void;
+}> = [];
+
+const processQueue = (error: unknown) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(undefined);
+    }
+  });
+  failedQueue = [];
+};
 
 // Request interceptor: attach JWT
 client.interceptors.request.use((config) => {
@@ -29,17 +47,61 @@ client.interceptors.response.use(
     }
     return body.data !== undefined ? body.data : body;
   },
-  (error) => {
+  async (error) => {
     const status = error.response?.status;
     const url = error.config?.url || '';
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-    // Only redirect on 401 for non-auth endpoints
-    if (status === 401 && !AUTH_ENDPOINTS.some((ep) => url.includes(ep))) {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('refresh_token');
-      localStorage.removeItem('auth_user');
-      window.location.href = '/welcome';
-      return Promise.reject(error);
+    // Handle 401 with token refresh for non-auth endpoints
+    if (status === 401 && !AUTH_ENDPOINTS.some((ep) => url.includes(ep)) && !originalRequest._retry) {
+      if (isRefreshing) {
+        // Queue the request while refreshing
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then(() => client(originalRequest));
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      const refreshTokenValue = localStorage.getItem('refresh_token');
+      if (!refreshTokenValue) {
+        // No refresh token, redirect to login
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('auth_user');
+        window.location.href = '/welcome';
+        return Promise.reject(error);
+      }
+
+      try {
+        // Call refresh endpoint directly to avoid interceptor loop
+        const response = await axios.post(
+          `${client.defaults.baseURL}/v1/auth/refresh`,
+          { refresh_token: refreshTokenValue }
+        );
+
+        const { accessToken, refreshToken: newRefreshToken } = response.data.data.tokens;
+        localStorage.setItem('access_token', accessToken);
+        if (newRefreshToken) {
+          localStorage.setItem('refresh_token', newRefreshToken);
+        }
+
+        processQueue(null);
+        // Retry the original request
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        return client(originalRequest);
+      } catch (refreshError) {
+        processQueue(refreshError);
+        // Refresh failed, redirect to login
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('auth_user');
+        window.location.href = '/welcome';
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
+      }
     }
 
     const msg =
