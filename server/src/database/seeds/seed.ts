@@ -94,23 +94,30 @@ async function seedAdmins(dataSource: DataSource) {
 
 async function seedCategories(dataSource: DataSource) {
   const categoryRepo = dataSource.getRepository(Category);
-  const count = await categoryRepo.count();
-
-  if (count > 0) {
-    console.log('⏭️  类目数据已存在，跳过');
-    return;
-  }
 
   const categoriesData = JSON.parse(
     fs.readFileSync(path.join(__dirname, 'data/categories.json'), 'utf-8'),
   );
 
+  let created = 0;
+  let skipped = 0;
+
   for (const categoryData of categoriesData) {
+    const existing = await categoryRepo.findOne({
+      where: { name: categoryData.name },
+    });
+
+    if (existing) {
+      skipped++;
+      continue;
+    }
+
     const category = categoryRepo.create(categoryData);
     await categoryRepo.save(category);
+    created++;
   }
 
-  console.log(`✅ 创建了 ${categoriesData.length} 个类目`);
+  console.log(`✅ 类目数据：新增 ${created} 条，跳过 ${skipped} 条`);
 }
 
 async function seedSystemConfigs(dataSource: DataSource) {
