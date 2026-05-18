@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { RouterProvider } from 'react-router';
-import { router } from './routes';
-import { UserProvider } from './context/UserContext';
-import { AuthProvider } from './context/AuthContext';
-import { SplashScreen } from './pages/auth/splash/SplashScreen';
+import { Toaster } from 'sonner';
+import { router } from '@/router';
+import { UserProvider } from '@/providers/UserContext';
+import { AuthProvider } from '@/providers/AuthContext';
+import { SplashScreen } from '@/pages/auth/splash/SplashScreen';
 
 function App() {
   const [splashDone, setSplashDone] = useState(false);
@@ -13,7 +14,24 @@ function App() {
       <UserProvider>
         <div className="bg-[#101010] w-full h-screen flex justify-center items-center">
           {/* Mobile container */}
-          <div className="w-full h-full max-w-[414px] max-h-[896px] bg-[#1C1A1B] relative overflow-hidden sm:rounded-[44px] sm:shadow-[0_32px_80px_rgba(0,0,0,0.6)] sm:border-[8px] border-[#1a1a1a] flex flex-col">
+          {/* <* className="w-full h-full max-w-[414px] max-h-[896px] bg-[#1C1A1B] relative sm:rounded-[44px] sm:shadow-[0_32px_80px_rgba(0,0,0,0.6)] sm:border-[8px] border-[#1a1a1a] flex flex-col overflow-hidden">*/}
+          <div className="w-full h-full max-w-[414px] max-h-[100vh] bg-[#1C1A1B] relative sm:shadow-[0_32px_80px_rgba(0,0,0,0.6)] flex flex-col overflow-hidden">
+            <Toaster
+              position="bottom-center"
+              gap={12}
+              toastOptions={{
+                duration: 3000,
+                style: {
+                  background: '#292526',
+                  color: '#FDFDFD',
+                  border: '1px solid #3a3637',
+                  borderRadius: '14px',
+                  fontSize: '13px',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+                },
+              }}
+              className="!absolute !bottom-4 !z-[9999]"
+            />
             {!splashDone ? (
               <SplashScreen onComplete={() => setSplashDone(true)} />
             ) : (
