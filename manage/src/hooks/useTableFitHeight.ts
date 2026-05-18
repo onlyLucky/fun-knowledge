@@ -97,16 +97,7 @@ export function useTableFitHeight(args: UseTableFitHeightArgs) {
         return;
       }
 
-      setTableScrollY(undefined);
-      requestAnimationFrame(() => {
-        const frame = tableFrameRef.current;
-        const avail = tableAvailableRef.current;
-        const minFrame = headReserve + pagReserve;
-        if (!frame || avail <= minFrame) return;
-        if (frame.scrollHeight > frame.clientHeight + 1) {
-          setTableScrollY(Math.max(120, avail - headReserve - pagReserve));
-        }
-      });
+      setTableScrollY(bodyMax);
     };
 
     measure();

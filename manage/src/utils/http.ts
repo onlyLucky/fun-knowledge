@@ -42,7 +42,6 @@ async function doRefreshSessionTokens(): Promise<boolean> {
   const refreshToken = tokens?.refreshToken;
   if (!refreshToken) {
     logout();
-    navigateToLogin();
     return false;
   }
 
@@ -58,7 +57,6 @@ async function doRefreshSessionTokens(): Promise<boolean> {
 
     if (!res.ok) {
       logout();
-      navigateToLogin();
       return false;
     }
 
@@ -67,7 +65,6 @@ async function doRefreshSessionTokens(): Promise<boolean> {
     const isSuccess = envelope.code === 200;
     if (envelope.code !== undefined && !isSuccess) {
       logout();
-      navigateToLogin();
       return false;
     }
 
@@ -76,7 +73,6 @@ async function doRefreshSessionTokens(): Promise<boolean> {
     return true;
   } catch {
     logout();
-    navigateToLogin();
     return false;
   }
 }
@@ -108,10 +104,6 @@ function getAuthHeaders(): Record<string, string> {
 
 function navigateTo403(): void {
   void httpRouter?.navigate({ to: "/403" });
-}
-
-function navigateToLogin(): void {
-  void httpRouter?.navigate({ to: "/login" });
 }
 
 async function request<T>(

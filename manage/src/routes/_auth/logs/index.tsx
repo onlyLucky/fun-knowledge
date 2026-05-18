@@ -229,7 +229,7 @@ function LogsPage() {
     >
       <div ref={toolbarRowRef}>
         {canDelete && selectedRowKeys.length > 0 && (
-          <Flex justify="flex-end" style={{ marginBottom: token.marginSM }}>
+          <Flex justify="flex-end">
             <Button
               danger
               icon={<Trash2 size={token.fontSize} />}

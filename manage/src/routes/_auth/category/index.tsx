@@ -19,7 +19,7 @@ import { FormModal } from "./-FormModal";
 
 const SearchParamsSchema = z.object({
   page: z.coerce.number().int().positive().catch(1),
-  pageSize: z.coerce.number().int().positive().catch(20),
+  pageSize: z.coerce.number().int().positive().catch(10),
   keyword: z.string().catch(""),
   status: z.string().catch(""),
 });
@@ -246,7 +246,7 @@ function CategoryPage() {
       gap={token.marginMD}
       style={{ flex: "1 1 0%", minHeight: 0, overflow: "hidden" }}
     >
-      <Flex ref={toolbarRowRef} justify="space-between" style={{ marginBottom: token.marginMD }}>
+      <Flex ref={toolbarRowRef} justify="space-between">
         <Space>
           <Input
             placeholder={t`搜索类目名称`}
@@ -295,7 +295,7 @@ function CategoryPage() {
           const next: Search = {
             ...search,
             page: pagination.current ?? 1,
-            pageSize: pagination.pageSize ?? 20,
+            pageSize: pagination.pageSize ?? 10,
           };
           if (pagination.pageSize !== search.pageSize) {
             next.page = 1;
