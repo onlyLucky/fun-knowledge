@@ -155,6 +155,13 @@ function CategoryPage() {
       render: (weight: number | undefined) => weight ?? 0,
     },
     {
+      title: t`卡片数`,
+      dataIndex: "knowledge_count",
+      key: "knowledge_count",
+      width: 80,
+      render: (count: number | undefined) => count ?? 0,
+    },
+    {
       title: t`状态`,
       dataIndex: "status",
       key: "status",

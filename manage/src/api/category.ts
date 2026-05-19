@@ -23,6 +23,7 @@ export const CategorySchema = z.object({
   sort_order: z.number(),
   weight: z.number().optional(),
   status: z.number(),
+  knowledge_count: z.number().optional(),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
 });
