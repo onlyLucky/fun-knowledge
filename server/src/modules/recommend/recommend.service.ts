@@ -2,7 +2,7 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { InjectModel } from '@nestjs/mongoose';
 import { InjectQueue } from '@nestjs/bull';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Model } from 'mongoose';
 import { Queue } from 'bull';
 import { Knowledge } from '../knowledge/entities/knowledge.entity';
@@ -138,10 +138,22 @@ export class RecommendService implements OnModuleInit {
       await this.logRecommendations(userId, knowledges, strategy);
     }
 
+    // Batch check favorite status
+    let favoritedIds = new Set<string>();
+    if (userId && knowledges.length > 0) {
+      const knowledgeIds = knowledges.map((k) => k.id);
+      const favorites = await this.favoriteRepo.find({
+        where: { user_id: userId, knowledge_id: In(knowledgeIds) },
+        select: ['knowledge_id'],
+      });
+      favoritedIds = new Set(favorites.map((f) => f.knowledge_id));
+    }
+
     return {
       list: knowledges.map((k) => ({
         ...k,
         category_name: k.category?.name,
+        is_favorited: favoritedIds.has(k.id),
       })),
       has_more: knowledges.length === pageSize,
       recommend_strategy: strategy,

@@ -20,6 +20,7 @@ import { UserModule } from './modules/user/user.module';
 import { KnowledgeModule } from './modules/knowledge/knowledge.module';
 import { CategoryModule } from './modules/category/category.module';
 import { FavoriteModule } from './modules/favorite/favorite.module';
+import { BrowseHistoryModule } from './modules/browse-history/browse-history.module';
 import { CorrectionModule } from './modules/correction/correction.module';
 import { CheckInModule } from './modules/check-in/check-in.module';
 import { AiModule } from './modules/ai/ai.module';
@@ -113,6 +114,7 @@ import { SystemModule } from './modules/system/system.module';
     KnowledgeModule,
     CategoryModule,
     FavoriteModule,
+    BrowseHistoryModule,
     CorrectionModule,
     CheckInModule,
     AiModule,

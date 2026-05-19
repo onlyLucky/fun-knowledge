@@ -81,7 +81,7 @@ export class FavoriteService {
    * 获取收藏列表
    */
   async findAll(userId: string, query: QueryKnowledgeDto): Promise<PaginatedResponseDto<any>> {
-    const { page = 1, pageSize = 10 } = query;
+    const { page = 1, pageSize = 10, keyword, title } = query;
 
     const qb = this.favoriteRepo
       .createQueryBuilder('f')
@@ -89,8 +89,16 @@ export class FavoriteService {
       .leftJoinAndSelect('k.category', 'c')
       .where('f.user_id = :userId', { userId })
       .andWhere('k.status = :status', { status: KnowledgeStatus.ONLINE })
-      .andWhere('k.deleted_at IS NULL')
-      .orderBy('f.created_at', 'DESC');
+      .andWhere('k.deleted_at IS NULL');
+
+    if (keyword) {
+      qb.andWhere('(k.title ILIKE :kw OR k.content ILIKE :kw)', { kw: `%${keyword}%` });
+    }
+    if (title) {
+      qb.andWhere('k.title ILIKE :title', { title: `%${title}%` });
+    }
+
+    qb.orderBy('f.created_at', 'DESC');
 
     const total = await qb.getCount();
     const list = await qb
@@ -98,11 +106,21 @@ export class FavoriteService {
       .take(pageSize)
       .getMany();
 
-    // 格式化返回数据
+    // 格式化返回数据，展平为 ServerKnowledge 格式
     const formattedList = list.map((item) => ({
-      id: item.id,
-      created_at: item.created_at,
-      knowledge: item.knowledge,
+      id: item.knowledge.id,
+      title: item.knowledge.title,
+      content: item.knowledge.content,
+      resource_url: item.knowledge.resource_url,
+      resource_type: item.knowledge.resource_type,
+      category_id: item.knowledge.category_id,
+      category: item.knowledge.category ? { id: item.knowledge.category.id, name: item.knowledge.category.name } : null,
+      tags: item.knowledge.tags,
+      source: item.knowledge.source,
+      status: item.knowledge.status,
+      view_count: item.knowledge.view_count,
+      favorite_count: item.knowledge.favorite_count,
+      created_at: item.knowledge.created_at,
     }));
 
     return new PaginatedResponseDto(formattedList, total, page, pageSize);

@@ -5,12 +5,14 @@ import { AiImageLog } from './entities/ai-image-log.entity';
 import { Knowledge } from '../knowledge/entities/knowledge.entity';
 import { User } from '../user/entities/user.entity';
 import { SystemConfig } from '../config/entities/system-config.entity';
+import { UploadModule } from '../upload/upload.module';
 import { AiController } from './ai.controller';
 import { AiService } from './ai.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([AiExtendLog, AiImageLog, Knowledge, User, SystemConfig]),
+    UploadModule,
   ],
   controllers: [AiController],
   providers: [AiService],

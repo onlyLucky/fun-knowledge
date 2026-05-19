@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 import { Knowledge } from './entities/knowledge.entity';
 import { Category } from '../category/entities/category.entity';
+import { Favorite } from '../favorite/entities/favorite.entity';
+import { SearchKeyword, SearchKeywordSchema } from './schemas/search-keyword.schema';
 import { KnowledgeController } from './knowledge.controller';
 import { KnowledgeAdminController } from './knowledge-admin.controller';
 import { KnowledgeService } from './knowledge.service';
@@ -9,7 +12,11 @@ import { KnowledgeAdminService } from './knowledge-admin.service';
 import { LogModule } from '../log/log.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Knowledge, Category]), LogModule],
+  imports: [
+    TypeOrmModule.forFeature([Knowledge, Category, Favorite]),
+    MongooseModule.forFeature([{ name: SearchKeyword.name, schema: SearchKeywordSchema }]),
+    LogModule,
+  ],
   controllers: [KnowledgeController, KnowledgeAdminController],
   providers: [KnowledgeService, KnowledgeAdminService],
   exports: [KnowledgeService, KnowledgeAdminService],

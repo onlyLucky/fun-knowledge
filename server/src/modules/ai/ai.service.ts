@@ -1,7 +1,7 @@
 import {
   Injectable,
   OnModuleInit,
-  ForbiddenException,
+  BadRequestException,
   NotFoundException,
   Logger,
 } from '@nestjs/common';
@@ -14,6 +14,8 @@ import { Knowledge } from '../knowledge/entities/knowledge.entity';
 import { User } from '../user/entities/user.entity';
 import { SystemConfig } from '../config/entities/system-config.entity';
 import { AiExtendType } from '../../common/enums/ai-extend-type.enum';
+import { UploadService } from '../upload/upload.service';
+import { UploadType } from '../upload/dto/upload.dto';
 
 export interface AiUsageInfo {
   daily_limit: number;
@@ -53,6 +55,7 @@ export class AiService implements OnModuleInit {
     @InjectRepository(SystemConfig)
     private systemConfigRepo: Repository<SystemConfig>,
     private configService: ConfigService,
+    private uploadService: UploadService,
   ) {}
 
   onModuleInit() {
@@ -146,12 +149,24 @@ export class AiService implements OnModuleInit {
    */
   async recognizeImage(
     userId: string,
-    imageUrl: string,
+    file: Express.Multer.File,
   ): Promise<AiResult<AiImageLog>> {
+    if (!file) {
+      throw new BadRequestException('请选择要上传的图片');
+    }
+
+    const allowedMimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedMimes.includes(file.mimetype)) {
+      throw new BadRequestException('仅支持 JPG、PNG、GIF、WebP 格式的图片');
+    }
+
     const usage = await this.checkAndGetUsage(userId);
     if (!usage.unlimited && usage.remaining <= 0) {
       return { limited: true, usage };
     }
+
+    // 上传图片到存储，获取 URL
+    const { url: imageUrl } = await this.uploadService.upload(file, UploadType.KNOWLEDGE);
 
     const aiResult = await this.callAiVisionApi(imageUrl);
 

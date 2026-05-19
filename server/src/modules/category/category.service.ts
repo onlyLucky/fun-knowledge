@@ -30,11 +30,15 @@ export class CategoryService {
     pageSize?: number;
     name?: string;
     status?: number;
-  }): Promise<PaginatedResponseDto<Category>> {
+  }): Promise<PaginatedResponseDto<any>> {
     const { page = 1, pageSize = 20, name, status } = options || {};
 
     const qb = this.categoryRepo
       .createQueryBuilder('c')
+      .addSelect(
+        `(SELECT COUNT(*) FROM t_knowledge k WHERE k.category_id = c.id AND k.deleted_at IS NULL)`,
+        'knowledge_count',
+      )
       .where('c.deleted_at IS NULL');
 
     if (name) {
@@ -48,10 +52,15 @@ export class CategoryService {
     qb.orderBy('c.sort_order', 'ASC').addOrderBy('c.created_at', 'DESC');
 
     const total = await qb.getCount();
-    const list = await qb
+    const { entities, raw } = await qb
       .skip((page - 1) * pageSize)
       .take(pageSize)
-      .getMany();
+      .getRawAndEntities();
+
+    const list = entities.map((entity, i) => ({
+      ...entity,
+      knowledge_count: parseInt(raw[i]?.knowledge_count ?? '0', 10),
+    }));
 
     return new PaginatedResponseDto(list, total, page, pageSize);
   }

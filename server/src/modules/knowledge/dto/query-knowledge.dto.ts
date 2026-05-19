@@ -27,6 +27,11 @@ export class QueryKnowledgeDto extends PaginationDto {
   @IsString()
   title?: string;
 
+  @ApiPropertyOptional({ description: '关键词（模糊搜索标题和内容）' })
+  @IsOptional()
+  @IsString()
+  keyword?: string;
+
   @ApiPropertyOptional({ description: '类目 ID' })
   @IsOptional()
   @IsString()

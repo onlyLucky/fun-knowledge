@@ -1,11 +1,11 @@
-import { Controller, Post, Get, Body, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import { Controller, Post, Get, Body, UseGuards, UseInterceptors, UploadedFile, HttpCode, HttpStatus } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse, ApiConsumes } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { RequestUser } from '../../common/interfaces/request.interface';
 import { AiService } from './ai.service';
 import { AiExtendDto } from './dto/ai-extend.dto';
-import { AiImageDto } from './dto/ai-image.dto';
 import { AiResetDto } from './dto/ai-reset.dto';
 
 @ApiTags('AI')
@@ -44,12 +44,14 @@ export class AiController {
   }
 
   @Post('image-recognize')
+  @UseInterceptors(FileInterceptor('file'))
   @ApiOperation({ summary: 'AI 图片识别' })
+  @ApiConsumes('multipart/form-data')
   async recognizeImage(
-    @Body() dto: AiImageDto,
+    @UploadedFile() file: Express.Multer.File,
     @CurrentUser() user: RequestUser,
   ) {
-    const result = await this.aiService.recognizeImage(user.id, dto.image_url);
+    const result = await this.aiService.recognizeImage(user.id, file);
 
     if (result.limited) {
       return {
