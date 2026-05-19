@@ -3,7 +3,7 @@ import { AuthGuard, wrap } from "./index";
 import { ModalRoute } from "@/components/ModalRoute";
 import { Home, CardDetailPage, CategoryDetail } from "@/pages/home";
 import { Discover, HotSearchPage } from "@/pages/discover";
-import { Profile, ProfileEditPage, Favorites, CalendarPage } from "@/pages/profile";
+import { Profile, ProfileEditPage, Favorites, BrowseHistory, CalendarPage } from "@/pages/profile";
 import { SettingsPage, AboutPage, ContactUsPage, PrivacyPolicyPage, UserAgreementPage } from "@/pages/settings";
 import { ErrorReportPage, ErrorReportDetailPage, ReportContentPage } from "@/pages/report";
 import { WelcomePage, LoginPage, RegisterPage } from "@/pages/auth";
@@ -18,6 +18,10 @@ function CategoryModal() {
 
 function FavoritesModal() {
   return <ModalRoute><Favorites /></ModalRoute>;
+}
+
+function BrowseHistoryModal() {
+  return <ModalRoute><BrowseHistory /></ModalRoute>;
 }
 
 function HotSearchModal() {
@@ -42,6 +46,7 @@ export const router = createBrowserRouter([
       { path: "card/:id",    Component: CardModal },
       { path: "category/:id", Component: CategoryModal },
       { path: "favorites",   Component: FavoritesModal },
+      { path: "browse-history", Component: BrowseHistoryModal },
       { path: "hot-searches", Component: HotSearchModal },
     ],
   },

@@ -28,7 +28,9 @@ export async function extendKnowledge(knowledgeId: string): Promise<AIExtendResu
   return [{ title: 'AI 延伸解读', content: raw }];
 }
 
-export async function recognizeImage(imageUrl: string): Promise<{ knowledge_id?: string; result?: string }> {
+export async function recognizeImage(file: File): Promise<{ knowledge_id?: string; result?: string }> {
   if (USE_MOCK) return { knowledge_id: '1' };
-  return client.post('/v1/ai/image-recognize', { image_url: imageUrl });
+  const formData = new FormData();
+  formData.append('file', file);
+  return client.post('/v1/ai/image-recognize', formData);
 }

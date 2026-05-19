@@ -4,7 +4,7 @@ import { Star, Calendar, AlertCircle, Settings, Info, ChevronRight, BookOpen, Fl
 import { motion } from 'motion/react';
 import { PageHeader } from '@/components/PageHeader';
 import { useUser } from '@/providers/UserContext';
-import { authService, favoriteService, checkinService } from '@/api';
+import { favoriteService, checkinService } from '@/api';
 
 // ─── Avatar display ───────────────────────────────────────────────────────────
 
@@ -71,17 +71,10 @@ export function Profile() {
   const navigate = useNavigate();
   const { profile } = useUser();
 
-  const [streak, setStreak] = useState(0);
-  const [total, setTotal] = useState(0);
   const [saved, setSaved] = useState(0);
   const [checkedDays, setCheckedDays] = useState<boolean[]>([false, false, false, false, false, false, false]);
 
   useEffect(() => {
-    authService.getProfile().then((u) => {
-      setStreak(u.streak_days);
-      setTotal(u.total_check_in_days);
-    }).catch(() => {});
-
     favoriteService.getFavorites({ pageSize: 1 }).then((res) => {
       setSaved(res.total);
     }).catch(() => {});
@@ -148,7 +141,7 @@ export function Profile() {
               </motion.button>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[#FDFDFD]/60 text-[11px] mb-0.5">知识等级 · 探索者</p>
+              {/* <p className="text-[#FDFDFD]/60 text-[11px] mb-0.5">知识等级 · 探索者</p> */}
               <h2 className="text-[#FDFDFD] text-[17px] font-bold truncate">{profile.nickname}</h2>
               {profile.bio ? (
                 <p className="text-[#FDFDFD]/50 text-[11px] mt-0.5 truncate">{profile.bio}</p>
@@ -172,7 +165,7 @@ export function Profile() {
                 <p className="text-[#FDFDFD]/60 text-[10px]">连续打卡</p>
               </div>
               <div className="flex items-baseline gap-1 mt-1">
-                <p className="text-[#FDFDFD] text-[22px] font-bold leading-none">{streak}</p>
+                <p className="text-[#FDFDFD] text-[22px] font-bold leading-none">{profile.streak}</p>
                 <p className="text-[#FDFDFD]/50 text-[10px]">天</p>
               </div>
             </div>
@@ -182,7 +175,7 @@ export function Profile() {
                 <p className="text-[#FDFDFD]/60 text-[10px]">累计打卡</p>
               </div>
               <div className="flex items-baseline gap-1 mt-1">
-                <p className="text-[#FDFDFD] text-[22px] font-bold leading-none">{total}</p>
+                <p className="text-[#FDFDFD] text-[22px] font-bold leading-none">{profile.totalCheckInDays}</p>
                 <p className="text-[#FDFDFD]/50 text-[10px]">天</p>
               </div>
             </div>
@@ -252,7 +245,7 @@ export function Profile() {
           <MenuRow
             icon={<BookOpen size={18} strokeWidth={2} className="text-[#292526]" />}
             title="浏览历史"
-            onClick={() => navigate('/category/all')}
+            onClick={() => navigate('/browse-history')}
           />
           <div className="h-[1px] bg-[#F2F2F2] mx-4" />
           <MenuRow

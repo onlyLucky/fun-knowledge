@@ -41,7 +41,7 @@ export function HotSearchPage() {
   const [hotSearches, setHotSearches] = useState<HotSearchItem[]>([]);
 
   useEffect(() => {
-    discoverService.getHotSearches().then(setHotSearches).catch(() => {});
+    discoverService.getHotSearches(30).then(setHotSearches).catch(() => {});
   }, []);
 
   const handleItemClick = (item: HotSearchItem) => {

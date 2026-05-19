@@ -5,6 +5,7 @@ const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
 export interface KnowledgeQuery {
   title?: string;
+  keyword?: string;
   category_id?: string;
   page?: number;
   pageSize?: number;
@@ -33,8 +34,9 @@ export async function getKnowledgeList(query: KnowledgeQuery = {}): Promise<Pagi
   if (USE_MOCK) {
     const { MOCK_CARDS } = await import('../data/mock');
     let filtered = MOCK_CARDS;
-    if (query.title) {
-      const q = query.title.toLowerCase();
+    const searchTerm = query.keyword || query.title;
+    if (searchTerm) {
+      const q = searchTerm.toLowerCase();
       filtered = filtered.filter((c) => c.title.toLowerCase().includes(q) || c.description.toLowerCase().includes(q));
     }
     return {

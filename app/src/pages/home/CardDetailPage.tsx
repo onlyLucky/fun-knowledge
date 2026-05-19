@@ -1,11 +1,12 @@
 import { useParams, useNavigate } from 'react-router';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { Star, AlertCircle, Sparkles, ChevronLeft } from 'lucide-react';
-import { knowledgeService, favoriteService, mapKnowledgeToCard } from '@/api';
+import { knowledgeService, favoriteService, browseService, mapKnowledgeToCard } from '@/api';
 import type { KnowledgeCard } from '@/types';
 import { AIBottomSheet } from '@/components/AIBottomSheet';
 import { ErrorReportSheet } from '@/components/ErrorReportSheet';
+import { favoriteEvents } from '@/lib/favorite-events';
 
 export function CardDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -21,22 +22,41 @@ export function CardDetailPage() {
       .then((data) => { if (!cancelled) setCard(mapKnowledgeToCard(data)); })
       .catch(() => {})
       .finally(() => { if (!cancelled) setLoading(false); });
+    // Record browse history
+    browseService.addBrowseHistory(id).catch(() => {});
     return () => { cancelled = true; };
   }, [id]);
 
   const [saved, setSaved] = useState(false);
   const [showReportSheet, setShowReportSheet] = useState(false);
   const [showAISheet, setShowAISheet] = useState(false);
+  const favoriteChanged = useRef(false);
+
+  // Sync favorite state from server response
+  useEffect(() => {
+    if (card) setSaved(card.isFavorited);
+  }, [card]);
+
+  // Emit favorite change when unmounting (navigating away)
+  useEffect(() => {
+    return () => {
+      if (id && favoriteChanged.current) {
+        favoriteEvents.emit({ cardId: id, isFavorited: saved });
+      }
+    };
+  }, [id, saved]);
 
   const toggleFavorite = async () => {
     if (!id) return;
     const next = !saved;
     setSaved(next);
+    favoriteChanged.current = true;
     try {
       if (next) await favoriteService.addFavorite(id);
       else await favoriteService.removeFavorite(id);
     } catch {
       setSaved(!next);
+      favoriteChanged.current = false;
     }
   };
 
@@ -126,7 +146,7 @@ export function CardDetailPage() {
         </div>
 
         {/* Card body */}
-        <div className="px-5 mt-5 pb-5">
+        <div className="px-5 mt-5">
           <h1 className="text-[20px] font-bold text-[#121111] leading-snug mb-3">
             {card.title}
           </h1>
@@ -145,12 +165,12 @@ export function CardDetailPage() {
           </div>
 
           {/* Related tip */}
-          <div className="bg-[#FDFDFD] rounded-[16px] p-4 border border-[#DFDEDE]/50">
+          {/* <div className="bg-[#FDFDFD] rounded-[16px] p-4 border border-[#DFDEDE]/50">
             <p className="text-[11px] font-medium text-[#878787] mb-2">💡 你知道吗</p>
             <p className="text-[13px] text-[#787676] leading-relaxed">
               这条知识属于「{card.category}」类目，你可以前往发现页浏览更多相关内容。
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
 

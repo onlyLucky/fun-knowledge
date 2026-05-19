@@ -1,7 +1,10 @@
+import client from '@/lib/http';
 import { HOT_SEARCHES } from '@/data/mock';
 import type { HotSearchItem } from '@/types';
 
-// Server has no hot search endpoint yet — return static mock data
-export async function getHotSearches(): Promise<HotSearchItem[]> {
-  return HOT_SEARCHES;
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
+
+export async function getHotSearches(limit: number = 10): Promise<HotSearchItem[]> {
+  if (USE_MOCK) return HOT_SEARCHES;
+  return client.get('/v1/knowledge/hot-searches', { params: { limit } });
 }

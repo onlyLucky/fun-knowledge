@@ -5,6 +5,7 @@ export interface KnowledgeCard {
   image: string;
   category: string;
   source: string;
+  isFavorited: boolean;
 }
 
 export interface HotSearchItem {

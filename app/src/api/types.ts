@@ -28,6 +28,7 @@ export interface ServerKnowledge {
   view_count: number;
   favorite_count: number;
   category?: ServerCategory;
+  is_favorited?: boolean;
   created_at: string;
 }
 
@@ -72,6 +73,24 @@ export interface ServerCheckIn {
   user_id: string;
   check_in_date: string;
   streak_days: number;
+  created_at: string;
+}
+
+export interface ServerBrowseHistory {
+  id: string;
+  knowledge_id: string;
+  title: string;
+  content: string;
+  resource_url: string | null;
+  resource_type: string | null;
+  category_id: string;
+  category?: { id: string; name: string } | null;
+  tags: string[] | null;
+  source: string | null;
+  status: number;
+  view_count: number;
+  favorite_count: number;
+  viewed_at: string;
   created_at: string;
 }
 

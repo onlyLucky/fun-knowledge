@@ -1,12 +1,13 @@
 import { useNavigate, useSearchParams } from 'react-router';
 import { createPortal } from 'react-dom';
-import { knowledgeService, discoverService, mapKnowledgeToCard } from '@/api';
+import { knowledgeService, discoverService, aiService, mapKnowledgeToCard } from '@/api';
 import type { KnowledgeCard, HotSearchItem } from '@/types';
 import {
   Camera, Search, X, Clock, TrendingUp, TrendingDown, Minus, ChevronRight, Flame,
 } from 'lucide-react';
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { toast } from 'sonner';
 import { PageHeader } from '@/components/PageHeader';
 import { getPortalTarget } from '@/lib/portal';
 
@@ -14,7 +15,17 @@ const MAX_RECENT = 8;
 
 // ─── AI Recognition Overlay ───────────────────────────────────────────────────
 
-function AIRecognitionOverlay({ visible }: { visible: boolean }) {
+function AIRecognitionOverlay({
+  visible,
+  result,
+  onNavigate,
+  onClose,
+}: {
+  visible: boolean;
+  result: { knowledge_id?: string; result?: string } | null;
+  onNavigate: () => void;
+  onClose: () => void;
+}) {
   return createPortal(
     <AnimatePresence>
       {visible && (
@@ -26,45 +37,82 @@ function AIRecognitionOverlay({ visible }: { visible: boolean }) {
           transition={{ duration: 0.25 }}
           className="absolute inset-0 z-[9999] flex flex-col items-center justify-center bg-[#292526]/92 backdrop-blur-sm"
         >
-          <div className="relative flex items-center justify-center mb-8">
-            <div className="absolute w-[160px] h-[160px]">
-              <div className="absolute top-0 left-0 w-7 h-7 border-t-2 border-l-2 border-[#FDFDFD] rounded-tl-[6px]" />
-              <div className="absolute top-0 right-0 w-7 h-7 border-t-2 border-r-2 border-[#FDFDFD] rounded-tr-[6px]" />
-              <div className="absolute bottom-0 left-0 w-7 h-7 border-b-2 border-l-2 border-[#FDFDFD] rounded-bl-[6px]" />
-              <div className="absolute bottom-0 right-0 w-7 h-7 border-b-2 border-r-2 border-[#FDFDFD] rounded-br-[6px]" />
-            </div>
-            <motion.div
-              className="absolute left-[10px] right-[10px] h-[2px] bg-gradient-to-r from-transparent via-[#FDFDFD]/80 to-transparent rounded-full"
-              animate={{ top: ['10px', '148px', '10px'] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-            />
-            <div className="w-[160px] h-[160px] bg-white/5 rounded-[20px] flex items-center justify-center">
-              <motion.div
-                animate={{ scale: [1, 1.08, 1] }}
-                transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+          {!result ? (
+            <>
+              <div className="relative flex items-center justify-center mb-8">
+                <div className="absolute w-[160px] h-[160px]">
+                  <div className="absolute top-0 left-0 w-7 h-7 border-t-2 border-l-2 border-[#FDFDFD] rounded-tl-[6px]" />
+                  <div className="absolute top-0 right-0 w-7 h-7 border-t-2 border-r-2 border-[#FDFDFD] rounded-tr-[6px]" />
+                  <div className="absolute bottom-0 left-0 w-7 h-7 border-b-2 border-l-2 border-[#FDFDFD] rounded-bl-[6px]" />
+                  <div className="absolute bottom-0 right-0 w-7 h-7 border-b-2 border-r-2 border-[#FDFDFD] rounded-br-[6px]" />
+                </div>
+                <motion.div
+                  className="absolute left-[10px] right-[10px] h-[2px] bg-gradient-to-r from-transparent via-[#FDFDFD]/80 to-transparent rounded-full"
+                  animate={{ top: ['10px', '148px', '10px'] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+                />
+                <div className="w-[160px] h-[160px] bg-white/5 rounded-[20px] flex items-center justify-center">
+                  <motion.div
+                    animate={{ scale: [1, 1.08, 1] }}
+                    transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                  >
+                    <Camera size={52} strokeWidth={1.5} className="text-[#FDFDFD]/80" />
+                  </motion.div>
+                </div>
+              </div>
+              <motion.p
+                className="text-[#FDFDFD] text-[16px] font-bold mb-2"
+                animate={{ opacity: [1, 0.5, 1] }}
+                transition={{ duration: 1.2, repeat: Infinity }}
               >
-                <Camera size={52} strokeWidth={1.5} className="text-[#FDFDFD]/80" />
-              </motion.div>
-            </div>
-          </div>
-          <motion.p
-            className="text-[#FDFDFD] text-[16px] font-bold mb-2"
-            animate={{ opacity: [1, 0.5, 1] }}
-            transition={{ duration: 1.2, repeat: Infinity }}
-          >
-            AI 识别中…
-          </motion.p>
-          <p className="text-[#FDFDFD]/50 text-[12px]">正在分析图片内容，发现知识</p>
-          <div className="flex gap-1.5 mt-5">
-            {[0, 1, 2].map((i) => (
+                AI 识别中…
+              </motion.p>
+              <p className="text-[#FDFDFD]/50 text-[12px]">正在分析图片内容，发现知识</p>
+              <div className="flex gap-1.5 mt-5">
+                {[0, 1, 2].map((i) => (
+                  <motion.div
+                    key={i}
+                    className="w-1.5 h-1.5 bg-[#FDFDFD]/60 rounded-full"
+                    animate={{ opacity: [0.3, 1, 0.3] }}
+                    transition={{ duration: 1, repeat: Infinity, delay: i * 0.25 }}
+                  />
+                ))}
+              </div>
+            </>
+          ) : (
+            <>
               <motion.div
-                key={i}
-                className="w-1.5 h-1.5 bg-[#FDFDFD]/60 rounded-full"
-                animate={{ opacity: [0.3, 1, 0.3] }}
-                transition={{ duration: 1, repeat: Infinity, delay: i * 0.25 }}
-              />
-            ))}
-          </div>
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+                className="flex flex-col items-center"
+              >
+                <div className="w-20 h-20 bg-[#FDFDFD]/10 rounded-[24px] flex items-center justify-center mb-6">
+                  <Search size={36} strokeWidth={1.5} className="text-[#FDFDFD]" />
+                </div>
+                <p className="text-[#FDFDFD] text-[16px] font-bold mb-2">识别完成</p>
+                <p className="text-[#FDFDFD]/60 text-[13px] mb-8 px-8 text-center leading-relaxed">
+                  {result.knowledge_id ? '已为你找到相关知识卡片' : `识别结果：${result.result}`}
+                </p>
+                <div className="flex gap-3">
+                  <motion.button
+                    whileTap={{ scale: 0.95 }}
+                    onClick={onClose}
+                    className="px-6 py-3 bg-[#FDFDFD]/15 text-[#FDFDFD] rounded-[100px] text-[14px] font-medium"
+                  >
+                    取消
+                  </motion.button>
+                  <motion.button
+                    whileTap={{ scale: 0.95 }}
+                    onClick={onNavigate}
+                    className="px-6 py-3 bg-[#FDFDFD] text-[#292526] rounded-[100px] text-[14px] font-bold"
+                  >
+                    {result.knowledge_id ? '查看详情' : '搜索'}
+                  </motion.button>
+                </div>
+              </motion.div>
+            </>
+          )}
         </motion.div>
       )}
     </AnimatePresence>,
@@ -132,6 +180,8 @@ export function Discover() {
   const [inputValue, setInputValue] = useState(() => searchParams.get('q') || '');
   const [submittedQuery, setSubmittedQuery] = useState(() => searchParams.get('q') || '');
   const [isRecognizing, setIsRecognizing] = useState(false);
+  const [recognitionResult, setRecognitionResult] = useState<{ knowledge_id?: string; result?: string } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [recentSearches, setRecentSearches] = useState<string[]>(() => {
     try {
       return JSON.parse(localStorage.getItem('recentSearches') || '[]');
@@ -149,18 +199,42 @@ export function Discover() {
   const top10HotSearches = hotSearches.slice(0, 10);
 
   const [searchResults, setSearchResults] = useState<KnowledgeCard[]>([]);
+  const [searchPage, setSearchPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const PAGE_SIZE = 20;
 
   useEffect(() => {
     const q = submittedQuery.trim();
-    if (!q) { setSearchResults([]); return; }
+    if (!q) { setSearchResults([]); setSearchPage(1); setHasMore(true); return; }
     let cancelled = false;
-    knowledgeService.getKnowledgeList({ title: q, pageSize: 20 })
+    knowledgeService.getKnowledgeList({ keyword: q, page: 1, pageSize: PAGE_SIZE })
       .then((data) => {
-        if (!cancelled) setSearchResults(data.list.map(mapKnowledgeToCard));
+        if (!cancelled) {
+          setSearchResults(data.list.map(mapKnowledgeToCard));
+          setSearchPage(1);
+          setHasMore(data.list.length >= PAGE_SIZE);
+        }
       })
       .catch(() => {});
     return () => { cancelled = true; };
   }, [submittedQuery]);
+
+  const loadMore = useCallback(async () => {
+    const q = submittedQuery.trim();
+    if (!q || !hasMore || loadingMore) return;
+    setLoadingMore(true);
+    try {
+      const data = await knowledgeService.getKnowledgeList({ keyword: q, page: searchPage + 1, pageSize: PAGE_SIZE });
+      setSearchResults((prev) => [...prev, ...data.list.map(mapKnowledgeToCard)]);
+      setSearchPage((p) => p + 1);
+      setHasMore(data.list.length >= PAGE_SIZE);
+    } catch {
+      // ignore
+    } finally {
+      setLoadingMore(false);
+    }
+  }, [submittedQuery, searchPage, hasMore, loadingMore]);
 
   const addRecentSearch = useCallback((query: string) => {
     const q = query.trim();
@@ -224,14 +298,10 @@ export function Discover() {
   };
 
   const handleHotItemClick = (item: HotSearchItem) => {
-    if (item.cardId) {
-      navigate(`/card/${item.cardId}`);
-    } else {
-      setInputValue(item.keyword);
-      setSubmittedQuery(item.keyword);
-      setSearchParams({ q: item.keyword }, { replace: true });
-      addRecentSearch(item.keyword);
-    }
+    setInputValue(item.keyword);
+    setSubmittedQuery(item.keyword);
+    setSearchParams({ q: item.keyword }, { replace: true });
+    addRecentSearch(item.keyword);
   };
 
   const handleRecentClick = (term: string) => {
@@ -248,17 +318,41 @@ export function Discover() {
 
   const handleAIRecognize = () => {
     if (isRecognizing) return;
+    setRecognitionResult(null);
+    fileInputRef.current?.click();
+  };
+
+  const handleImageSelected = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = '';
     setIsRecognizing(true);
-    knowledgeService.getKnowledgeList({ pageSize: 50 })
-      .then((data) => {
-        const cards = data.list.map(mapKnowledgeToCard);
-        if (cards.length > 0) {
-          const randomCard = cards[Math.floor(Math.random() * cards.length)];
-          navigate(`/card/${randomCard.id}`);
-        }
-      })
-      .catch(() => {})
-      .finally(() => setIsRecognizing(false));
+    setRecognitionResult(null);
+    try {
+      const result = await aiService.recognizeImage(file);
+      setRecognitionResult(result);
+    } catch {
+      toast.error('识别失败，请稍后重试');
+      setIsRecognizing(false);
+    }
+  };
+
+  const handleRecognitionNavigate = () => {
+    if (recognitionResult?.knowledge_id) {
+      navigate(`/card/${recognitionResult.knowledge_id}`);
+    } else if (recognitionResult?.result) {
+      setInputValue(recognitionResult.result);
+      setSubmittedQuery(recognitionResult.result);
+      setSearchParams({ q: recognitionResult.result }, { replace: true });
+      addRecentSearch(recognitionResult.result);
+    }
+    setIsRecognizing(false);
+    setRecognitionResult(null);
+  };
+
+  const closeRecognition = () => {
+    setIsRecognizing(false);
+    setRecognitionResult(null);
   };
 
   const isSearching = submittedQuery.trim().length > 0;
@@ -314,7 +408,16 @@ export function Discover() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto no-scrollbar px-5 pb-6">
+      <div
+        className="flex-1 overflow-y-auto no-scrollbar px-5 pb-6"
+        onScroll={(e) => {
+          if (!isSearching) return;
+          const el = e.currentTarget;
+          if (el.scrollTop + el.clientHeight >= el.scrollHeight - 80) {
+            loadMore();
+          }
+        }}
+      >
         {isSearching ? (
           /* Search Results */
           <div>
@@ -335,6 +438,12 @@ export function Discover() {
                     onClick={() => navigate(`/card/${card.id}`)}
                   />
                 ))}
+                {loadingMore && (
+                  <p className="text-center text-[12px] text-[#878787] py-3">加载中...</p>
+                )}
+                {!hasMore && searchResults.length > 0 && (
+                  <p className="text-center text-[12px] text-[#DFDEDE] py-3">没有更多了</p>
+                )}
               </div>
             )}
           </div>
@@ -397,6 +506,7 @@ export function Discover() {
             )}
 
             {/* Hot Search Ranking */}
+            {top10HotSearches.length > 0 && (
             <div className="bg-[#FDFDFD] rounded-[20px] border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)] overflow-hidden">
               <div className="flex items-center justify-between px-4 pt-4 pb-2">
                 <div className="flex items-center gap-2">
@@ -436,12 +546,28 @@ export function Discover() {
                 </div>
               </div>
             </div>
+            )}
           </>
         )}
       </div>
 
       {/* AI Recognition Overlay */}
-      <AIRecognitionOverlay visible={isRecognizing} />
+      <AIRecognitionOverlay
+        visible={isRecognizing}
+        result={recognitionResult}
+        onNavigate={handleRecognitionNavigate}
+        onClose={closeRecognition}
+      />
+
+      {/* Hidden file input for camera/gallery */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        className="hidden"
+        onChange={handleImageSelected}
+      />
     </div>
   );
 }

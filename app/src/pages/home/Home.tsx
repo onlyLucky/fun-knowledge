@@ -1,10 +1,11 @@
-import { createElement, useState, useRef, useEffect } from 'react';
+import { createElement, useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   SlidersHorizontal, CheckCircle2, Check,
   Sparkles, Leaf, Atom,Layers,CloudSun,
   Calculator, User, Utensils, Map, Palette,PawPrint,Volleyball,Earth,Gamepad2,Cpu,
+  RefreshCw,
 } from 'lucide-react';
 import { knowledgeService, categoryService, checkinService, mapKnowledgeToCard, mapServerCategory } from '@/api';
 import { toast } from 'sonner';
@@ -14,6 +15,7 @@ import { AIBottomSheet } from '@/components/AIBottomSheet';
 import { PageHeader } from '@/components/PageHeader';
 import { clsx } from 'clsx';
 import { getPortalTarget } from '@/lib/portal';
+import { favoriteEvents } from '@/lib/favorite-events';
 
 const iconMap: Record<string, any> = {
   Layers,Utensils,CloudSun,Atom, Calculator, Map, PawPrint, Leaf, User,Volleyball,Palette,Earth,Gamepad2,Cpu,Sparkles,
@@ -146,6 +148,11 @@ export function Home() {
   const PAGE_SIZE = 20;
   const PRELOAD_THRESHOLD = PAGE_SIZE / 2; // 预加载阈值：10
 
+  // Pull-to-refresh
+  const PULL_THRESHOLD = 60;
+  const [pullDistance, setPullDistance] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+
   const [cards, setCards] = useState<KnowledgeCardType[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -228,6 +235,38 @@ export function Home() {
     if (currentIndex > 0) setCurrentIndex((prev) => prev - 1);
   };
 
+  // Pull-to-refresh (called by KnowledgeCard drag callbacks)
+  const doRefresh = useCallback(() => {
+    if (refreshing) return;
+    setRefreshing(true);
+    setPullDistance(40);
+    const reloadCards = activeCategory === 'all'
+      ? knowledgeService.getRecommendations({ page: 1, pageSize: PAGE_SIZE })
+      : knowledgeService.getKnowledgeList({ category_id: activeCategory, page: 1, pageSize: PAGE_SIZE });
+    reloadCards
+      .then((data) => {
+        setCards(data.list.map(mapKnowledgeToCard));
+        setPage(1);
+        setCurrentIndex(0);
+        setHasMore(data.list.length === PAGE_SIZE);
+      })
+      .catch(() => {})
+      .finally(() => {
+        setTimeout(() => {
+          setRefreshing(false);
+          setPullDistance(0);
+        }, 1000);
+      });
+  }, [activeCategory, refreshing]);
+
+  const handlePullProgress = useCallback((distance: number) => {
+    setPullDistance(distance);
+  }, []);
+
+  const handlePullEnd = useCallback(() => {
+    doRefresh();
+  }, [doRefresh]);
+
   // 初始化时检查打卡状态
   useEffect(() => {
     checkinService.getCheckInStatus().then((status) => {
@@ -269,6 +308,13 @@ export function Home() {
     return () => {
       if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
     };
+  }, []);
+
+  // Sync favorite state from detail page
+  useEffect(() => {
+    return favoriteEvents.subscribe(({ cardId, isFavorited }) => {
+      setCards((prev) => prev.map((c) => c.id === cardId ? { ...c, isFavorited } : c));
+    });
   }, []);
 
   const handleSelectCategory = (id: string) => {
@@ -341,6 +387,24 @@ export function Home() {
         )}
       </AnimatePresence>
 
+      {/* Pull-to-refresh indicator */}
+      <div
+        className="flex justify-center overflow-hidden transition-all shrink-0"
+        style={{ height: pullDistance > 0 ? pullDistance : 0 }}
+      >
+        <div className="flex items-center gap-2 py-2">
+          <motion.div
+            animate={refreshing ? { rotate: 360 } : { rotate: pullDistance >= PULL_THRESHOLD ? 180 : 0 }}
+            transition={refreshing ? { duration: 0.8, repeat: Infinity, ease: 'linear' } : { duration: 0.2 }}
+          >
+            <RefreshCw size={16} strokeWidth={2} className="text-[#878787]" />
+          </motion.div>
+          <span className="text-[12px] text-[#878787]">
+            {refreshing ? '刷新中...' : pullDistance >= PULL_THRESHOLD ? '松开刷新' : '下拉刷新'}
+          </span>
+        </div>
+      </div>
+
       {/* Card Stack */}
       <div className="flex-1 relative overflow-hidden">
         <AnimatePresence>
@@ -357,6 +421,10 @@ export function Home() {
                   onAIOpen={openAISheet}
                   onSave={handleSave}
                   zIndex={filteredCards.length - index}
+                  initialSaved={card.isFavorited}
+                  isFirstCard={index === 0}
+                  onPullProgress={handlePullProgress}
+                  onPullEnd={handlePullEnd}
                 />
               );
             })

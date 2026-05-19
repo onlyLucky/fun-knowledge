@@ -25,6 +25,7 @@ export function mapKnowledgeToCard(k: ServerKnowledge): KnowledgeCard {
     image: resolveImageUrl(k.resource_url),
     category: categoryNameMap[k.category_id] || k.category?.name || '未分类',
     source: k.source || '',
+    isFavorited: k.is_favorited ?? false,
   };
 }
 

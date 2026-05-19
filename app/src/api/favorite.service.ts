@@ -13,7 +13,7 @@ export async function removeFavorite(knowledgeId: string): Promise<void> {
   return client.delete(`/v1/favorite/${knowledgeId}`);
 }
 
-export async function getFavorites(query: { page?: number; pageSize?: number } = {}): Promise<PaginatedData<ServerKnowledge>> {
+export async function getFavorites(query: { page?: number; pageSize?: number; keyword?: string; title?: string } = {}): Promise<PaginatedData<ServerKnowledge>> {
   if (USE_MOCK) {
     const { MOCK_CARDS } = await import('../data/mock');
     const subset = MOCK_CARDS.slice(0, 4);

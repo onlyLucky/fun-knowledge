@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Star, AlertCircle, Sparkles, ChevronUp } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -15,10 +15,18 @@ interface KnowledgeCardProps {
   onAIOpen: (id: string, title: string) => void;
   onSave?: () => void;
   zIndex: number;
+  initialSaved?: boolean;
+  isFirstCard?: boolean;
+  onPullProgress?: (distance: number) => void;
+  onPullEnd?: () => void;
 }
 
-export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen, onSave, zIndex }: KnowledgeCardProps) {
-  const [isSaved, setIsSaved] = useState(false);
+export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen, onSave, zIndex, initialSaved, isFirstCard, onPullProgress, onPullEnd }: KnowledgeCardProps) {
+  const [isSaved, setIsSaved] = useState(initialSaved ?? false);
+
+  useEffect(() => {
+    setIsSaved(initialSaved ?? false);
+  }, [initialSaved, card.id]);
   const [showReport, setShowReport] = useState(false);
   const dragConstraintsRef = useRef(null);
   const navigate = useNavigate();
@@ -29,10 +37,20 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
   const dragStartTime = useRef(0);
   const dragStartPos = useRef({ x: 0, y: 0 });
 
+  const PULL_THRESHOLD = 60;
+
   const handleDragStart = (_e: any, info: any) => {
     isDragging.current = true;
     dragStartTime.current = Date.now();
     dragStartPos.current = { x: info.point.x, y: info.point.y };
+  };
+
+  const handleDrag = (_e: any, info: any) => {
+    if (isFirstCard && info.offset.y > 0) {
+      onPullProgress?.(Math.min(info.offset.y * 0.5, 100));
+    } else {
+      onPullProgress?.(0);
+    }
   };
 
   const handleDragEnd = (_event: any, info: any) => {
@@ -48,6 +66,14 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
     if (dragDistance > distanceThreshold || dragDuration > timeThreshold) {
       isDragging.current = true;
     }
+
+    // Pull-to-refresh on first card (downward drag > threshold)
+    if (isFirstCard && info.offset.y * 0.5 >= PULL_THRESHOLD) {
+      onPullEnd?.();
+      setTimeout(() => { isDragging.current = false; }, 50);
+      return;
+    }
+    onPullProgress?.(0);
 
     // Handle swipe actions
     if (info.offset.y < -swipeThreshold || info.velocity.y < -velocityThreshold) {
@@ -96,6 +122,7 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
         dragConstraints={{ top: 0, bottom: 0 }}
         dragElastic={0.15}
         onDragStart={handleDragStart}
+        onDrag={handleDrag}
         onDragEnd={handleDragEnd}
         whileDrag={{ scale: 0.985 }}
       >
@@ -125,13 +152,13 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
 
         {/* Content Area — tappable to view detail */}
         <div
-          className="px-5 pt-5 pb-3 flex-1 flex flex-col overflow-y-auto no-scrollbar cursor-pointer"
+          className="px-5 pt-5 pb-3 flex-1 flex flex-col cursor-pointer"
           onClick={handleContentClick}
         >
-          <h2 className="text-[20px] leading-snug font-bold text-[#121111] mb-3">
+          <h2 className="text-[20px] leading-snug font-bold text-[#121111] mb-3 line-clamp-1">
             {card.title}
           </h2>
-          <p className="text-[14px] leading-relaxed text-[#787676] flex-1">
+          <p className="text-[14px] leading-relaxed text-[#787676] line-clamp-6 overflow-hidden">
             {card.description}
           </p>
 

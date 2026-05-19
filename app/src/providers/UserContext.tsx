@@ -8,6 +8,8 @@ export interface UserProfile {
   avatarEmoji: string; // emoji fallback
   avatarBg: string;    // bg color for emoji avatars
   usePhoto: boolean;
+  streak: number;
+  totalCheckInDays: number;
 }
 
 const DEFAULT_PROFILE: UserProfile = {
@@ -17,6 +19,8 @@ const DEFAULT_PROFILE: UserProfile = {
   avatarEmoji: '🌍',
   avatarBg: '#292526',
   usePhoto: false,
+  streak: 0,
+  totalCheckInDays: 0,
 };
 
 interface UserContextType {
@@ -60,6 +64,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
         nickname: serverUser.nickname || prev.nickname,
         avatarUrl: serverUser.avatar || prev.avatarUrl,
         bio: serverUser.signature || prev.bio,
+        streak: serverUser.streak_days ?? prev.streak,
+        totalCheckInDays: serverUser.total_check_in_days ?? prev.totalCheckInDays,
       }));
       setCategoryMap(cats);
     } catch {

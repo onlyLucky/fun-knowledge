@@ -6,6 +6,7 @@ import { ChevronLeft, Check, Camera, X } from 'lucide-react';
 import { getPortalTarget } from '@/lib/portal';
 import { useUser } from '@/providers/UserContext';
 import { authService } from '@/api';
+import { toast } from 'sonner';
 
 // ─── Preset Avatars ───────────────────────────────────────────────────────────
 
@@ -86,7 +87,7 @@ function AvatarDisplay({
 
 export function ProfileEditPage() {
   const navigate = useNavigate();
-  const { profile, updateProfile } = useUser();
+  const { profile, updateProfile, initProfile } = useUser();
 
   const [nickname, setNickname] = useState(profile.nickname);
   const [bio, setBio] = useState(profile.bio);
@@ -96,21 +97,26 @@ export function ProfileEditPage() {
   const [avatarBg, setAvatarBg] = useState(profile.avatarBg);
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const [pickerTab, setPickerTab] = useState<'photo' | 'emoji'>('photo');
+  const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
   const handleSave = async () => {
-    updateProfile({ nickname, bio, usePhoto, avatarUrl, avatarEmoji, avatarBg });
+    setSaving(true);
     try {
       await authService.updateProfile({
         nickname,
         signature: bio,
         avatar: usePhoto ? avatarUrl : undefined,
       });
+      updateProfile({ nickname, bio, usePhoto, avatarUrl, avatarEmoji, avatarBg });
+      await initProfile();
+      setSaved(true);
+      setTimeout(() => navigate(-1), 800);
     } catch {
-      // local state already updated, server sync failed silently
+      toast.error('保存失败，请稍后重试');
+    } finally {
+      setSaving(false);
     }
-    setSaved(true);
-    setTimeout(() => navigate(-1), 800);
   };
 
   const selectPhoto = (url: string) => {
@@ -144,9 +150,10 @@ export function ProfileEditPage() {
           <motion.button
             whileTap={{ scale: 0.88 }}
             onClick={handleSave}
-            className="w-[38px] h-[38px] bg-[#292526] rounded-[12px] flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.2)]"
+            disabled={saving}
+            className="w-[38px] h-[38px] bg-[#292526] rounded-[12px] flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.2)] disabled:opacity-50"
           >
-            <Check size={18} strokeWidth={2.5} className="text-white" />
+            <Check size={18} strokeWidth={2.5} className={`text-white ${saving ? 'animate-pulse' : ''}`} />
           </motion.button>
         </div>
       </div>
@@ -211,14 +218,14 @@ export function ProfileEditPage() {
           </div>
 
           {/* Level info (read-only) */}
-          <div className="bg-[#FDFDFD] rounded-[18px] px-5 py-4 border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]">
+          {/* <div className="bg-[#FDFDFD] rounded-[18px] px-5 py-4 border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]">
             <p className="text-[11px] font-medium text-[#878787] mb-1">知识等级</p>
             <div className="flex items-center gap-2 mt-1.5">
               <div className="w-6 h-6 bg-[#292526] rounded-full flex items-center justify-center text-[11px]">⭐</div>
               <span className="text-[14px] font-bold text-[#121111]">探索者</span>
               <span className="text-[11px] text-[#878787] ml-1">· 每日打卡可升级</span>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Save banner */}

@@ -2,6 +2,7 @@ export * as authService from './auth.service';
 export * as categoryService from './category.service';
 export * as knowledgeService from './knowledge.service';
 export * as favoriteService from './favorite.service';
+export * as browseService from './browse.service';
 export * as checkinService from './checkin.service';
 export * as correctionService from './correction.service';
 export * as aiService from './ai.service';
