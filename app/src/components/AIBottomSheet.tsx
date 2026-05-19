@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Sparkles, RefreshCw } from 'lucide-react';
+import { X, Sparkles, RefreshCw, Lock } from 'lucide-react';
 import { aiService } from '@/api';
 import type { AIExtendResult } from '@/api/ai.service';
+import { getPortalTarget } from '@/lib/portal';
 
 interface AIBottomSheetProps {
   isOpen: boolean;
@@ -14,15 +16,26 @@ interface AIBottomSheetProps {
 export function AIBottomSheet({ isOpen, onClose, title, knowledgeId }: AIBottomSheetProps) {
   const [items, setItems] = useState<AIExtendResult[]>([]);
   const [loading, setLoading] = useState(false);
+  const [quotaExceeded, setQuotaExceeded] = useState(false);
+  const [dailyLimit, setDailyLimit] = useState(10);
 
   const fetchItems = useCallback(async () => {
     if (!knowledgeId) return;
     setLoading(true);
+    setQuotaExceeded(false);
     try {
       const result = await aiService.extendKnowledge(knowledgeId);
       setItems(result);
-    } catch {
-      // keep previous items on error
+    } catch (error: any) {
+      const status = error?.response?.status;
+      const code = error?.response?.data?.code;
+      // code=403 表示次数用完
+      if (status === 403 || code === 403) {
+        setQuotaExceeded(true);
+        // 从接口返回数据中获取每日可用次数
+        const limit = error?.response?.data?.data?.daily_limit;
+        if (limit) setDailyLimit(limit);
+      }
     } finally {
       setLoading(false);
     }
@@ -32,10 +45,10 @@ export function AIBottomSheet({ isOpen, onClose, title, knowledgeId }: AIBottomS
     if (isOpen && knowledgeId) fetchItems();
   }, [isOpen, knowledgeId, fetchItems]);
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <>
+        <div className="absolute inset-0 z-[9999]">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -43,7 +56,7 @@ export function AIBottomSheet({ isOpen, onClose, title, knowledgeId }: AIBottomS
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="absolute inset-0 bg-[#121111]/50 z-[100] backdrop-blur-[3px]"
+            className="absolute inset-0 bg-[#121111]/50 backdrop-blur-[3px]"
           />
 
           {/* Sheet */}
@@ -52,7 +65,7 @@ export function AIBottomSheet({ isOpen, onClose, title, knowledgeId }: AIBottomS
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 28, stiffness: 220 }}
-            className="absolute bottom-0 left-0 right-0 h-[72%] bg-[#FDFDFD] z-[101] rounded-t-[24px] flex flex-col overflow-hidden"
+            className="absolute bottom-0 left-0 right-0 h-[72%] bg-[#FDFDFD] rounded-t-[24px] flex flex-col overflow-hidden"
           >
             {/* Handle */}
             <div className="flex justify-center pt-3 pb-1 shrink-0">
@@ -98,7 +111,24 @@ export function AIBottomSheet({ isOpen, onClose, title, knowledgeId }: AIBottomS
                   />
                   <p className="text-[13px] text-[#878787]">AI 正在生成延伸知识...</p>
                 </div>
-              ) : (
+              ) : quotaExceeded ? (
+                <div className="flex flex-col items-center justify-center py-12 gap-4">
+                  <div className="w-16 h-16 bg-[#F2F2F2] rounded-full flex items-center justify-center">
+                    <Lock size={28} strokeWidth={2} className="text-[#878787]" />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-[16px] font-bold text-[#121111] mb-1">今日免费次数已用完</p>
+                    <p className="text-[13px] text-[#878787]">每天有 {dailyLimit} 次免费 AI 解读机会</p>
+                  </div>
+                  <motion.button
+                    whileTap={{ scale: 0.97 }}
+                    onClick={onClose}
+                    className="w-[200px] bg-[#292526] text-[#FDFDFD] py-3.5 rounded-[100px] font-bold text-[14px] flex items-center justify-center gap-2 shadow-[0_4px_12px_rgba(41,37,38,0.2)]"
+                  >
+                    知道了
+                  </motion.button>
+                </div>
+              ) : items.length > 0 ? (
                 items.map((item, i) => (
                   <div key={i} className="flex gap-3">
                     <span className="text-[11px] font-bold text-[#DFDEDE] mt-0.5 shrink-0">
@@ -116,24 +146,31 @@ export function AIBottomSheet({ isOpen, onClose, title, knowledgeId }: AIBottomS
                     </div>
                   </div>
                 ))
+              ) : (
+                <div className="flex flex-col items-center justify-center py-12 gap-3">
+                  <p className="text-[13px] text-[#878787]">暂无延伸知识</p>
+                </div>
               )}
             </div>
 
             {/* Footer Button */}
-            <div className="px-5 py-4 shrink-0 border-t border-[#F2F2F2]">
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                onClick={fetchItems}
-                disabled={loading}
-                className="w-full bg-[#292526] text-[#FDFDFD] py-4 rounded-[100px] font-bold text-[14px] flex items-center justify-center gap-2 active:opacity-80 transition-opacity shadow-[0_4px_12px_rgba(41,37,38,0.2)]"
-              >
-                <RefreshCw size={15} strokeWidth={2.5} className={loading ? 'animate-spin' : ''} />
-                换一批延伸知识
-              </motion.button>
-            </div>
+            {!quotaExceeded && (
+              <div className="px-5 py-4 shrink-0 border-t border-[#F2F2F2]">
+                <motion.button
+                  whileTap={{ scale: 0.97 }}
+                  onClick={fetchItems}
+                  disabled={loading}
+                  className="w-full bg-[#292526] text-[#FDFDFD] py-4 rounded-[100px] font-bold text-[14px] flex items-center justify-center gap-2 active:opacity-80 transition-opacity shadow-[0_4px_12px_rgba(41,37,38,0.2)]"
+                >
+                  <RefreshCw size={15} strokeWidth={2.5} className={loading ? 'animate-spin' : ''} />
+                  换一批延伸知识
+                </motion.button>
+              </div>
+            )}
           </motion.div>
-        </>
+        </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    getPortalTarget()
   );
 }

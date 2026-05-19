@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Bell, Moon, Eye, Globe, Shield, Trash2, ChevronRight, Check, LogOut, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate } from 'react-router';
+import { getPortalTarget } from '@/lib/portal';
 import { PageHeader } from '@/components/PageHeader';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -97,10 +99,10 @@ function LanguageModal({
   onSelect: (code: string) => void;
   onClose: () => void;
 }) {
-  return (
+  return createPortal(
     <AnimatePresence>
       {open && (
-        <>
+        <div className="absolute inset-0 z-[9999]">
           {/* Backdrop */}
           <motion.div
             key="backdrop"
@@ -108,7 +110,7 @@ function LanguageModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="absolute inset-0 bg-[#121111]/50 z-40 backdrop-blur-[3px]"
+            className="absolute inset-0 bg-[#121111]/50 backdrop-blur-[3px]"
             onClick={onClose}
           />
 
@@ -119,7 +121,7 @@ function LanguageModal({
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', stiffness: 380, damping: 36 }}
-            className="absolute bottom-0 left-0 right-0 z-50 bg-[#FDFDFD] rounded-t-[24px] shadow-[0_-8px_30px_rgba(41,37,38,0.14)] overflow-hidden"
+            className="absolute bottom-0 left-0 right-0 bg-[#FDFDFD] rounded-t-[24px] shadow-[0_-8px_30px_rgba(41,37,38,0.14)] overflow-hidden"
           >
             {/* Handle */}
             <div className="flex justify-center pt-3 pb-1">
@@ -173,26 +175,27 @@ function LanguageModal({
               </motion.button>
             </div>
           </motion.div>
-        </>
+        </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    getPortalTarget()
   );
 }
 
 // ─── Logout Confirmation Modal ────────────────────────────────────────────────
 
 function LogoutModal({ open, onConfirm, onClose }: { open: boolean; onConfirm: () => void; onClose: () => void }) {
-  return (
+  return createPortal(
     <AnimatePresence>
       {open && (
-        <>
+        <div className="absolute inset-0 z-[9999]">
           <motion.div
             key="backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="absolute inset-0 bg-[#121111]/50 z-40 backdrop-blur-[3px]"
+            className="absolute inset-0 bg-[#121111]/50 backdrop-blur-[3px]"
             onClick={onClose}
           />
           <motion.div
@@ -201,7 +204,7 @@ function LogoutModal({ open, onConfirm, onClose }: { open: boolean; onConfirm: (
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', stiffness: 380, damping: 36 }}
-            className="absolute bottom-0 left-0 right-0 z-50 bg-[#FDFDFD] rounded-t-[24px] shadow-[0_-8px_30px_rgba(41,37,38,0.14)] overflow-hidden"
+            className="absolute bottom-0 left-0 right-0 bg-[#FDFDFD] rounded-t-[24px] shadow-[0_-8px_30px_rgba(41,37,38,0.14)] overflow-hidden"
           >
             <div className="flex justify-center pt-3 pb-1">
               <div className="w-10 h-1 bg-[#DFDEDE] rounded-full" />
@@ -232,9 +235,10 @@ function LogoutModal({ open, onConfirm, onClose }: { open: boolean; onConfirm: (
               </div>
             </div>
           </motion.div>
-        </>
+        </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    getPortalTarget()
   );
 }
 

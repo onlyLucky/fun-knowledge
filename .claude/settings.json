@@ -43,7 +43,9 @@
       "Skill(superpowers:systematic-debugging)",
       "Skill(superpowers:systematic-debugging:*)",
       "Bash(lsof -ti:5173,5174,5175,5176,5177)",
-      "Bash(xargs kill -9)"
+      "Bash(xargs kill -9)",
+      "Bash(./node_modules/.bin/tsc --noEmit)",
+      "Bash(pnpm tsc *)"
     ],
     "defaultMode": "bypassPermissions"
   },

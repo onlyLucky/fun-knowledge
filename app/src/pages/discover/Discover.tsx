@@ -1,4 +1,5 @@
 import { useNavigate, useSearchParams } from 'react-router';
+import { createPortal } from 'react-dom';
 import { knowledgeService, discoverService, mapKnowledgeToCard } from '@/api';
 import type { KnowledgeCard, HotSearchItem } from '@/types';
 import {
@@ -7,13 +8,14 @@ import {
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { PageHeader } from '@/components/PageHeader';
+import { getPortalTarget } from '@/lib/portal';
 
 const MAX_RECENT = 8;
 
 // ─── AI Recognition Overlay ───────────────────────────────────────────────────
 
 function AIRecognitionOverlay({ visible }: { visible: boolean }) {
-  return (
+  return createPortal(
     <AnimatePresence>
       {visible && (
         <motion.div
@@ -22,7 +24,7 @@ function AIRecognitionOverlay({ visible }: { visible: boolean }) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
-          className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#292526]/92 backdrop-blur-sm"
+          className="absolute inset-0 z-[9999] flex flex-col items-center justify-center bg-[#292526]/92 backdrop-blur-sm"
         >
           <div className="relative flex items-center justify-center mb-8">
             <div className="absolute w-[160px] h-[160px]">
@@ -65,7 +67,8 @@ function AIRecognitionOverlay({ visible }: { visible: boolean }) {
           </div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    getPortalTarget()
   );
 }
 

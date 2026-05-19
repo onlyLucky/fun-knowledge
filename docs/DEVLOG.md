@@ -9,6 +9,7 @@
 | 版本 | 日期 | 说明 |
 |------|------|------|
 | v0.1.0 | - | MVP 版本（规划中） |
+| v0.0.11 | 2026-05-19 | 弹窗容器优化与 AI 次数限制 |
 | v0.0.10 | 2026-05-18 | 首页卡片分页加载优化 |
 | v0.0.9 | 2026-05-17 | 系统管理模块与AI延伸解读 |
 | v0.0.8 | 2026-05-15 | 推荐系统与用户画像种子数据 |
@@ -337,6 +338,36 @@ FunFact/
 - `app/src/pages/home/Home.tsx` — 首页组件（分页加载逻辑）
 - `app/src/components/KnowledgeCard.tsx` — 卡片组件（收藏、纠错交互修复）
 - `app/src/components/ErrorReportSheet.tsx` — 纠错弹窗（事件冒泡阻止）
+
+---
+
+### 2026-05-19 - v0.0.11
+
+**弹窗容器层级优化与 AI 解读次数限制**
+
+#### 完成任务
+
+- 所有客户端弹窗容器渲染到 `#app-container` 内
+- AI 解读次数用完时显示解锁次数的用户界面
+- Toaster 消息提示层级最高（z-index: 10000）
+
+#### 技术实现
+
+- 创建 `portal.ts` 工具函数，统一 Portal 目标为 `#app-container`
+- 所有弹窗 z-index 统一为 `9999`，Toaster 为 `10000`
+- AIBottomSheet 添加次数用完状态检测（429 / 42900 / 10010 错误码）
+- 次数用完时显示 Lock 图标和"今日免费次数已用完"提示
+
+#### 相关文件
+
+- `app/src/lib/portal.ts` — Portal 目标工具函数（新增）
+- `app/src/components/AIBottomSheet.tsx` — AI 延伸解读弹窗（次数限制 UI）
+- `app/src/components/ErrorReportSheet.tsx` — 纠错弹窗（Portal 目标更新）
+- `app/src/pages/home/Home.tsx` — 首页分类弹窗（Portal 目标更新）
+- `app/src/pages/settings/SettingsPage.tsx` — 语言/退出弹窗（Portal 目标更新）
+- `app/src/pages/profile/ProfileEditPage.tsx` — 头像选择弹窗（Portal 目标更新）
+- `app/src/pages/discover/Discover.tsx` — AI 识别覆盖层（Portal 目标更新）
+- `app/src/app/App.tsx` — Toaster z-index 调整为 10000
 
 ---
 

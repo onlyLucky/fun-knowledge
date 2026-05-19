@@ -74,11 +74,8 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
 
   return (
     <motion.div
-      className={clsx(
-        "absolute inset-0 w-full h-full px-4 py-3 flex flex-col",
-        showReport ? "pointer-events-auto" : "pointer-events-none"
-      )}
-      style={{ zIndex: showReport ? 100 : zIndex }}
+      className="absolute inset-0 w-full h-full px-4 py-3 flex flex-col pointer-events-none"
+      style={{ zIndex }}
       initial={{ opacity: 0, y: 40 }}
       animate={{
         opacity: isActive ? 1 : 0,
@@ -95,7 +92,7 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
           "bg-[#FDFDFD] rounded-[20px] flex flex-col overflow-hidden h-full w-full shadow-[0_4px_20px_rgba(41,37,38,0.08)]",
           isActive ? "pointer-events-auto" : "pointer-events-none"
         )}
-        drag={isActive && !showReport ? "y" : false}
+        drag={isActive ? "y" : false}
         dragConstraints={{ top: 0, bottom: 0 }}
         dragElastic={0.15}
         onDragStart={handleDragStart}

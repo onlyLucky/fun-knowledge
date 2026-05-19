@@ -17,7 +17,7 @@ function App() {
           {/* <* className="w-full h-full max-w-[414px] max-h-[896px] bg-[#1C1A1B] relative sm:rounded-[44px] sm:shadow-[0_32px_80px_rgba(0,0,0,0.6)] sm:border-[8px] border-[#1a1a1a] flex flex-col overflow-hidden">*/}
           <div id="app-container" className="w-full h-full max-w-[414px] max-h-[100vh] bg-[#1C1A1B] relative sm:shadow-[0_32px_80px_rgba(0,0,0,0.6)] flex flex-col overflow-hidden">
             <Toaster
-              position="bottom-center"
+              position="top-center"
               gap={12}
               toastOptions={{
                 duration: 3000,
@@ -28,9 +28,10 @@ function App() {
                   borderRadius: '14px',
                   fontSize: '13px',
                   boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+                  marginTop: '8px',
                 },
               }}
-              className="!absolute !bottom-4 !z-[9999]"
+              className="!absolute !top-[60px] !z-[10000]"
             />
             {!splashDone ? (
               <SplashScreen onComplete={() => setSplashDone(true)} />

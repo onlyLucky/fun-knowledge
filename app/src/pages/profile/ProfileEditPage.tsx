@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, Check, Camera, X } from 'lucide-react';
+import { getPortalTarget } from '@/lib/portal';
 import { useUser } from '@/providers/UserContext';
 import { authService } from '@/api';
 
@@ -236,23 +238,24 @@ export function ProfileEditPage() {
       </div>
 
       {/* ── Avatar Picker Bottom Sheet ── */}
-      <AnimatePresence>
-        {showAvatarPicker && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/40 z-[200]"
-              onClick={() => setShowAvatarPicker(false)}
-            />
-            <motion.div
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{ type: 'spring', damping: 26, stiffness: 300 }}
-              className="absolute bottom-0 left-0 right-0 bg-[#FDFDFD] rounded-t-[28px] z-[201] overflow-hidden"
-            >
+      {createPortal(
+        <AnimatePresence>
+          {showAvatarPicker && (
+            <div className="absolute inset-0 z-[9999]">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 bg-black/40"
+                onClick={() => setShowAvatarPicker(false)}
+              />
+              <motion.div
+                initial={{ y: '100%' }}
+                animate={{ y: 0 }}
+                exit={{ y: '100%' }}
+                transition={{ type: 'spring', damping: 26, stiffness: 300 }}
+                className="absolute bottom-0 left-0 right-0 bg-[#FDFDFD] rounded-t-[28px] overflow-hidden"
+              >
               {/* Handle */}
               <div className="flex justify-center pt-3">
                 <div className="w-10 h-1 bg-[#DFDEDE] rounded-full" />
@@ -332,9 +335,11 @@ export function ProfileEditPage() {
                 )}
               </div>
             </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+            </div>
+          )}
+        </AnimatePresence>,
+        getPortalTarget()
+      )}
     </div>
   );
 }

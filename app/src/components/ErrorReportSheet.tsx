@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Send, CheckCircle2 } from 'lucide-react';
 import { correctionService } from '@/api';
 import { mapReasonToType } from '@/api/mappers';
+import { getPortalTarget } from '@/lib/portal';
 
 const ERROR_REASONS = [
   '内容描述不准确',
@@ -59,26 +61,23 @@ export function ErrorReportSheet({ isOpen, onClose, knowledgeId }: ErrorReportSh
     }, 300);
   };
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <>
+        <div className="absolute inset-0 z-[9999]">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/40 z-[200]"
+            className="absolute inset-0 bg-black/40"
             onClick={handleClose}
-            onTouchMove={(e) => e.stopPropagation()}
           />
           <motion.div
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 26, stiffness: 300 }}
-            className="absolute bottom-0 left-0 right-0 bg-[#FDFDFD] rounded-t-[28px] z-[201] overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-            onTouchMove={(e) => e.stopPropagation()}
+            className="absolute bottom-0 left-0 right-0 bg-[#FDFDFD] rounded-t-[28px] overflow-hidden"
           >
             {/* Handle */}
             <div className="flex justify-center pt-3 pb-1">
@@ -160,8 +159,9 @@ export function ErrorReportSheet({ isOpen, onClose, knowledgeId }: ErrorReportSh
               )}
             </div>
           </motion.div>
-        </>
+        </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    getPortalTarget()
   );
 }

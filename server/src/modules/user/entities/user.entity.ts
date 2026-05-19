@@ -62,6 +62,9 @@ export class User {
   @Column({ type: 'int', default: 0, comment: 'AI 使用次数' })
   ai_usage_count: number;
 
+  @Column({ type: 'date', nullable: true, comment: 'AI 使用次数重置日期' })
+  ai_usage_count_reset_at: string;
+
   @ApiProperty({ description: '多平台登录信息' })
   @Column({ type: 'jsonb', nullable: true, comment: '多平台登录信息 JSON' })
   user_auths: Record<string, any>;

@@ -1,16 +1,19 @@
 import { createElement, useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   SlidersHorizontal, CheckCircle2, Check,
   Sparkles, Leaf, Atom,Layers,CloudSun,
   Calculator, User, Utensils, Map, Palette,PawPrint,Volleyball,Earth,Gamepad2,Cpu,
 } from 'lucide-react';
-import { knowledgeService, categoryService, mapKnowledgeToCard, mapServerCategory } from '@/api';
+import { knowledgeService, categoryService, checkinService, mapKnowledgeToCard, mapServerCategory } from '@/api';
+import { toast } from 'sonner';
 import type { KnowledgeCard as KnowledgeCardType } from '@/types';
 import { KnowledgeCard } from '@/components/KnowledgeCard';
 import { AIBottomSheet } from '@/components/AIBottomSheet';
 import { PageHeader } from '@/components/PageHeader';
 import { clsx } from 'clsx';
+import { getPortalTarget } from '@/lib/portal';
 
 const iconMap: Record<string, any> = {
   Layers,Utensils,CloudSun,Atom, Calculator, Map, PawPrint, Leaf, User,Volleyball,Palette,Earth,Gamepad2,Cpu,Sparkles,
@@ -31,17 +34,17 @@ function CategoryModal({
   onClose: () => void;
   categories: { id: string; name: string; icon: string }[];
 }) {
-  return (
+  return createPortal(
     <AnimatePresence>
       {open && (
-        <>
+        <div className="absolute inset-0 z-[9999]">
           <motion.div
             key="backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="absolute inset-0 bg-[#121111]/50 z-40 backdrop-blur-[3px]"
+            className="absolute inset-0 bg-[#121111]/50 backdrop-blur-[3px]"
             onClick={onClose}
           />
 
@@ -51,7 +54,7 @@ function CategoryModal({
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', stiffness: 380, damping: 36 }}
-            className="absolute bottom-0 left-0 right-0 z-50 bg-[#FDFDFD] rounded-t-[24px] shadow-[0_-8px_30px_rgba(41,37,38,0.14)]"
+            className="absolute bottom-0 left-0 right-0 bg-[#FDFDFD] rounded-t-[24px] shadow-[0_-8px_30px_rgba(41,37,38,0.14)]"
           >
             {/* Handle */}
             <div className="flex justify-center pt-3 pb-1">
@@ -117,9 +120,10 @@ function CategoryModal({
               </motion.button>
             </div>
           </motion.div>
-        </>
+        </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    getPortalTarget()
   );
 }
 
@@ -224,10 +228,25 @@ export function Home() {
     if (currentIndex > 0) setCurrentIndex((prev) => prev - 1);
   };
 
-  const handleCheckIn = () => {
+  // 初始化时检查打卡状态
+  useEffect(() => {
+    checkinService.getCheckInStatus().then((status) => {
+      if (status.checked_in) {
+        setHasCheckedIn(true);
+        setCheckInDismissed(true);
+      }
+    }).catch(() => {});
+  }, []);
+
+  const handleCheckIn = async () => {
     if (viewedCount >= 3 && !hasCheckedIn) {
-      setHasCheckedIn(true);
-      setTimeout(() => setCheckInDismissed(true), 3000);
+      try {
+        await checkinService.checkIn();
+        setHasCheckedIn(true);
+        setTimeout(() => setCheckInDismissed(true), 3000);
+      } catch {
+        toast.error('打卡失败，请稍后重试');
+      }
     }
   };
 
