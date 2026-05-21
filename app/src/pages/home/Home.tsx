@@ -8,6 +8,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { knowledgeService, categoryService, checkinService, mapKnowledgeToCard, mapServerCategory } from '@/api';
+import { reportBehavior } from '@/api/knowledge.service';
 import { toast } from 'sonner';
 import type { KnowledgeCard as KnowledgeCardType } from '@/types';
 import { KnowledgeCard } from '@/components/KnowledgeCard';
@@ -160,6 +161,10 @@ export function Home() {
   const [loadingMore, setLoadingMore] = useState(false);
   const loadingMoreRef = useRef(false);
 
+  // 行为上报：浏览时长追踪
+  const browseStartRef = useRef(Date.now());
+  const prevIndexRef = useRef(0);
+
   // 加载首页数据
   useEffect(() => {
     let cancelled = false;
@@ -218,6 +223,17 @@ export function Home() {
   };
 
   const filteredCards = cards;
+
+  // 卡片切换时上报上一张卡片的浏览时长
+  useEffect(() => {
+    const prevCard = filteredCards[prevIndexRef.current];
+    if (prevCard && prevIndexRef.current !== currentIndex) {
+      const duration = Math.floor((Date.now() - browseStartRef.current) / 1000);
+      reportBehavior(prevCard.id, 'browse', duration).catch(() => {});
+    }
+    browseStartRef.current = Date.now();
+    prevIndexRef.current = currentIndex;
+  }, [currentIndex, filteredCards]);
 
   const handleSwipeUp = () => {
     if (currentIndex < filteredCards.length - 1) {
@@ -425,6 +441,12 @@ export function Home() {
                   isFirstCard={index === 0}
                   onPullProgress={handlePullProgress}
                   onPullEnd={handlePullEnd}
+                  onFavoriteToggle={(id, isFavorited) => {
+                    reportBehavior(id, 'favorite').catch(() => {});
+                  }}
+                  onAIClick={(id) => {
+                    reportBehavior(id, 'ai_extend').catch(() => {});
+                  }}
                 />
               );
             })

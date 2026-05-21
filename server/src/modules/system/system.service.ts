@@ -145,6 +145,42 @@ export class SystemService {
     return { deleted_count: deletedCount, freed_size: freedSize };
   }
 
+  /** 删除单个未使用资源 */
+  async deleteSingleResource(resourcePath: string): Promise<{ success: boolean }> {
+    if (!resourcePath || !resourcePath.startsWith('/uploads/knowledge/')) {
+      throw new BadRequestException('无效的资源路径');
+    }
+
+    // 确认该资源未被引用
+    const referencedUrls = await this.getReferencedUrls();
+    const referencedPaths = new Set(
+      referencedUrls
+        .filter((url) => url && url.startsWith('/uploads/knowledge/'))
+        .map((url) => url.replace('/uploads/', '')),
+    );
+
+    const relativePath = resourcePath.replace('/uploads/', '');
+    if (referencedPaths.has(relativePath)) {
+      throw new BadRequestException('该资源正在被使用，无法删除');
+    }
+
+    const baseDir = this.configService.get<string>('storage.localPath', './uploads');
+    const filePath = path.join(baseDir, relativePath);
+
+    if (!fs.existsSync(filePath)) {
+      throw new BadRequestException('资源文件不存在');
+    }
+
+    fs.unlinkSync(filePath);
+
+    // 清理空目录
+    const dir = path.dirname(filePath);
+    this.removeEmptyDirs(path.join(baseDir, 'knowledge'));
+
+    this.logger.log(`已删除单个资源: ${resourcePath}`);
+    return { success: true };
+  }
+
   /** 获取数据库中所有被引用的 resource_url */
   private async getReferencedUrls(): Promise<string[]> {
     const results = await this.knowledgeRepo

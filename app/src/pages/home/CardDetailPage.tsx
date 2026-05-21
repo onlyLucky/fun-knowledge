@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { Star, AlertCircle, Sparkles, ChevronLeft } from 'lucide-react';
 import { knowledgeService, favoriteService, browseService, mapKnowledgeToCard } from '@/api';
+import { reportBehavior } from '@/api/knowledge.service';
 import type { KnowledgeCard } from '@/types';
 import { AIBottomSheet } from '@/components/AIBottomSheet';
 import { ErrorReportSheet } from '@/components/ErrorReportSheet';
@@ -31,11 +32,22 @@ export function CardDetailPage() {
   const [showReportSheet, setShowReportSheet] = useState(false);
   const [showAISheet, setShowAISheet] = useState(false);
   const favoriteChanged = useRef(false);
+  const browseStartRef = useRef(Date.now());
 
   // Sync favorite state from server response
   useEffect(() => {
     if (card) setSaved(card.isFavorited);
   }, [card]);
+
+  // 页面卸载时上报浏览行为
+  useEffect(() => {
+    return () => {
+      if (id) {
+        const duration = Math.floor((Date.now() - browseStartRef.current) / 1000);
+        reportBehavior(id, 'browse', duration).catch(() => {});
+      }
+    };
+  }, [id]);
 
   // Emit favorite change when unmounting (navigating away)
   useEffect(() => {
@@ -52,8 +64,12 @@ export function CardDetailPage() {
     setSaved(next);
     favoriteChanged.current = true;
     try {
-      if (next) await favoriteService.addFavorite(id);
-      else await favoriteService.removeFavorite(id);
+      if (next) {
+        await favoriteService.addFavorite(id);
+        reportBehavior(id, 'favorite').catch(() => {});
+      } else {
+        await favoriteService.removeFavorite(id);
+      }
     } catch {
       setSaved(!next);
       favoriteChanged.current = false;
@@ -178,7 +194,7 @@ export function CardDetailPage() {
       <div className="shrink-0 px-5 pb-5 pt-3 bg-[#F2F2F2]">
         <motion.button
           whileTap={{ scale: 0.97 }}
-          onClick={() => setShowAISheet(true)}
+          onClick={() => { reportBehavior(id!, 'ai_extend').catch(() => {}); setShowAISheet(true); }}
           className="w-full bg-[#292526] rounded-[18px] p-4 flex items-center justify-between shadow-[0_6px_20px_rgba(41,37,38,0.18)]"
         >
           <div className="text-left">

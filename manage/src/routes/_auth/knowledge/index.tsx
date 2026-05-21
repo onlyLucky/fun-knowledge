@@ -132,7 +132,16 @@ function KnowledgePage() {
           sortOrder: search.sortOrder ?? undefined,
         },
       }),
-    select: (raw) => paginatedSchema.shape.data.parse(raw),
+    select: (raw) => {
+      const result = paginatedSchema.shape.data.safeParse(raw);
+      if (!result.success) {
+        console.error("Knowledge list parse error:", result.error);
+        // 回退：直接从 raw 中提取 list 和 total
+        const r = raw as { list?: KnowledgeType[]; total?: number };
+        return { list: r.list ?? [], total: r.total ?? 0 };
+      }
+      return result.data;
+    },
     createFn: (values) =>
       httpClient.post(KNOWLEDGE_ENDPOINTS.create, CreateKnowledgeRequestSchema.parse(values)),
     updateFn: ({ id, ...values }) => httpClient.put(KNOWLEDGE_ENDPOINTS.update(id), values),

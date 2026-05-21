@@ -48,12 +48,6 @@
     "sort_order": 8
   },
   {
-    "name": "科技前沿",
-    "icon": "https://cdn.funfact.com/icons/technology.png",
-    "description": "科技领域的最新发现",
-    "sort_order": 9
-  },
-  {
     "name": "文化艺术",
     "icon": "https://cdn.funfact.com/icons/culture.png",
     "description": "文化与艺术中的冷知识",

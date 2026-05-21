@@ -207,7 +207,17 @@ export class ImportService {
     }
 
     // 资源类型
-    const resourceType = raw['资源类型'] ? this.sanitizeText(String(raw['资源类型']), 20) : undefined;
+    const VALID_RESOURCE_TYPES = ['image', 'video', 'audio', 'model_3d', 'svg', 'webpage'];
+    let resourceType: string | undefined;
+    const rawResourceType = raw['资源类型'] ? this.sanitizeText(String(raw['资源类型']), 20) : '';
+    if (rawResourceType) {
+      if (!VALID_RESOURCE_TYPES.includes(rawResourceType)) {
+        throw new BadRequestException(
+          `第 ${rowNum} 行：资源类型不合法，允许值: ${VALID_RESOURCE_TYPES.join(', ')}`,
+        );
+      }
+      resourceType = rawResourceType;
+    }
 
     // 资源 URL：文件名或 http/https 在线地址
     let resourceUrl: string | undefined;
@@ -242,15 +252,43 @@ export class ImportService {
     let aiExtendData: string | undefined;
     const rawAiExtendData = raw['AI延伸解读数据'] ? String(raw['AI延伸解读数据']).trim() : '';
     if (rawAiExtendData) {
+      let parsed: unknown;
       try {
-        const parsed = JSON.parse(rawAiExtendData);
-        if (!Array.isArray(parsed)) {
-          throw new Error('必须为数组');
-        }
-        aiExtendData = rawAiExtendData;
+        parsed = JSON.parse(rawAiExtendData);
       } catch {
-        throw new BadRequestException(`第 ${rowNum} 行：AI延伸解读数据 JSON 格式不正确，需为 [{title, content, source?}] 数组`);
+        throw new BadRequestException(
+          `第 ${rowNum} 行：AI延伸解读数据 JSON 解析失败，需为 [{"title":"...","content":"...","source":"..."}] 格式的数组`,
+        );
       }
+      if (!Array.isArray(parsed)) {
+        throw new BadRequestException(
+          `第 ${rowNum} 行：AI延伸解读数据必须为数组，收到: ${typeof parsed}`,
+        );
+      }
+      for (let j = 0; j < parsed.length; j++) {
+        const item = parsed[j];
+        if (!item || typeof item !== 'object') {
+          throw new BadRequestException(
+            `第 ${rowNum} 行：AI延伸解读数据第 ${j + 1} 项不是对象`,
+          );
+        }
+        if (typeof item.title !== 'string' || !item.title.trim()) {
+          throw new BadRequestException(
+            `第 ${rowNum} 行：AI延伸解读数据第 ${j + 1} 项缺少 title 字段（字符串）`,
+          );
+        }
+        if (typeof item.content !== 'string' || !item.content.trim()) {
+          throw new BadRequestException(
+            `第 ${rowNum} 行：AI延伸解读数据第 ${j + 1} 项缺少 content 字段（字符串）`,
+          );
+        }
+        if (item.source !== undefined && typeof item.source !== 'string') {
+          throw new BadRequestException(
+            `第 ${rowNum} 行：AI延伸解读数据第 ${j + 1} 项 source 字段必须为字符串`,
+          );
+        }
+      }
+      aiExtendData = rawAiExtendData;
     }
 
     return {

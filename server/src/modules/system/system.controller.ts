@@ -2,7 +2,9 @@ import {
   Controller,
   Get,
   Post,
+  Delete,
   Body,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -31,5 +33,11 @@ export class SystemController {
   @ApiOperation({ summary: '执行系统管理操作' })
   async executeAction(@Body() dto: SystemActionDto): Promise<unknown> {
     return this.systemService.executeAction(dto.type, dto.params);
+  }
+
+  @Delete('resource')
+  @ApiOperation({ summary: '删除单个未使用资源' })
+  async deleteResource(@Query('path') resourcePath: string): Promise<{ success: boolean }> {
+    return this.systemService.deleteSingleResource(resourcePath);
   }
 }

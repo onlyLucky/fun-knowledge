@@ -19,9 +19,11 @@ interface KnowledgeCardProps {
   isFirstCard?: boolean;
   onPullProgress?: (distance: number) => void;
   onPullEnd?: () => void;
+  onFavoriteToggle?: (id: string, isFavorited: boolean) => void;
+  onAIClick?: (id: string) => void;
 }
 
-export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen, onSave, zIndex, initialSaved, isFirstCard, onPullProgress, onPullEnd }: KnowledgeCardProps) {
+export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen, onSave, zIndex, initialSaved, isFirstCard, onPullProgress, onPullEnd, onFavoriteToggle, onAIClick }: KnowledgeCardProps) {
   const [isSaved, setIsSaved] = useState(initialSaved ?? false);
 
   useEffect(() => {
@@ -181,9 +183,11 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
                 if (isSaved) {
                   await favoriteService.removeFavorite(card.id);
                   setIsSaved(false);
+                  onFavoriteToggle?.(card.id, false);
                 } else {
                   await favoriteService.addFavorite(card.id);
                   setIsSaved(true);
+                  onFavoriteToggle?.(card.id, true);
                   onSave?.();
                 }
               } catch {
@@ -207,7 +211,7 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
           {/* AI button */}
           <motion.button
             whileTap={{ scale: 0.92 }}
-            onClick={() => onAIOpen(card.id, card.title)}
+            onClick={() => { onAIClick?.(card.id); onAIOpen(card.id, card.title); }}
             className="flex items-center gap-2 bg-[#292526] text-[#FDFDFD] px-5 py-2.5 rounded-[100px] shadow-[0_4px_12px_rgba(41,37,38,0.25)]"
           >
             <Sparkles size={15} strokeWidth={2} />

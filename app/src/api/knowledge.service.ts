@@ -64,3 +64,15 @@ export async function getRecommendations(query: { category_id?: string; page?: n
   if (USE_MOCK) return getKnowledgeList(query);
   return client.get('/v1/knowledge/recommend', { params: query });
 }
+
+export async function reportBehavior(
+  knowledgeId: string,
+  action: 'browse' | 'favorite' | 'ai_extend',
+  browseDuration?: number,
+): Promise<void> {
+  return client.post('/v1/knowledge/recommend/behavior', {
+    knowledge_id: knowledgeId,
+    action,
+    browse_duration: browseDuration,
+  });
+}

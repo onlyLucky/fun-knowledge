@@ -155,11 +155,16 @@ export class ImportProcessor {
           knowledge.ai_extend_type = row.ai_extend_type;
         }
         if (row.ai_extend_data) {
-          try {
-            knowledge.ai_extend_data = JSON.parse(row.ai_extend_data);
-          } catch {
-            // parseRow 已验证过 JSON，此处兜底忽略
+          const parsed = JSON.parse(row.ai_extend_data);
+          if (!Array.isArray(parsed)) {
+            throw new Error('AI延伸解读数据必须为数组');
           }
+          for (const item of parsed) {
+            if (!item || typeof item !== 'object' || typeof item.title !== 'string' || typeof item.content !== 'string') {
+              throw new Error('AI延伸解读数据格式不正确，每项需包含 title 和 content 字段');
+            }
+          }
+          knowledge.ai_extend_data = parsed;
         }
 
         await this.knowledgeRepo.save(knowledge);

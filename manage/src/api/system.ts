@@ -5,6 +5,8 @@ import { z } from "zod/v4";
 export const SYSTEM_ENDPOINTS = {
   data: "/api/admin/v1/system/data",
   action: "/api/admin/v1/system/action",
+  deleteResource: (path: string) =>
+    `/api/admin/v1/system/resource?path=${encodeURIComponent(path)}`,
 } as const;
 
 /* ---------- 系统管理类型 ---------- */

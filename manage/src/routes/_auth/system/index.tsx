@@ -14,9 +14,9 @@ import {
   Divider,
 } from "antd";
 import { useLingui } from "@lingui/react/macro";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Trash2 } from "lucide-react";
+import { Trash2, Eye } from "lucide-react";
 import { httpClient } from "@/utils/http";
 import { formatStorage } from "@/utils/utils";
 import {
@@ -28,6 +28,7 @@ import {
 } from "@/api/system";
 import type { SystemDataGroup, StorageStatsData } from "@/api/system";
 import { z } from "zod/v4";
+import { UnusedResourcesModal } from "./-UnusedResourcesModal";
 
 const SearchParamsSchema = z.object({});
 
@@ -41,6 +42,7 @@ function SystemPage() {
   const { t } = useLingui();
   const queryClient = useQueryClient();
   const { token } = theme.useToken();
+  const [unusedResourcesOpen, setUnusedResourcesOpen] = useState(false);
 
   const { data: systemData, isLoading } = useQuery({
     queryKey: ["system-data"],
@@ -96,6 +98,7 @@ function SystemPage() {
                 stats={StorageStatsDataSchema.parse(storageItem.data)}
                 onClean={confirmClean}
                 cleanLoading={cleanMutation.isPending}
+                onViewUnused={() => setUnusedResourcesOpen(true)}
               />
             )}
             {otherItems.map((item) => (
@@ -147,6 +150,11 @@ function SystemPage() {
           )}
         </Spin>
       </div>
+
+      <UnusedResourcesModal
+        open={unusedResourcesOpen}
+        onClose={() => setUnusedResourcesOpen(false)}
+      />
     </Flex>
   );
 }
@@ -157,10 +165,12 @@ function StorageCard({
   stats,
   onClean,
   cleanLoading,
+  onViewUnused,
 }: {
   stats: StorageStatsData;
   onClean: () => void;
   cleanLoading: boolean;
+  onViewUnused: () => void;
 }) {
   const { t } = useLingui();
   const { token } = theme.useToken();
@@ -255,16 +265,26 @@ function StorageCard({
           </Typography.Text>
         )}
 
-        <Button
-          danger
-          block
-          icon={<Trash2 size={token.fontSize} />}
-          loading={cleanLoading}
-          disabled={stats.unused_files === 0}
-          onClick={onClean}
-        >
-          {t`清理未使用资源`}
-        </Button>
+        <Flex gap={token.marginSM}>
+          <Button
+            block
+            icon={<Eye size={token.fontSize} />}
+            disabled={stats.unused_files === 0}
+            onClick={onViewUnused}
+          >
+            {t`查看未使用资源`}
+          </Button>
+          <Button
+            danger
+            block
+            icon={<Trash2 size={token.fontSize} />}
+            loading={cleanLoading}
+            disabled={stats.unused_files === 0}
+            onClick={onClean}
+          >
+            {t`清理未使用资源`}
+          </Button>
+        </Flex>
       </Flex>
     </Card>
   );
