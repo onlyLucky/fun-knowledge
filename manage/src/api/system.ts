@@ -14,6 +14,8 @@ export const SYSTEM_ENDPOINTS = {
 export const SystemManageType = {
   STORAGE_STATS: "storage_stats",
   STORAGE_CLEAN: "storage_clean",
+  AVATAR_STORAGE_STATS: "avatar_storage_stats",
+  AVATAR_STORAGE_CLEAN: "avatar_storage_clean",
 } as const;
 
 export type SystemManageType = (typeof SystemManageType)[keyof typeof SystemManageType];

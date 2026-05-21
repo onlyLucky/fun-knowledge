@@ -5,20 +5,14 @@ export interface UserProfile {
   nickname: string;
   bio: string;
   avatarUrl: string;   // photo URL or empty string
-  avatarEmoji: string; // emoji fallback
-  avatarBg: string;    // bg color for emoji avatars
-  usePhoto: boolean;
   streak: number;
   totalCheckInDays: number;
 }
 
 const DEFAULT_PROFILE: UserProfile = {
   nickname: '知识探索者',
-  bio: '每天学一点，世界大一点 🌍',
+  bio: '每天学一点，世界大一点',
   avatarUrl: '',
-  avatarEmoji: '🌍',
-  avatarBg: '#292526',
-  usePhoto: false,
   streak: 0,
   totalCheckInDays: 0,
 };

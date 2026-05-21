@@ -1,79 +1,85 @@
 [
   {
     "name": "日常生活",
-    "icon": "https://cdn.funfact.com/icons/daily-life.png",
+    "icon": "Utensils",
     "description": "生活中的冷知识和小技巧",
     "sort_order": 1
   },
   {
     "name": "自然科学",
-    "icon": "https://cdn.funfact.com/icons/nature.png",
+    "icon": "CloudSun",
     "description": "大自然中的奇妙现象",
     "sort_order": 2
   },
   {
     "name": "科学原理",
-    "icon": "https://cdn.funfact.com/icons/science.png",
+    "icon": "Atom",
     "description": "有趣的科学知识和原理",
     "sort_order": 3
   },
   {
     "name": "数学趣闻",
-    "icon": "https://cdn.funfact.com/icons/math.png",
+    "icon": "Calculator",
     "description": "数学中的有趣知识",
     "sort_order": 4
   },
   {
     "name": "历史故事",
-    "icon": "https://cdn.funfact.com/icons/history.png",
+    "icon": "Map",
     "description": "历史上的冷知识和趣事",
     "sort_order": 5
   },
   {
     "name": "动物世界",
-    "icon": "https://cdn.funfact.com/icons/animal.png",
+    "icon": "PawPrint",
     "description": "动物界的奇妙知识",
     "sort_order": 6
   },
   {
     "name": "植物王国",
-    "icon": "https://cdn.funfact.com/icons/plant.png",
+    "icon": "Leaf",
     "description": "植物界的有趣知识",
     "sort_order": 7
   },
   {
     "name": "人体奥秘",
-    "icon": "https://cdn.funfact.com/icons/human-body.png",
+    "icon": "User",
     "description": "人体的奇妙之处",
     "sort_order": 8
   },
   {
+    "name": "体育运动",
+    "icon": "Volleyball",
+    "description": "全方位科普体育运动相关知识",
+    "sort_order": 9
+  },
+  {
     "name": "文化艺术",
-    "icon": "https://cdn.funfact.com/icons/culture.png",
+    "icon": "Palette",
     "description": "文化与艺术中的冷知识",
     "sort_order": 10
   },
   {
     "name": "宇宙天文",
-    "icon": "https://cdn.funfact.com/icons/astronomy.png",
+    "icon": "Earth",
     "description": "浩瀚宇宙中的天文奇观与太空冷知识",
     "sort_order": 11
   },
   {
     "name": "动漫游戏",
-    "icon": "https://cdn.funfact.com/icons/anime-game.png",
+    "icon": "Gamepad2",
     "description": "动漫与游戏中的趣味冷知识和幕后故事",
     "sort_order": 12
   },
   {
     "name": "文娱热点",
-    "icon": "https://cdn.funfact.com/icons/entertainment.png",
+    "icon": "Sparkles",
     "description": "影视、音乐、综艺等文娱领域的冷知识",
     "sort_order": 13
   },
   {
     "name": "数字科学",
-    "icon": "https://cdn.funfact.com/icons/digital-science.png",
+    "icon": "Cpu",
     "description": "计算机、人工智能等数字科技前沿知识",
     "sort_order": 14
   }

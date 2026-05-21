@@ -40,18 +40,45 @@ export class KnowledgeService {
       .andWhere('(c.status = :categoryStatus OR c.id IS NULL)', { categoryStatus: 1 });
 
     if (keyword) {
-      // 拆分为单字符模糊匹配，命中 80% 即可
-      const chars = [...new Set(keyword.trim())].filter((c) => c !== ' ');
-      if (chars.length > 0) {
-        const params: Record<string, string | number> = {};
-        const caseExprs = chars.map((char, i) => {
-          const key = `kw${i}`;
-          params[key] = `%${char}%`;
-          return `(CASE WHEN k.title ILIKE :${key} OR k.content ILIKE :${key} THEN 1 ELSE 0 END)`;
-        });
-        const threshold = Math.max(1, Math.floor(chars.length * 0.8));
-        params['kw_threshold'] = threshold;
-        qb.andWhere(`(${caseExprs.join(' + ')}) >= :kw_threshold`, params);
+      // 连续字符子串匹配，命中 80% 以上长度即可
+      const trimmed = keyword.trim();
+      if (trimmed.length > 0) {
+        const minLength = Math.max(1, Math.ceil(trimmed.length * 0.8));
+        const params: Record<string, string> = {};
+        const contentConditions: string[] = [];
+
+        // 生成所有长度 >= minLength 的连续子串
+        for (let len = minLength; len <= trimmed.length; len++) {
+          for (let i = 0; i <= trimmed.length - len; i++) {
+            const sub = trimmed.substring(i, i + len);
+            const key = `kw${len}_${i}`;
+            params[key] = `%${sub}%`;
+            contentConditions.push(`(k.title ILIKE :${key} OR k.content ILIKE :${key})`);
+          }
+        }
+
+        // 类目名称匹配条件
+        const categoryMatchParam = `%${trimmed}%`;
+        params['kw_category'] = categoryMatchParam;
+        const categoryCondition = `c.name ILIKE :kw_category`;
+
+        // 组合条件：标题/内容匹配 OR 类目名称匹配
+        const allConditions: string[] = [];
+        if (contentConditions.length > 0) {
+          allConditions.push(`(${contentConditions.join(' OR ')})`);
+        }
+        allConditions.push(categoryCondition);
+
+        qb.andWhere(`(${allConditions.join(' OR ')})`, params);
+
+        // 类目名称匹配优先排序
+        qb.addSelect(
+          `CASE WHEN c.name ILIKE '${categoryMatchParam.replace(/'/g, "''")}' THEN 1 ELSE 0 END`,
+          'category_match_score',
+        );
+        qb.addOrderBy('category_match_score', 'DESC');
+        qb.addOrderBy('c.sort_order', 'ASC');
+        qb.addOrderBy('c.weight', 'DESC');
       }
       // fire-and-forget 记录搜索关键词
       this.recordSearchKeyword(keyword).catch(() => {});
@@ -70,12 +97,12 @@ export class KnowledgeService {
     // 动态排序
     if (sortField && sortOrder) {
       const direction = sortOrder === 'ascend' ? 'ASC' : 'DESC';
-      qb.orderBy(`k.${sortField}`, direction);
+      qb.addOrderBy(`k.${sortField}`, direction);
       if (sortField !== 'sort_weight') {
         qb.addOrderBy('k.sort_weight', 'DESC');
       }
     } else {
-      qb.orderBy('k.sort_weight', 'DESC');
+      qb.addOrderBy('k.sort_weight', 'DESC');
       qb.addOrderBy('k.created_at', 'DESC');
     }
 

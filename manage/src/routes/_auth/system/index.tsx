@@ -42,7 +42,9 @@ function SystemPage() {
   const { t } = useLingui();
   const queryClient = useQueryClient();
   const { token } = theme.useToken();
-  const [unusedResourcesOpen, setUnusedResourcesOpen] = useState(false);
+  const [unusedResourcesType, setUnusedResourcesType] = useState<"knowledge" | "avatar" | null>(
+    null,
+  );
 
   const { data: systemData, isLoading } = useQuery({
     queryKey: ["system-data"],
@@ -76,11 +78,42 @@ function SystemPage() {
     });
   };
 
+  const cleanAvatarMutation = useMutation({
+    mutationFn: () =>
+      httpClient.post(SYSTEM_ENDPOINTS.action, {
+        type: SystemManageType.AVATAR_STORAGE_CLEAN,
+      }),
+    onSuccess: (raw) => {
+      const result = CleanResultDataSchema.parse(raw);
+      message.success(
+        t`清理完成：删除 ${result.deleted_count} 个文件，释放 ${formatStorage(result.freed_size)}`,
+      );
+      void queryClient.invalidateQueries({ queryKey: ["system-data"] });
+    },
+    onError: (err: Error) => message.error(err.message || t`清理失败`),
+  });
+
+  const confirmCleanAvatar = () => {
+    modal.confirm({
+      title: t`确定要清理未使用的头像资源吗？`,
+      content: t`此操作将删除所有未被用户引用的头像文件，不可撤销。`,
+      okText: t`清理`,
+      okType: "danger",
+      cancelText: t`取消`,
+      onOk: () => cleanAvatarMutation.mutate(),
+    });
+  };
+
   const tabItems = useMemo(() => {
     if (!systemData) return [];
     return systemData.groups.map((group: SystemDataGroup) => {
       const storageItem = group.items.find((i) => i.type === SystemManageType.STORAGE_STATS);
-      const otherItems = group.items.filter((i) => i.type !== SystemManageType.STORAGE_STATS);
+      const avatarItem = group.items.find((i) => i.type === SystemManageType.AVATAR_STORAGE_STATS);
+      const knownTypes = new Set<string>([
+        SystemManageType.STORAGE_STATS,
+        SystemManageType.AVATAR_STORAGE_STATS,
+      ]);
+      const otherItems = group.items.filter((i) => !knownTypes.has(i.type));
 
       return {
         key: group.key,
@@ -96,9 +129,19 @@ function SystemPage() {
             {storageItem && (
               <StorageCard
                 stats={StorageStatsDataSchema.parse(storageItem.data)}
+                title={t`知识卡片存储`}
                 onClean={confirmClean}
                 cleanLoading={cleanMutation.isPending}
-                onViewUnused={() => setUnusedResourcesOpen(true)}
+                onViewUnused={() => setUnusedResourcesType("knowledge")}
+              />
+            )}
+            {avatarItem && (
+              <StorageCard
+                stats={StorageStatsDataSchema.parse(avatarItem.data)}
+                title={t`用户头像存储`}
+                onClean={confirmCleanAvatar}
+                cleanLoading={cleanAvatarMutation.isPending}
+                onViewUnused={() => setUnusedResourcesType("avatar")}
               />
             )}
             {otherItems.map((item) => (
@@ -123,7 +166,14 @@ function SystemPage() {
         ),
       };
     });
-  }, [systemData, token, cleanMutation.isPending]);
+  }, [
+    systemData,
+    token,
+    cleanMutation.isPending,
+    cleanAvatarMutation.isPending,
+    confirmClean,
+    confirmCleanAvatar,
+  ]);
 
   return (
     <Flex
@@ -152,8 +202,9 @@ function SystemPage() {
       </div>
 
       <UnusedResourcesModal
-        open={unusedResourcesOpen}
-        onClose={() => setUnusedResourcesOpen(false)}
+        open={unusedResourcesType !== null}
+        storageType={unusedResourcesType}
+        onClose={() => setUnusedResourcesType(null)}
       />
     </Flex>
   );
@@ -161,13 +212,17 @@ function SystemPage() {
 
 /* ---- 存储统计卡片 ---- */
 
+const STORAGE_CARD_HEIGHT = 420;
+
 function StorageCard({
   stats,
+  title,
   onClean,
   cleanLoading,
   onViewUnused,
 }: {
   stats: StorageStatsData;
+  title: string;
   onClean: () => void;
   cleanLoading: boolean;
   onViewUnused: () => void;
@@ -180,18 +235,26 @@ function StorageCard({
   return (
     <Card
       size="small"
-      styles={{ body: { padding: token.paddingSM } }}
+      styles={{
+        body: {
+          padding: token.paddingSM,
+          display: "flex",
+          flexDirection: "column",
+          height: STORAGE_CARD_HEIGHT - 40,
+        },
+      }}
+      style={{ height: STORAGE_CARD_HEIGHT }}
       title={
         <Typography.Text
           strong
-          ellipsis={{ tooltip: t`知识卡片存储` }}
+          ellipsis={{ tooltip: title }}
           style={{ fontSize: token.fontSizeSM }}
         >
-          {t`知识卡片存储`}
+          {title}
         </Typography.Text>
       }
     >
-      <Flex vertical gap={token.marginSM}>
+      <Flex vertical gap={token.marginSM} style={{ flex: 1, minHeight: 0, overflowY: "auto" }}>
         <Flex justify="space-between">
           <Statistic title={t`总文件数`} value={stats.total_files} />
           <Statistic
@@ -264,27 +327,28 @@ function StorageCard({
             {t`所有资源均已被引用`}
           </Typography.Text>
         )}
+      </Flex>
 
-        <Flex gap={token.marginSM}>
-          <Button
-            block
-            icon={<Eye size={token.fontSize} />}
-            disabled={stats.unused_files === 0}
-            onClick={onViewUnused}
-          >
-            {t`查看未使用资源`}
-          </Button>
-          <Button
-            danger
-            block
-            icon={<Trash2 size={token.fontSize} />}
-            loading={cleanLoading}
-            disabled={stats.unused_files === 0}
-            onClick={onClean}
-          >
-            {t`清理未使用资源`}
-          </Button>
-        </Flex>
+      <Divider style={{ margin: `${token.marginSM}px 0 0` }} />
+      <Flex gap={token.marginSM} style={{ paddingTop: token.paddingSM }}>
+        <Button
+          block
+          icon={<Eye size={token.fontSize} />}
+          disabled={stats.unused_files === 0}
+          onClick={onViewUnused}
+        >
+          {t`查看未使用资源`}
+        </Button>
+        <Button
+          danger
+          block
+          icon={<Trash2 size={token.fontSize} />}
+          loading={cleanLoading}
+          disabled={stats.unused_files === 0}
+          onClick={onClean}
+        >
+          {t`清理未使用资源`}
+        </Button>
       </Flex>
     </Card>
   );

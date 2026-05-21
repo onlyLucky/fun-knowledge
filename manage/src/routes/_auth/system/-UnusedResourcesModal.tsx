@@ -3,12 +3,13 @@ import { Trash2, HardDrive } from "lucide-react";
 import { useLingui } from "@lingui/react/macro";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { httpClient } from "@/utils/http";
-import { SYSTEM_ENDPOINTS, StorageStatsDataSchema } from "@/api/system";
+import { SYSTEM_ENDPOINTS, SystemManageType, StorageStatsDataSchema } from "@/api/system";
 import type { StorageStatsData, UnusedResourceItem } from "@/api/system";
 import { API_BASE_URL } from "@/utils/constants";
 
 export type UnusedResourcesModalProps = {
   open: boolean;
+  storageType: "knowledge" | "avatar" | null;
   onClose: () => void;
 };
 
@@ -25,18 +26,25 @@ function formatSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-export function UnusedResourcesModal({ open, onClose }: UnusedResourcesModalProps) {
+export function UnusedResourcesModal({ open, storageType, onClose }: UnusedResourcesModalProps) {
   const { t } = useLingui();
   const { message } = App.useApp();
   const queryClient = useQueryClient();
+
+  const targetType =
+    storageType === "avatar"
+      ? SystemManageType.AVATAR_STORAGE_STATS
+      : SystemManageType.STORAGE_STATS;
 
   const { data, isLoading } = useQuery<StorageStatsData>({
     queryKey: ["system-data"],
     queryFn: () => httpClient.get(SYSTEM_ENDPOINTS.data),
     select: (raw) => {
-      const resp = raw as { groups?: Array<{ key?: string; items?: Array<{ data?: unknown }> }> };
+      const resp = raw as {
+        groups?: Array<{ key?: string; items?: Array<{ type?: string; data?: unknown }> }>;
+      };
       const storageGroup = resp.groups?.find((g) => g.key === "storage");
-      const statsItem = storageGroup?.items?.[0]?.data;
+      const statsItem = storageGroup?.items?.find((i) => i.type === targetType)?.data;
       return StorageStatsDataSchema.parse(statsItem);
     },
     enabled: open,

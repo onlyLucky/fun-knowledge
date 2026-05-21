@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { Star, Shield, Zap, Heart, ChevronRight } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';
+import { AppLogo } from '@/components/AppLogo';
 
 const FEATURES = [
   { icon: Zap, title: '每日精选', desc: '精心策划的冷知识，每天更新，拒绝信息噪音' },
@@ -29,8 +30,8 @@ export function AboutPage() {
         <div className="bg-[#292526] rounded-[24px] p-6 flex flex-col items-center text-center relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full translate-x-10 -translate-y-10" />
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -translate-x-8 translate-y-8" />
-          <div className="w-16 h-16 bg-[#FDFDFD] rounded-[20px] flex items-center justify-center text-3xl mb-4 shadow-lg relative z-10">
-            🌍
+          <div className="w-16 h-16 bg-[#1C1A1B] rounded-[20px] flex items-center justify-center text-3xl mb-4 shadow-lg relative z-10">
+            <AppLogo size={50} />
           </div>
           <h2 className="text-[#FDFDFD] text-[18px] font-bold mb-1 relative z-10">冷知识星球</h2>
           <p className="text-[#FDFDFD]/50 text-[12px] relative z-10">版本 1.0.0</p>
@@ -85,7 +86,7 @@ export function AboutPage() {
 
         {/* Credits */}
         <div className="flex flex-col items-center gap-1 py-2">
-          <p className="text-[11px] text-[#DFDEDE]">Made with ❤️ by 冷知识星球团队</p>
+          <p className="text-[11px] text-[#DFDEDE]">Made with by 冷知识星球团队</p>
           <p className="text-[10px] text-[#DFDEDE]">© 2026 冷知识星球 All rights reserved</p>
         </div>
       </div>

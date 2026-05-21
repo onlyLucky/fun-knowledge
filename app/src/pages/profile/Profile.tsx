@@ -5,13 +5,14 @@ import { motion } from 'motion/react';
 import { PageHeader } from '@/components/PageHeader';
 import { useUser } from '@/providers/UserContext';
 import { favoriteService, checkinService } from '@/api';
+import DefaultAvatar from '@/assets/images/avatar.png';
 
 // ─── Avatar display ───────────────────────────────────────────────────────────
 
 function Avatar({ size = 52 }: { size?: number }) {
   const { profile } = useUser();
   const style = { width: size, height: size, borderRadius: '100px', overflow: 'hidden' as const, flexShrink: 0 as const };
-  if (profile.usePhoto && profile.avatarUrl) {
+  if (profile.avatarUrl) {
     return (
       <div style={style} className="shadow-sm">
         <img src={profile.avatarUrl} alt="avatar" className="w-full h-full object-cover" />
@@ -19,11 +20,8 @@ function Avatar({ size = 52 }: { size?: number }) {
     );
   }
   return (
-    <div
-      style={{ ...style, backgroundColor: profile.avatarBg, fontSize: size * 0.44 }}
-      className="flex items-center justify-center shadow-sm"
-    >
-      {profile.avatarEmoji}
+    <div style={style} className="shadow-sm">
+      <img src={DefaultAvatar} alt="avatar" className="w-full h-full object-cover" />
     </div>
   );
 }

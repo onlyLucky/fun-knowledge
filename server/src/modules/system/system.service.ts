@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ConfigService } from '@nestjs/config';
 import { Knowledge } from '../knowledge/entities/knowledge.entity';
+import { User } from '../user/entities/user.entity';
 import { SystemManageType } from '../../common/enums/system-manage-type.enum';
 import type { SystemDataDto } from './dto/system-data.dto';
 import type { StorageStatsData, CleanResultData, StorageTypeStats, UnusedResourceItem } from './dto/storage.dto';
@@ -21,16 +22,23 @@ export class SystemService {
   constructor(
     @InjectRepository(Knowledge)
     private readonly knowledgeRepo: Repository<Knowledge>,
+    @InjectRepository(User)
+    private readonly userRepo: Repository<User>,
     private readonly configService: ConfigService,
   ) {
     this.handlers = {
       [SystemManageType.STORAGE_STATS]: () => this.getStorageStats(),
       [SystemManageType.STORAGE_CLEAN]: () => this.cleanUnusedResources(),
+      [SystemManageType.AVATAR_STORAGE_STATS]: () => this.getAvatarStorageStats(),
+      [SystemManageType.AVATAR_STORAGE_CLEAN]: () => this.cleanUnusedAvatarResources(),
     };
   }
 
   async getAllData(): Promise<SystemDataDto> {
-    const storageStats = await this.getStorageStats();
+    const [storageStats, avatarStats] = await Promise.all([
+      this.getStorageStats(),
+      this.getAvatarStorageStats(),
+    ]);
 
     return {
       groups: [
@@ -39,6 +47,7 @@ export class SystemService {
           label: '存储管理',
           items: [
             { type: SystemManageType.STORAGE_STATS, label: '知识卡片存储', data: storageStats },
+            { type: SystemManageType.AVATAR_STORAGE_STATS, label: '用户头像存储', data: avatarStats },
           ],
         },
       ],
@@ -145,26 +154,117 @@ export class SystemService {
     return { deleted_count: deletedCount, freed_size: freedSize };
   }
 
+  private async getAvatarStorageStats(): Promise<StorageStatsData> {
+    const baseDir = this.configService.get<string>('storage.localPath', './uploads');
+    const avatarDir = path.join(baseDir, 'avatar');
+
+    // 获取数据库中所有被引用的头像 URL
+    const referencedAvatars = await this.getReferencedAvatarUrls();
+    const referencedPaths = new Set(
+      referencedAvatars
+        .filter((url) => url && url.startsWith('/uploads/avatar/'))
+        .map((url) => url.replace('/uploads/', '')),
+    );
+
+    // 扫描 avatar 目录
+    const allFiles = this.scanDirectory(avatarDir, 'avatar');
+
+    let usedFiles = 0;
+    let usedSize = 0;
+    let unusedFiles = 0;
+    let unusedSize = 0;
+    const unusedItems: UnusedResourceItem[] = [];
+
+    for (const file of allFiles) {
+      if (referencedPaths.has(file.relativePath)) {
+        usedFiles++;
+        usedSize += file.size;
+      } else {
+        unusedFiles++;
+        unusedSize += file.size;
+        unusedItems.push({
+          path: `/uploads/${file.relativePath}`,
+          filename: file.filename,
+          size: file.size,
+          modified_at: file.modifiedAt,
+        });
+      }
+    }
+
+    return {
+      total_files: allFiles.length,
+      total_size: allFiles.reduce((sum, f) => sum + f.size, 0),
+      used_files: usedFiles,
+      used_size: usedSize,
+      unused_files: unusedFiles,
+      unused_size: unusedSize,
+      types: allFiles.length > 0 ? [{ type: 'avatar', count: allFiles.length, size: allFiles.reduce((sum, f) => sum + f.size, 0) }] : [],
+      unused_items: unusedItems,
+    };
+  }
+
+  private async cleanUnusedAvatarResources(): Promise<CleanResultData> {
+    const stats = await this.getAvatarStorageStats();
+    let deletedCount = 0;
+    let freedSize = 0;
+
+    const baseDir = this.configService.get<string>('storage.localPath', './uploads');
+
+    for (const item of stats.unused_items) {
+      try {
+        const filePath = path.join(baseDir, item.path.replace('/uploads/', ''));
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+          deletedCount++;
+          freedSize += item.size;
+        }
+      } catch (err) {
+        this.logger.warn(`删除头像文件失败: ${item.path}`, err);
+      }
+    }
+
+    this.removeEmptyDirs(path.join(baseDir, 'avatar'));
+
+    this.logger.log(`头像清理完成: 删除 ${deletedCount} 个文件，释放 ${freedSize} 字节`);
+    return { deleted_count: deletedCount, freed_size: freedSize };
+  }
+
   /** 删除单个未使用资源 */
   async deleteSingleResource(resourcePath: string): Promise<{ success: boolean }> {
-    if (!resourcePath || !resourcePath.startsWith('/uploads/knowledge/')) {
+    const isKnowledge = resourcePath.startsWith('/uploads/knowledge/');
+    const isAvatar = resourcePath.startsWith('/uploads/avatar/');
+
+    if (!resourcePath || (!isKnowledge && !isAvatar)) {
       throw new BadRequestException('无效的资源路径');
     }
 
     // 确认该资源未被引用
-    const referencedUrls = await this.getReferencedUrls();
-    const referencedPaths = new Set(
-      referencedUrls
-        .filter((url) => url && url.startsWith('/uploads/knowledge/'))
-        .map((url) => url.replace('/uploads/', '')),
-    );
-
-    const relativePath = resourcePath.replace('/uploads/', '');
-    if (referencedPaths.has(relativePath)) {
-      throw new BadRequestException('该资源正在被使用，无法删除');
+    if (isKnowledge) {
+      const referencedUrls = await this.getReferencedUrls();
+      const referencedPaths = new Set(
+        referencedUrls
+          .filter((url) => url && url.startsWith('/uploads/knowledge/'))
+          .map((url) => url.replace('/uploads/', '')),
+      );
+      const relativePath = resourcePath.replace('/uploads/', '');
+      if (referencedPaths.has(relativePath)) {
+        throw new BadRequestException('该资源正在被使用，无法删除');
+      }
+    } else {
+      const referencedAvatars = await this.getReferencedAvatarUrls();
+      const referencedPaths = new Set(
+        referencedAvatars
+          .filter((url) => url && url.startsWith('/uploads/avatar/'))
+          .map((url) => url.replace('/uploads/', '')),
+      );
+      const relativePath = resourcePath.replace('/uploads/', '');
+      if (referencedPaths.has(relativePath)) {
+        throw new BadRequestException('该资源正在被使用，无法删除');
+      }
     }
 
     const baseDir = this.configService.get<string>('storage.localPath', './uploads');
+    const relativePath = resourcePath.replace('/uploads/', '');
     const filePath = path.join(baseDir, relativePath);
 
     if (!fs.existsSync(filePath)) {
@@ -174,8 +274,8 @@ export class SystemService {
     fs.unlinkSync(filePath);
 
     // 清理空目录
-    const dir = path.dirname(filePath);
-    this.removeEmptyDirs(path.join(baseDir, 'knowledge'));
+    const parentDir = isKnowledge ? 'knowledge' : 'avatar';
+    this.removeEmptyDirs(path.join(baseDir, parentDir));
 
     this.logger.log(`已删除单个资源: ${resourcePath}`);
     return { success: true };
@@ -189,6 +289,16 @@ export class SystemService {
       .where('k.resource_url IS NOT NULL AND k.resource_url != :empty', { empty: '' })
       .getMany();
     return results.map((k) => k.resource_url);
+  }
+
+  /** 获取数据库中所有被引用的头像 URL */
+  private async getReferencedAvatarUrls(): Promise<string[]> {
+    const results = await this.userRepo
+      .createQueryBuilder('u')
+      .select('u.avatar')
+      .where('u.avatar IS NOT NULL AND u.avatar != :empty', { empty: '' })
+      .getMany();
+    return results.map((u) => u.avatar);
   }
 
   /** 递归扫描目录，返回文件列表 */
