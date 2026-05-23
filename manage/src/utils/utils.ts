@@ -1,3 +1,15 @@
+import { API_BASE_URL } from "./constants";
+
+/* ---------- URL 工具 ---------- */
+
+/** 将相对路径（如 /uploads/avatar/xxx.jpg）解析为完整 URL */
+export function resolveUrl(url: string): string {
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
+  const base = API_BASE_URL || window.location.origin;
+  return `${base}${url.startsWith("/") ? "" : "/"}${url}`;
+}
+
 /* ---------- 存储工具 ---------- */
 
 export const STORAGE_UNITS = ["B", "KB", "MB", "GB", "TB"] as const;

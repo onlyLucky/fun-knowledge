@@ -3,6 +3,7 @@ import { useLingui } from "@lingui/react/macro";
 import { Plus, Trash2, Upload } from "lucide-react";
 import { forwardRef, useMemo } from "react";
 import { FilterToolbar } from "@/components/FilterToolbar";
+import type { Category } from "@/api/category";
 
 const FILTER_CONTROL_WIDTH = 220;
 
@@ -11,8 +12,11 @@ export type ToolbarProps = {
   onKeywordChange: (value: string) => void;
   onSearch: (keyword: string) => void;
   onClearSearch: () => void;
+  categoryIdValue: string | undefined;
+  onCategoryChange: (categoryId: string) => void;
   statusValue: string | undefined;
   onStatusChange: (status: string) => void;
+  categories?: Category[];
   onCreateClick: () => void;
   onImportClick?: () => void;
   selectedCount?: number;
@@ -25,8 +29,11 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
     onKeywordChange,
     onSearch,
     onClearSearch,
+    categoryIdValue,
+    onCategoryChange,
     statusValue,
     onStatusChange,
+    categories,
     onCreateClick,
     onImportClick,
     selectedCount = 0,
@@ -55,6 +62,20 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
         ),
       },
       {
+        key: "category",
+        minWidth: FILTER_CONTROL_WIDTH,
+        children: (
+          <Select
+            allowClear
+            placeholder={t`类目`}
+            style={{ width: FILTER_CONTROL_WIDTH }}
+            value={categoryIdValue || undefined}
+            onChange={(v) => onCategoryChange(v ?? "")}
+            options={categories?.map((c) => ({ label: c.name, value: c.id }))}
+          />
+        ),
+      },
+      {
         key: "status",
         minWidth: FILTER_CONTROL_WIDTH,
         children: (
@@ -76,9 +97,12 @@ export const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar
       keywordInput,
       onClearSearch,
       onKeywordChange,
+      categoryIdValue,
+      onCategoryChange,
       onStatusChange,
       onSearch,
       statusValue,
+      categories,
       t,
       token.fontSize,
     ],

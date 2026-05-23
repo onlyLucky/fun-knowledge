@@ -6,6 +6,7 @@ import { useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Eye, Trash2 } from "lucide-react";
 import { httpClient } from "@/utils/http";
+import { resolveUrl } from "@/utils/utils";
 import { USER_ENDPOINTS } from "@/api/user";
 import { PaginatedResponseSchema, UserSchema } from "@/api/schemas";
 import type { User } from "@/api/schemas";
@@ -134,7 +135,7 @@ function UsersPage() {
       sorter: true,
       sortOrder: search.sortField === "nickname" ? search.sortOrder : null,
       render: (_: unknown, record: User) => {
-        const src = (record.avatar ?? "").trim() || undefined;
+        const src = resolveUrl(record.avatar ?? "") || undefined;
         return (
           <Flex align="center" gap={token.marginSM} style={{ minWidth: 0 }}>
             <Avatar size={24} src={src} shape="circle" style={{ flexShrink: 0 }}>

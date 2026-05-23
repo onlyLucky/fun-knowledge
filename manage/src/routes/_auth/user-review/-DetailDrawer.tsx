@@ -19,6 +19,7 @@ import {
   USER_REVIEW_STATUS_COLORS,
 } from "@/api/user-review";
 import type { UserReview } from "@/api/user-review";
+import { resolveUrl } from "@/utils/utils";
 
 type DetailDrawerProps = {
   open: boolean;
@@ -79,7 +80,7 @@ export function DetailDrawer({
       <Descriptions column={1} bordered size="small">
         <Descriptions.Item label={t`用户`}>
           <Space>
-            <Avatar src={review.user?.avatar} size="small">
+            <Avatar src={resolveUrl(review.user?.avatar ?? "") || undefined} size="small">
               {review.user?.nickname?.[0]}
             </Avatar>
             <span>{review.user?.nickname || "-"}</span>
@@ -114,9 +115,9 @@ export function DetailDrawer({
         {review.avatar && (
           <Descriptions.Item label={t`头像`}>
             <Space>
-              <Avatar src={review.user?.avatar} size="small" />
+              <Avatar src={resolveUrl(review.user?.avatar ?? "") || undefined} size="small" />
               <span>→</span>
-              <Avatar src={review.avatar} size="small" />
+              <Avatar src={resolveUrl(review.avatar ?? "") || undefined} size="small" />
             </Space>
           </Descriptions.Item>
         )}

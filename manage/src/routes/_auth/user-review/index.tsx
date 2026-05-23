@@ -6,6 +6,7 @@ import { useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Eye, Search } from "lucide-react";
 import { httpClient } from "@/utils/http";
+import { resolveUrl } from "@/utils/utils";
 import {
   USER_REVIEW_ENDPOINTS,
   USER_REVIEW_STATUS,
@@ -131,7 +132,7 @@ function UserReviewPage() {
       width: 200,
       render: (_: unknown, record: UserReview) => (
         <Space>
-          <Avatar src={record.user?.avatar} size="small">
+          <Avatar src={resolveUrl(record.user?.avatar ?? "") || undefined} size="small">
             {record.user?.nickname?.[0]}
           </Avatar>
           <span>{record.user?.nickname || "-"}</span>
@@ -139,10 +140,26 @@ function UserReviewPage() {
       ),
     },
     {
-      title: t`个性签名`,
-      key: "signature",
-      ellipsis: true,
-      render: (_: unknown, record: UserReview) => record.signature || record.user?.signature || "-",
+      title: t`审核类型`,
+      key: "review_type",
+      width: 200,
+      render: (_: unknown, record: UserReview) => {
+        const types: Array<{ label: string; color: string }> = [];
+        if (record.nickname) types.push({ label: t`昵称`, color: "blue" });
+        if (record.avatar) types.push({ label: t`头像`, color: "green" });
+        if (record.signature) types.push({ label: t`签名`, color: "orange" });
+        return types.length > 0 ? (
+          <Space size={4}>
+            {types.map((item) => (
+              <Tag key={item.label} color={item.color}>
+                {item.label}
+              </Tag>
+            ))}
+          </Space>
+        ) : (
+          "-"
+        );
+      },
     },
     {
       title: t`审核状态`,

@@ -5,20 +5,13 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { httpClient } from "@/utils/http";
 import { SYSTEM_ENDPOINTS, SystemManageType, StorageStatsDataSchema } from "@/api/system";
 import type { StorageStatsData, UnusedResourceItem } from "@/api/system";
-import { API_BASE_URL } from "@/utils/constants";
+import { resolveUrl } from "@/utils/utils";
 
 export type UnusedResourcesModalProps = {
   open: boolean;
   storageType: "knowledge" | "avatar" | null;
   onClose: () => void;
 };
-
-function resolveUrl(url: string): string {
-  if (!url) return "";
-  if (url.startsWith("http://") || url.startsWith("https://")) return url;
-  const base = API_BASE_URL || window.location.origin;
-  return `${base}${url.startsWith("/") ? "" : "/"}${url}`;
-}
 
 function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;

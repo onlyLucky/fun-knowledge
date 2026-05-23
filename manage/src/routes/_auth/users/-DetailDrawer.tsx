@@ -15,6 +15,7 @@ import {
 import { useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
 import { httpClient } from "@/utils/http";
+import { resolveUrl } from "@/utils/utils";
 import { USER_ENDPOINTS } from "@/api/user";
 import { UserSchema, type User } from "@/api/schemas";
 
@@ -48,7 +49,11 @@ export function DetailDrawer({ open, user, onClose, onStatusChange }: DetailDraw
       <Spin spinning={isLoading}>
         <Flex vertical justify="center" align="center">
           <Space>
-            <Avatar size={48} src={displayUser.avatar} shape="circle">
+            <Avatar
+              size={48}
+              src={resolveUrl(displayUser.avatar ?? "") || undefined}
+              shape="circle"
+            >
               {displayUser.nickname?.[0]?.toUpperCase()}
             </Avatar>
             {/* {displayUser.avatar && <Image src={displayUser.avatar} width={48} style={{ borderRadius: 4 }} />} */}

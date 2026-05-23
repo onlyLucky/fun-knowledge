@@ -3,7 +3,7 @@ import { Button, Form, App, Dropdown, theme, Tag, Flex, Space, Switch } from "an
 import type { TablePaginationConfig, Key } from "antd/es/table/interface";
 import { useLingui } from "@lingui/react/macro";
 import { useMemo, useRef, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { httpClient } from "@/utils/http";
 import {
   KNOWLEDGE_ENDPOINTS,
@@ -12,6 +12,7 @@ import {
   CreateKnowledgeRequestSchema,
   AiExtendType,
 } from "@/api/knowledge";
+import { CATEGORY_ENDPOINTS, CategorySchema } from "@/api/category";
 import { PaginatedResponseSchema } from "@/api/schemas";
 import type { Knowledge as KnowledgeType, CreateKnowledgeRequest } from "@/api/knowledge";
 import { z } from "zod/v4";
@@ -113,6 +114,15 @@ function KnowledgePage() {
       onOk: () => batchDeleteMutation.mutate(selectedRowKeys as string[]),
     });
   };
+
+  const { data: categories } = useQuery({
+    queryKey: ["categories", "enabled"],
+    queryFn: () => httpClient.get(CATEGORY_ENDPOINTS.enabled),
+    select: (raw: unknown) => {
+      const list = raw as unknown[];
+      return list.map((item) => CategorySchema.parse(item));
+    },
+  });
 
   const { data, isLoading, createMutation, updateMutation, deleteMutation } = useResourceCRUD<
     { list: KnowledgeType[]; total: number },
@@ -390,8 +400,13 @@ function KnowledgePage() {
           setKeywordInput("");
           setSearch({ ...search, keyword: "", page: 1 });
         }}
+        categoryIdValue={search.category_id || undefined}
+        onCategoryChange={(categoryId) =>
+          void navigate({ search: { ...search, category_id: categoryId, page: 1 } })
+        }
         statusValue={search.status || undefined}
         onStatusChange={(status) => void navigate({ search: { ...search, status, page: 1 } })}
+        categories={categories}
         onCreateClick={() => {
           setEditing(null);
           form.resetFields();
