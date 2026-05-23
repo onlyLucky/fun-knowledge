@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 import { toast } from 'sonner';
+import { globalLoading } from './global-loading';
 
 const client = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api',
@@ -36,9 +37,16 @@ client.interceptors.request.use((config) => {
   return config;
 });
 
+// Track active requests for global loading indicator
+client.interceptors.request.use((config) => {
+  globalLoading.start();
+  return config;
+});
+
 // Response interceptor: unwrap { code, message, data }, handle errors
 client.interceptors.response.use(
   (res) => {
+    globalLoading.stop();
     const body = res.data;
     if (body.code !== undefined && body.code !== 200) {
       const msg = body.message || '请求失败';
@@ -56,9 +64,13 @@ client.interceptors.response.use(
     if (status === 401 && !AUTH_ENDPOINTS.some((ep) => url.includes(ep)) && !originalRequest._retry) {
       if (isRefreshing) {
         // Queue the request while refreshing
+        globalLoading.stop();
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
-        }).then(() => client(originalRequest));
+        }).then(() => {
+          globalLoading.start();
+          return client(originalRequest);
+        });
       }
 
       originalRequest._retry = true;
@@ -70,6 +82,7 @@ client.interceptors.response.use(
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('auth_user');
+        globalLoading.stop();
         window.location.href = '/welcome';
         return Promise.reject(error);
       }
@@ -97,6 +110,7 @@ client.interceptors.response.use(
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('auth_user');
+        globalLoading.stop();
         window.location.href = '/welcome';
         return Promise.reject(refreshError);
       } finally {
@@ -112,6 +126,8 @@ client.interceptors.response.use(
        status === 500 ? '服务器错误' :
        '网络异常，请稍后重试');
     toast.error(msg);
+    // 非重试请求才停止 loading（401 重试的 stop 在重试完成后触发）
+    if (!originalRequest._retry) globalLoading.stop();
     return Promise.reject(error);
   }
 );

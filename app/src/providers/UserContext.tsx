@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
-import { authService, categoryService, setCategoryMap } from '@/api';
+import { authService, categoryService, setCategoryMap, resolveImageUrl } from '@/api';
+import { ReviewFieldInfo } from '@/api/types';
 
 export interface UserProfile {
   nickname: string;
@@ -7,6 +8,11 @@ export interface UserProfile {
   avatarUrl: string;   // photo URL or empty string
   streak: number;
   totalCheckInDays: number;
+  reviewInfo: {
+    avatar?: ReviewFieldInfo;
+    nickname?: ReviewFieldInfo;
+    signature?: ReviewFieldInfo;
+  };
 }
 
 const DEFAULT_PROFILE: UserProfile = {
@@ -15,25 +21,36 @@ const DEFAULT_PROFILE: UserProfile = {
   avatarUrl: '',
   streak: 0,
   totalCheckInDays: 0,
+  reviewInfo: {},
 };
 
 interface UserContextType {
   profile: UserProfile;
   updateProfile: (updates: Partial<UserProfile>) => void;
+  /** 启动时初始化：拉取 profile + categories */
   initProfile: () => Promise<void>;
+  /** 仅刷新 profile（不拉取 categories） */
+  refreshProfile: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType>({
   profile: DEFAULT_PROFILE,
   updateProfile: () => {},
   initProfile: async () => {},
+  refreshProfile: async () => {},
 });
 
 export function UserProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<UserProfile>(() => {
     try {
       const stored = localStorage.getItem('userProfile');
-      return stored ? { ...DEFAULT_PROFILE, ...JSON.parse(stored) } : DEFAULT_PROFILE;
+      if (!stored) return DEFAULT_PROFILE;
+      const parsed = JSON.parse(stored);
+      return {
+        ...DEFAULT_PROFILE,
+        ...parsed,
+        avatarUrl: resolveImageUrl(parsed.avatarUrl) || parsed.avatarUrl || '',
+      };
     } catch {
       return DEFAULT_PROFILE;
     }
@@ -56,10 +73,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
       setProfile((prev) => ({
         ...prev,
         nickname: serverUser.nickname || prev.nickname,
-        avatarUrl: serverUser.avatar || prev.avatarUrl,
+        avatarUrl: resolveImageUrl(serverUser.avatar) || prev.avatarUrl,
         bio: serverUser.signature || prev.bio,
         streak: serverUser.streak_days ?? prev.streak,
         totalCheckInDays: serverUser.total_check_in_days ?? prev.totalCheckInDays,
+        reviewInfo: serverUser.review_info || prev.reviewInfo,
       }));
       setCategoryMap(cats);
     } catch {
@@ -67,8 +85,25 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const refreshProfile = useCallback(async () => {
+    try {
+      const serverUser = await authService.getProfile();
+      setProfile((prev) => ({
+        ...prev,
+        nickname: serverUser.nickname || prev.nickname,
+        avatarUrl: resolveImageUrl(serverUser.avatar) || prev.avatarUrl,
+        bio: serverUser.signature || prev.bio,
+        streak: serverUser.streak_days ?? prev.streak,
+        totalCheckInDays: serverUser.total_check_in_days ?? prev.totalCheckInDays,
+        reviewInfo: serverUser.review_info || prev.reviewInfo,
+      }));
+    } catch {
+      // Server unavailable, keep localStorage defaults
+    }
+  }, []);
+
   return (
-    <UserContext.Provider value={{ profile, updateProfile, initProfile }}>
+    <UserContext.Provider value={{ profile, updateProfile, initProfile, refreshProfile }}>
       {children}
     </UserContext.Provider>
   );

@@ -156,7 +156,7 @@ export function Home() {
 
   const [cards, setCards] = useState<KnowledgeCardType[]>([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
+  const pageRef = useRef(1);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const loadingMoreRef = useRef(false);
@@ -170,7 +170,7 @@ export function Home() {
     let cancelled = false;
     async function load() {
       setLoading(true);
-      setPage(1);
+      pageRef.current = 1;
       setHasMore(true);
       try {
         const [serverCats, serverCards] = await Promise.all([
@@ -202,14 +202,14 @@ export function Home() {
     loadingMoreRef.current = true;
     setLoadingMore(true);
     try {
-      const nextPage = page + 1;
+      const nextPage = pageRef.current + 1;
       const result = activeCategory === 'all'
         ? await knowledgeService.getRecommendations({ page: nextPage, pageSize: PAGE_SIZE })
         : await knowledgeService.getKnowledgeList({ category_id: activeCategory, page: nextPage, pageSize: PAGE_SIZE });
       const newCards = result.list.map(mapKnowledgeToCard);
       if (newCards.length > 0) {
         setCards((prev) => [...prev, ...newCards]);
-        setPage(nextPage);
+        pageRef.current = nextPage;
         setHasMore(newCards.length === PAGE_SIZE);
       } else {
         setHasMore(false);
@@ -241,7 +241,7 @@ export function Home() {
       setCurrentIndex(nextIndex);
       if (viewedCount < 5) setViewedCount((prev) => prev + 1);
       // 预加载：当滑动到当前页一半时加载下一页
-      if (nextIndex >= page * PAGE_SIZE - PRELOAD_THRESHOLD && hasMore) {
+      if (nextIndex >= pageRef.current * PAGE_SIZE - PRELOAD_THRESHOLD && hasMore) {
         loadMore();
       }
     }
@@ -262,7 +262,7 @@ export function Home() {
     reloadCards
       .then((data) => {
         setCards(data.list.map(mapKnowledgeToCard));
-        setPage(1);
+        pageRef.current = 1;
         setCurrentIndex(0);
         setHasMore(data.list.length === PAGE_SIZE);
       })

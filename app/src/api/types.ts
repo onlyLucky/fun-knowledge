@@ -41,6 +41,12 @@ export interface ServerCategory {
   status: number;
 }
 
+export interface ReviewFieldInfo {
+  status: number; // 0=使用中, 1=审核中, 2=审核失败
+  value?: string;
+  msg?: string;
+}
+
 export interface ServerUser {
   id: string;
   nickname: string;
@@ -52,6 +58,11 @@ export interface ServerUser {
   total_check_in_days: number;
   ai_usage_count: number;
   user_auths?: Record<string, unknown>;
+  review_info?: {
+    avatar?: ReviewFieldInfo;
+    nickname?: ReviewFieldInfo;
+    signature?: ReviewFieldInfo;
+  };
   created_at: string;
 }
 

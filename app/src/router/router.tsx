@@ -3,7 +3,7 @@ import { AuthGuard, wrap } from "./index";
 import { ModalRoute } from "@/components/ModalRoute";
 import { Home, CardDetailPage, CategoryDetail } from "@/pages/home";
 import { Discover, HotSearchPage } from "@/pages/discover";
-import { Profile, ProfileEditPage, Favorites, BrowseHistory, CalendarPage } from "@/pages/profile";
+import { Profile, ProfileEditPage, AvatarEditPage, AvatarCropPage, NicknameEditPage, SignatureEditPage, Favorites, BrowseHistory, CalendarPage } from "@/pages/profile";
 import { SettingsPage, AboutPage, ContactUsPage, PrivacyPolicyPage, UserAgreementPage } from "@/pages/settings";
 import { ErrorReportPage, ErrorReportDetailPage, ReportContentPage } from "@/pages/report";
 import { WelcomePage, LoginPage, RegisterPage } from "@/pages/auth";
@@ -52,8 +52,12 @@ export const router = createBrowserRouter([
   },
 
   // Sub-pages (protected)
-  { path: "/profile/edit",      Component: wrap(ProfileEditPage) },
-  { path: "/calendar",          Component: wrap(CalendarPage) },
+  { path: "/profile/edit",          Component: wrap(ProfileEditPage) },
+  { path: "/profile/edit/avatar",       Component: wrap(AvatarEditPage) },
+  { path: "/profile/edit/avatar/crop", Component: wrap(AvatarCropPage) },
+  { path: "/profile/edit/nickname", Component: wrap(NicknameEditPage) },
+  { path: "/profile/edit/signature", Component: wrap(SignatureEditPage) },
+  { path: "/calendar",              Component: wrap(CalendarPage) },
   { path: "/settings",          Component: wrap(SettingsPage) },
   { path: "/about",             Component: wrap(AboutPage) },
   { path: "/error-reports",     Component: wrap(ErrorReportPage) },

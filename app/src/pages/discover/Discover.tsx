@@ -200,41 +200,54 @@ export function Discover() {
 
   const [searchResults, setSearchResults] = useState<KnowledgeCard[]>([]);
   const [searchPage, setSearchPage] = useState(1);
+  const searchPageRef = useRef(1);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const loadingMoreRef = useRef(false);
+  const loadingRef = useRef(false);
+  const searchScrollRef = useRef<HTMLDivElement>(null);
   const PAGE_SIZE = 20;
 
   useEffect(() => {
     const q = submittedQuery.trim();
-    if (!q) { setSearchResults([]); setSearchPage(1); setHasMore(true); return; }
+    if (!q) { setSearchResults([]); setSearchPage(1); searchPageRef.current = 1; setHasMore(true); loadingRef.current = false; loadingMoreRef.current = false; return; }
     let cancelled = false;
+    loadingMoreRef.current = false;
+    loadingRef.current = true;
+    if (searchScrollRef.current) searchScrollRef.current.scrollTop = 0;
     knowledgeService.getKnowledgeList({ keyword: q, page: 1, pageSize: PAGE_SIZE })
       .then((data) => {
         if (!cancelled) {
           setSearchResults(data.list.map(mapKnowledgeToCard));
           setSearchPage(1);
+          searchPageRef.current = 1;
           setHasMore(data.list.length >= PAGE_SIZE);
         }
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => { if (!cancelled) loadingRef.current = false; });
     return () => { cancelled = true; };
   }, [submittedQuery]);
 
   const loadMore = useCallback(async () => {
     const q = submittedQuery.trim();
-    if (!q || !hasMore || loadingMore) return;
+    if (!q || loadingMoreRef.current || loadingRef.current || !hasMore) return;
+    loadingMoreRef.current = true;
     setLoadingMore(true);
     try {
-      const data = await knowledgeService.getKnowledgeList({ keyword: q, page: searchPage + 1, pageSize: PAGE_SIZE });
+      const nextPage = searchPageRef.current + 1;
+      const data = await knowledgeService.getKnowledgeList({ keyword: q, page: nextPage, pageSize: PAGE_SIZE });
       setSearchResults((prev) => [...prev, ...data.list.map(mapKnowledgeToCard)]);
-      setSearchPage((p) => p + 1);
+      setSearchPage(nextPage);
+      searchPageRef.current = nextPage;
       setHasMore(data.list.length >= PAGE_SIZE);
     } catch {
       // ignore
     } finally {
+      loadingMoreRef.current = false;
       setLoadingMore(false);
     }
-  }, [submittedQuery, searchPage, hasMore, loadingMore]);
+  }, [submittedQuery, hasMore]);
 
   const addRecentSearch = useCallback((query: string) => {
     const q = query.trim();
@@ -409,6 +422,7 @@ export function Discover() {
       </div>
 
       <div
+        ref={searchScrollRef}
         className="flex-1 overflow-y-auto no-scrollbar px-5 pb-6"
         onScroll={(e) => {
           if (!isSearching) return;

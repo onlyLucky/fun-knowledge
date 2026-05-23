@@ -166,7 +166,7 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
 
           <div className="flex items-center mt-4 pt-4 border-t border-[#DFDEDE]">
             <div className="w-1.5 h-1.5 rounded-full bg-[#DFDEDE] mr-2" />
-            <span className="text-[11px] text-[#878787]">来源：{card.source}</span>
+            <span className="text-[11px] text-[#878787] line-clamp-1 overflow-hidden">来源：{card.source}</span>
           </div>
         </div>
 

@@ -115,9 +115,23 @@ export async function getProfile(): Promise<ServerUser> {
   return client.get('/v1/auth/profile');
 }
 
-export async function updateProfile(data: { nickname?: string; avatar?: string; signature?: string }): Promise<{ id: string; status: string }> {
-  if (USE_MOCK) return { id: 'mock-1', status: 'pending' };
+export async function updateProfile(data: { nickname?: string; avatar?: string; signature?: string }): Promise<{ pending: boolean; id?: string; status?: number } | null> {
+  if (USE_MOCK) return { pending: false };
   return client.put('/v1/auth/profile', data);
+}
+
+export async function uploadAvatar(file: File): Promise<{ url: string }> {
+  if (USE_MOCK) {
+    await new Promise((r) => setTimeout(r, 1000));
+    return { url: URL.createObjectURL(file) };
+  }
+  const formData = new FormData();
+  formData.append('file', file);
+  return client.post('/v1/upload?type=avatar', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 }
 
 export async function refreshToken(refreshToken: string): Promise<LoginTokens> {

@@ -5,6 +5,7 @@ import { router } from '@/router';
 import { UserProvider } from '@/providers/UserContext';
 import { AuthProvider } from '@/providers/AuthContext';
 import { SplashScreen } from '@/pages/auth/splash/SplashScreen';
+import { GlobalLoading } from '@/components/GlobalLoading';
 
 function App() {
   const [splashDone, setSplashDone] = useState(false);
@@ -16,6 +17,7 @@ function App() {
           {/* Mobile container */}
           {/* <* className="w-full h-full max-w-[414px] max-h-[896px] bg-[#1C1A1B] relative sm:rounded-[44px] sm:shadow-[0_32px_80px_rgba(0,0,0,0.6)] sm:border-[8px] border-[#1a1a1a] flex flex-col overflow-hidden">*/}
           <div id="app-container" className="w-full h-full max-w-[414px] max-h-[100vh] bg-[#1C1A1B] relative sm:shadow-[0_32px_80px_rgba(0,0,0,0.6)] flex flex-col overflow-hidden">
+            <GlobalLoading />
             <Toaster
               position="top-center"
               gap={12}

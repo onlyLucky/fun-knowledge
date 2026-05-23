@@ -1,5 +1,9 @@
 export { Profile } from './Profile';
 export { ProfileEditPage } from './ProfileEditPage';
+export { AvatarEditPage } from './AvatarEditPage';
+export { AvatarCropPage } from './AvatarCropPage';
+export { NicknameEditPage } from './NicknameEditPage';
+export { SignatureEditPage } from './SignatureEditPage';
 export { Favorites } from './Favorites';
 export { BrowseHistory } from './BrowseHistory';
 export { CalendarPage } from './CalendarPage';

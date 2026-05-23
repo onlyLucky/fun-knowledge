@@ -132,7 +132,7 @@ export function Profile() {
               {/* Edit badge */}
               <motion.button
                 whileTap={{ scale: 0.88 }}
-                onClick={() => navigate('/profile/edit')}
+                onClick={() => navigate('/profile/edit/avatar')}
                 className="absolute -bottom-0.5 -right-0.5 w-[20px] h-[20px] bg-white rounded-full flex items-center justify-center shadow-md"
               >
                 <Pencil size={10} strokeWidth={2.5} className="text-[#292526]" />

@@ -81,7 +81,7 @@ export function CalendarPage() {
           ].map((stat) => (
             <div
               key={stat.label}
-              className={`rounded-[16px] p-3 flex flex-col items-center border ${
+              className={`rounded-[16px] p-3 flex flex-col items-center justify-center border ${
                 stat.highlight
                   ? 'bg-[#292526] border-transparent'
                   : 'bg-[#FDFDFD] border-[#DFDEDE]/50'

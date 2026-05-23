@@ -17,11 +17,14 @@ export function Favorites() {
   const [submittedQuery, setSubmittedQuery] = useState(() => searchParams.get('q') || '');
 
   const [saved, setSaved] = useState<KnowledgeCard[]>([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const pageRef = useRef(1);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const loadingMoreRef = useRef(false);
+  const loadingRef = useRef(true);
   const [toggling, setToggling] = useState<string | null>(null);
   const [aiSheet, setAiSheet] = useState<{ open: boolean; title: string; knowledgeId: string }>({ open: false, title: '', knowledgeId: '' });
 
@@ -47,32 +50,39 @@ export function Favorites() {
     const q = submittedQuery.trim();
     setLoading(true);
     setPage(1);
+    pageRef.current = 1;
     setHasMore(true);
+    loadingMoreRef.current = false;
+    loadingRef.current = true;
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
     fetchFavorites(q, 1)
       .then((data) => {
         if (!cancelled) {
           setSaved(data.list.map(mapKnowledgeToCard));
+          setTotal(data.total);
           setHasMore(data.list.length === PAGE_SIZE);
         }
       })
       .catch(() => {})
-      .finally(() => { if (!cancelled) setLoading(false); });
+      .finally(() => { if (!cancelled) { setLoading(false); loadingRef.current = false; } });
     return () => { cancelled = true; };
   }, [submittedQuery, fetchFavorites]);
 
   // Load more
   const loadMore = useCallback(async () => {
-    if (loadingMoreRef.current || !hasMore) return;
+    if (loadingMoreRef.current || loadingRef.current || !hasMore) return;
     loadingMoreRef.current = true;
     setLoadingMore(true);
     try {
       const q = submittedQuery.trim();
-      const nextPage = page + 1;
+      const nextPage = pageRef.current + 1;
       const data = await fetchFavorites(q, nextPage);
       const newCards = data.list.map(mapKnowledgeToCard);
       if (newCards.length > 0) {
         setSaved((prev) => [...prev, ...newCards]);
+        setTotal(data.total);
         setPage(nextPage);
+        pageRef.current = nextPage;
         setHasMore(newCards.length === PAGE_SIZE);
       } else {
         setHasMore(false);
@@ -83,7 +93,7 @@ export function Favorites() {
       loadingMoreRef.current = false;
       setLoadingMore(false);
     }
-  }, [submittedQuery, page, hasMore, fetchFavorites]);
+  }, [submittedQuery, hasMore, fetchFavorites]);
 
   // Pull-to-refresh
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -107,15 +117,20 @@ export function Favorites() {
     if (pullDistance >= PULL_THRESHOLD) {
       setRefreshing(true);
       setPullDistance(40);
+      loadingMoreRef.current = false;
+      loadingRef.current = true;
       const q = submittedQuery.trim();
       fetchFavorites(q, 1)
         .then((data) => {
           setSaved(data.list.map(mapKnowledgeToCard));
+          setTotal(data.total);
           setPage(1);
+          pageRef.current = 1;
           setHasMore(data.list.length === PAGE_SIZE);
         })
         .catch(() => {})
         .finally(() => {
+          loadingRef.current = false;
           setTimeout(() => {
             setRefreshing(false);
             setPullDistance(0);
@@ -164,7 +179,7 @@ export function Favorites() {
     <div className="flex flex-col h-full bg-[#F2F2F2] relative">
       <PageHeader
         title="我的收藏"
-        subtitle={`共 ${saved.length} 张知识卡片`}
+        subtitle={`共 ${total} 张知识卡片`}
       />
 
       {/* Search bar */}
@@ -277,24 +292,30 @@ export function Favorites() {
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-[#121111]/10" />
+                  {/* Category tag - top left */}
+                  <span className="absolute top-2 left-2 text-[9px] text-white bg-[#121111]/60 backdrop-blur-sm px-2 py-0.5 rounded-[100px]">
+                    {card.category}
+                  </span>
                 </div>
 
                 {/* Content */}
                 <div className="flex-1 p-4 flex flex-col justify-between min-w-0">
                   <div>
-                    <span className="text-[10px] text-[#878787] bg-[#F2F2F2] px-2 py-0.5 rounded-[100px]">
-                      {card.category}
-                    </span>
-                    <h3 className="text-[14px] font-bold text-[#121111] mt-2 leading-snug line-clamp-2">
+                    <h3 className="text-[14px] font-bold text-[#121111] leading-snug line-clamp-2">
                       {card.title}
                     </h3>
+                    {card.description && (
+                      <p className="text-[12px] text-[#878787] mt-1.5 leading-snug line-clamp-1">
+                        {card.description}
+                      </p>
+                    )}
                   </div>
                   <div className="flex items-center justify-between mt-2">
-                    <div className="flex items-center gap-1">
-                      <div className="w-1 h-1 rounded-full bg-[#DFDEDE]" />
-                      <span className="text-[10px] text-[#878787]">{card.source}</span>
+                    <div className="flex items-center gap-1 min-w-0">
+                      <div className="w-1 h-1 rounded-full bg-[#DFDEDE] shrink-0" />
+                      <span className="text-[10px] text-[#878787] truncate">{card.source}</span>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 shrink-0">
                       <motion.button
                         whileTap={{ scale: 0.8 }}
                         className="w-7 h-7 bg-[#F2F2F2] rounded-[8px] flex items-center justify-center"
