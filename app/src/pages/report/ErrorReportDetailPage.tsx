@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router';
+import { useParams, useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import { CheckCircle2, Clock, XCircle, MessageSquare, FileText } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';
@@ -56,15 +56,33 @@ const TIMELINE: Record<Status, { step: string; done: boolean }[]> = {
 
 export function ErrorReportDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [report, setReport] = useState<ServerCorrection | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!id) return;
-    correctionService.getCorrections({ pageSize: 100 }).then((res) => {
-      const found = res.list.find((r) => r.id === id);
-      setReport(found || null);
-    }).catch(() => {});
+    setLoading(true);
+    correctionService.getCorrection(id)
+      .then((data) => setReport(data))
+      .catch(() => setReport(null))
+      .finally(() => setLoading(false));
   }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col h-full bg-[#F2F2F2]">
+        <PageHeader title="纠错详情" />
+        <div className="flex-1 flex items-center justify-center">
+          <motion.div
+            className="w-6 h-6 border-2 border-[#DFDEDE] border-t-[#292526] rounded-full"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
+          />
+        </div>
+      </div>
+    );
+  }
 
   if (!report) {
     return (
@@ -104,28 +122,49 @@ export function ErrorReportDetailPage() {
           </div>
         </motion.div>
 
-        {/* Referenced card */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.05 }}
-          className="bg-[#FDFDFD] rounded-[20px] overflow-hidden border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]"
-        >
-          <div className="px-4 pt-4 pb-2">
-            <p className="text-[10px] font-medium text-[#878787] uppercase tracking-wider mb-3">关联卡片</p>
-          </div>
-          <div className="flex items-center gap-3 px-4 pb-4">
-            <div className="w-14 h-14 rounded-[12px] overflow-hidden bg-[#F2F2F2] shrink-0">
-              {card && <img src={resolveImageUrl(card.resource_url)} alt="" className="w-full h-full object-cover" />}
+        {/* Referenced card - Favorites style */}
+        {card && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 }}
+            onClick={() => navigate(`/card/${card.id}`)}
+            className="bg-[#FDFDFD] rounded-[18px] overflow-hidden border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)] flex cursor-pointer active:opacity-80 transition-opacity"
+          >
+            {/* Thumbnail */}
+            <div className="w-[90px] shrink-0 bg-[#F2F2F2] relative">
+              <img
+                src={resolveImageUrl(card.resource_url)}
+                alt={card.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-[#121111]/10" />
+              {/* <span className="absolute top-2 left-2 text-[9px] text-white bg-[#121111]/60 backdrop-blur-sm px-2 py-0.5 rounded-[100px]">
+                {card.category?.name || '未分类'}
+              </span> */}
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-[14px] font-bold text-[#121111] line-clamp-2 leading-snug">
-                {card?.title || '未知卡片'}
-              </p>
-              <span className="text-[10px] text-[#878787] mt-1 inline-block">{card?.category?.name || '未分类'}</span>
+
+            {/* Content */}
+            <div className="flex-1 p-4 flex flex-col justify-between min-w-0">
+              <div>
+                <h3 className="text-[14px] font-bold text-[#121111] leading-snug line-clamp-2">
+                  {card.title}
+                </h3>
+                {card.content && (
+                  <p className="text-[12px] text-[#878787] mt-1.5 leading-snug line-clamp-1">
+                    {card.content}
+                  </p>
+                )}
+              </div>
+              <div className="flex items-center mt-2">
+                <div className="flex items-center gap-1 min-w-0">
+                  <div className="w-1 h-1 rounded-full bg-[#DFDEDE] shrink-0" />
+                  <span className="text-[10px] text-[#878787] truncate">{card.source}</span>
+                </div>
+              </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        )}
 
         {/* Report content */}
         <motion.div

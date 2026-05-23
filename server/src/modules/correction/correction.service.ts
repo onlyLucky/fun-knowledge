@@ -48,13 +48,29 @@ export class CorrectionService {
   }
 
   /**
+   * 获取纠错详情
+   */
+  async findOne(id: string, userId: string): Promise<Correction> {
+    const correction = await this.correctionRepo.findOne({
+      where: { id, user_id: userId },
+      relations: ['knowledge'],
+    });
+
+    if (!correction) {
+      throw new NotFoundException('纠错记录不存在');
+    }
+
+    return correction;
+  }
+
+  /**
    * 获取我的纠错列表
    */
   async findMyCorrections(
     userId: string,
     query: QueryCorrectionDto,
   ): Promise<PaginatedResponseDto<Correction>> {
-    const { page = 1, pageSize = 10, status } = query;
+    const { page = 1, pageSize = 10, status, keyword } = query;
 
     const qb = this.correctionRepo
       .createQueryBuilder('c')
@@ -63,6 +79,11 @@ export class CorrectionService {
 
     if (status !== undefined) {
       qb.andWhere('c.status = :status', { status });
+    }
+
+    if (keyword) {
+      const trimmedKw = keyword.trim();
+      qb.andWhere('(k.title ILIKE :kw OR c.description ILIKE :kw)', { kw: `%${trimmedKw}%` });
     }
 
     qb.orderBy('c.created_at', 'DESC');

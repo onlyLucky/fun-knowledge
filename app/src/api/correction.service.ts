@@ -19,3 +19,10 @@ export async function getCorrections(query: { page?: number; pageSize?: number; 
   }
   return client.get('/v1/correction/list', { params: query });
 }
+
+export async function getCorrection(id: string): Promise<ServerCorrection> {
+  if (USE_MOCK) {
+    return {} as ServerCorrection;
+  }
+  return client.get(`/v1/correction/${id}`);
+}

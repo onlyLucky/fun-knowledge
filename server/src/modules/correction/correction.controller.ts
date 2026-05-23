@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
@@ -27,5 +27,14 @@ export class CorrectionController {
     @CurrentUser() user: RequestUser,
   ) {
     return this.correctionService.findMyCorrections(user.id, query);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: '获取纠错详情' })
+  async findOne(
+    @Param('id') id: string,
+    @CurrentUser() user: RequestUser,
+  ) {
+    return this.correctionService.findOne(id, user.id);
   }
 }
