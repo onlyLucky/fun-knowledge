@@ -126,5 +126,13 @@
     "description": "批量上传允许的资源 MIME 类型",
     "group": "upload",
     "config_type": "textarea"
+  },
+  {
+    "config_key": "user_review_enabled",
+    "config_value": "true",
+    "description": "是否开启用户信息审核",
+    "group": "user",
+    "config_type": "switch",
+    "options": "[{\"label\":\"开启\",\"value\":\"true\"},{\"label\":\"关闭\",\"value\":\"false\"}]"
   }
 ]

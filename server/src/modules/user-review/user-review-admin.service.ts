@@ -90,26 +90,45 @@ export class UserReviewAdminService {
 
       await queryRunner.manager.save(UserReview, review);
 
-      // 如果审核通过，更新用户表
-      if (dto.status === UserReviewStatus.APPROVED) {
-        const user = await this.userRepo.findOne({
-          where: { id: review.user_id },
-        });
+      // 获取用户信息
+      const user = await this.userRepo.findOne({
+        where: { id: review.user_id },
+      });
 
-        if (user) {
+      if (user) {
+        const reviewInfo = { ...(user.review_info || {}) };
+
+        if (dto.status === UserReviewStatus.APPROVED) {
+          // 审核通过：更新用户字段 + review_info 状态
           if (review.nickname) {
             user.nickname = review.nickname;
+            reviewInfo.nickname = { status: 0 };
           }
           if (review.avatar) {
             user.avatar = review.avatar;
+            reviewInfo.avatar = { status: 0 };
           }
           if (review.signature) {
             user.signature = review.signature;
+            reviewInfo.signature = { status: 0 };
           }
-
-          await queryRunner.manager.save(User, user);
           this.logger.log(`审核通过，已更新用户 ${review.user_id} 的信息`);
+        } else if (dto.status === UserReviewStatus.REJECTED) {
+          // 审核驳回：更新 review_info 状态和拒绝原因
+          if (review.nickname) {
+            reviewInfo.nickname = { status: 2, value: review.nickname, msg: dto.review_remark || '审核未通过' };
+          }
+          if (review.avatar) {
+            reviewInfo.avatar = { status: 2, value: review.avatar, msg: dto.review_remark || '审核未通过' };
+          }
+          if (review.signature) {
+            reviewInfo.signature = { status: 2, value: review.signature, msg: dto.review_remark || '审核未通过' };
+          }
+          this.logger.log(`审核驳回，用户 ${review.user_id}`);
         }
+
+        user.review_info = reviewInfo;
+        await queryRunner.manager.save(User, user);
       }
 
       await queryRunner.commitTransaction();

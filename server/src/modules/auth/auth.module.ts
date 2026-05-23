@@ -18,6 +18,7 @@ import { AdminJwtStrategy } from './strategies/admin-jwt.strategy';
 
 import { UserReviewModule } from '../user-review/user-review.module';
 import { SmsModule } from '../sms/sms.module';
+import { ConfigModule as AppConfigModule } from '../config/config.module';
 
 /**
  * 认证模块
@@ -53,6 +54,9 @@ import { SmsModule } from '../sms/sms.module';
 
     // 短信验证模块
     SmsModule,
+
+    // 系统配置模块
+    AppConfigModule,
   ],
   controllers: [AuthController, AuthAdminController],
   providers: [AuthService, AuthAdminService, JwtStrategy, AdminJwtStrategy],

@@ -64,10 +64,23 @@ export class BrowseHistoryService {
       .andWhere('k.deleted_at IS NULL');
 
     if (keyword) {
-      qb.andWhere('(k.title ILIKE :kw OR k.content ILIKE :kw)', { kw: `%${keyword}%` });
+      const trimmedKw = keyword.trim();
+      // 类目名称匹配
+      qb.andWhere('(k.title ILIKE :kw OR k.content ILIKE :kw OR c.name ILIKE :categoryKw)', {
+        kw: `%${trimmedKw}%`,
+        categoryKw: `%${trimmedKw}%`,
+      });
+      // 类目匹配优先排序
+      qb.addSelect(`CASE WHEN c.name ILIKE :categoryKw THEN 1 ELSE 0 END`, 'category_match_score');
+      qb.setParameters({ categoryKw: `%${trimmedKw}%` });
     }
 
-    qb.orderBy('bh.viewed_at', 'DESC');
+    if (keyword) {
+      qb.orderBy('category_match_score', 'DESC');
+      qb.addOrderBy('bh.viewed_at', 'DESC');
+    } else {
+      qb.orderBy('bh.viewed_at', 'DESC');
+    }
 
     const total = await qb.getCount();
     const list = await qb

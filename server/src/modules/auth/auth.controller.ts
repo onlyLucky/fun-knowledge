@@ -9,6 +9,7 @@ import {
   HttpCode,
   HttpStatus,
   UseGuards,
+  Logger,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -30,15 +31,23 @@ import { RegisterDto } from './dto/register.dto';
 import { SendSmsDto } from './dto/send-sms.dto';
 import { UserReviewService } from '../user-review/user-review.service';
 import { SmsService } from '../sms/sms.service';
+import { ConfigService as AppConfigService } from '../config/config.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @ApiTags('客户端认证')
 @UseGuards(JwtAuthGuard)
 @Controller('v1/auth')
 export class AuthController {
+  private readonly logger = new Logger(AuthController.name);
+
   constructor(
     private readonly authService: AuthService,
     private readonly userReviewService: UserReviewService,
     private readonly smsService: SmsService,
+    private readonly configService: AppConfigService,
+    @InjectRepository(User)
+    private readonly userRepo: Repository<User>,
   ) {}
 
   /**
@@ -158,12 +167,14 @@ export class AuthController {
         id: profile.id,
         nickname: profile.nickname,
         avatar: profile.avatar,
+        signature: profile.signature,
         phone: profile.phone,
         email: profile.email,
         streak_days: profile.streak_days,
         total_check_in_days: profile.total_check_in_days,
         ai_usage_count: profile.ai_usage_count,
         user_auths: profile.user_auths,
+        review_info: profile.review_info || {},
         created_at: profile.created_at,
       },
     };
@@ -181,15 +192,100 @@ export class AuthController {
     @CurrentUser() user: User,
     @Body() dto: UpdateProfileDto,
   ) {
-    const review = await this.userReviewService.create(user.id, dto);
-    return {
-      code: 200,
-      message: '提交成功，等待管理员审核',
-      data: {
-        id: review.id,
-        status: review.status,
-      },
-    };
+    // 检查是否开启用户信息审核
+    let reviewEnabled = true;
+    try {
+      const config = await this.configService.findByKey('user_review_enabled');
+      reviewEnabled = config.config_value === 'true';
+      this.logger.log(`用户信息审核配置: ${config.config_value}, reviewEnabled: ${reviewEnabled}`);
+    } catch (error) {
+      // 配置不存在时默认开启审核
+      this.logger.warn(`获取用户信息审核配置失败，使用默认值: ${error}`);
+    }
+
+    this.logger.log(`更新用户资料: userId=${user.id}, reviewEnabled=${reviewEnabled}, dto=${JSON.stringify(dto)}`);
+
+    if (reviewEnabled) {
+      // 审核模式：提交审核申请
+      const createResult = await this.userReviewService.create(user.id, dto);
+      this.logger.log(`审核申请结果: pending=${createResult.pending}, reviewId=${createResult.review?.id}`);
+
+      if (createResult.pending && !createResult.review) {
+        // 所有字段都被拦截，无新审核记录
+        return {
+          code: 200,
+          message: createResult.message || '请等待审核完成后再提交',
+          data: null,
+        };
+      }
+
+      if (!createResult.review) {
+        // 无审核记录（不应该到这里，兜底处理）
+        return {
+          code: 200,
+          message: '无需要提交的字段',
+          data: null,
+        };
+      }
+
+      // 更新用户的 review_info，标记审核中
+      const fullUser = await this.authService.getProfile(user.id);
+      const reviewInfo = { ...(fullUser.review_info || {}) };
+
+      // 标记提交的字段为审核中
+      if (dto.avatar && createResult.review.avatar) {
+        reviewInfo.avatar = { status: 1, value: dto.avatar };
+      }
+      if (dto.nickname && createResult.review.nickname) {
+        reviewInfo.nickname = { status: 1, value: dto.nickname };
+      }
+      if (dto.signature && createResult.review.signature) {
+        reviewInfo.signature = { status: 1, value: dto.signature };
+      }
+
+      this.logger.log(`更新 review_info: ${JSON.stringify(reviewInfo)}`);
+      await this.userRepo.update(user.id, { review_info: reviewInfo });
+      this.logger.log(`review_info 更新成功`);
+
+      return {
+        code: 200,
+        message: '提交成功，等待管理员审核',
+        data: {
+          pending: true,
+          id: createResult.review?.id,
+          status: createResult.review?.status,
+        },
+      };
+    } else {
+      // 非审核模式：直接更新
+      this.logger.log('非审核模式，直接更新用户资料');
+      const updateData: Partial<User> = {};
+      const reviewInfo = { ...((await this.authService.getProfile(user.id)).review_info || {}) };
+
+      if (dto.avatar) {
+        updateData.avatar = dto.avatar;
+        reviewInfo.avatar = { status: 0 };
+      }
+      if (dto.nickname) {
+        updateData.nickname = dto.nickname;
+        reviewInfo.nickname = { status: 0 };
+      }
+      if (dto.signature) {
+        updateData.signature = dto.signature;
+        reviewInfo.signature = { status: 0 };
+      }
+
+      updateData.review_info = reviewInfo;
+      this.logger.log(`直接更新: ${JSON.stringify(updateData)}`);
+      await this.userRepo.update(user.id, updateData);
+      this.logger.log('直接更新成功');
+
+      return {
+        code: 200,
+        message: '更新成功',
+        data: { pending: false },
+      };
+    }
   }
 
   /**

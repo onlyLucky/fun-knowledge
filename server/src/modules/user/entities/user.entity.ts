@@ -69,6 +69,10 @@ export class User {
   @Column({ type: 'jsonb', nullable: true, comment: '多平台登录信息 JSON' })
   user_auths: Record<string, any>;
 
+  @ApiProperty({ description: '用户审核信息' })
+  @Column({ type: 'jsonb', nullable: true, comment: '用户审核信息 JSON' })
+  review_info: Record<string, { status: number; value?: string; msg?: string }>;
+
   @ApiProperty({ description: '创建时间' })
   @CreateDateColumn({ type: 'timestamptz', comment: '创建时间' })
   created_at: Date;
