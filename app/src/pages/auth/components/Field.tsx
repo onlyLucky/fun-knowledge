@@ -21,10 +21,10 @@ export function Field({
 }: FieldProps) {
   return (
     <div className="space-y-1.5">
-      {label && <p className="text-[12px] font-medium text-[#878787] px-1">{label}</p>}
+      {label && <p className="text-[12px] font-medium text-text-muted px-1">{label}</p>}
       <div
-        className={`flex items-center bg-[#FDFDFD] rounded-[14px] border px-4 h-[52px] transition-colors ${
-          error ? 'border-red-300' : 'border-[#DFDEDE]'
+        className={`flex items-center bg-bg-card rounded-[14px] border px-4 h-[52px] transition-colors ${
+          error ? 'border-red-300' : 'border-border'
         } shadow-[0_2px_6px_rgba(41,37,38,0.04)]`}
       >
         <input
@@ -32,7 +32,7 @@ export function Field({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="flex-1 bg-transparent text-[14px] text-[#121111] placeholder:text-[#DFDEDE] outline-none"
+          className="flex-1 bg-transparent text-[14px] text-text-main placeholder:text-[#DFDEDE] outline-none"
         />
         {right}
       </div>

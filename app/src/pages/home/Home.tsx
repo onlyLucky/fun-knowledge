@@ -17,6 +17,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { clsx } from 'clsx';
 import { getPortalTarget } from '@/lib/portal';
 import { favoriteEvents } from '@/lib/favorite-events';
+import { useSettings } from '@/lib/settings';
 
 const iconMap: Record<string, any> = {
   Layers,Utensils,CloudSun,Atom, Calculator, Map, PawPrint, Leaf, User,Volleyball,Palette,Earth,Gamepad2,Cpu,Sparkles,
@@ -57,17 +58,17 @@ function CategoryModal({
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', stiffness: 380, damping: 36 }}
-            className="absolute bottom-0 left-0 right-0 bg-[#FDFDFD] rounded-t-[24px] shadow-[0_-8px_30px_rgba(41,37,38,0.14)]"
+            className="absolute bottom-0 left-0 right-0 bg-bg-card rounded-t-[24px] shadow-[0_-8px_30px_rgba(41,37,38,0.14)]"
           >
             {/* Handle */}
             <div className="flex justify-center pt-3 pb-1">
-              <div className="w-10 h-1 bg-[#DFDEDE] rounded-full" />
+              <div className="w-10 h-1 bg-border rounded-full" />
             </div>
 
             {/* Title */}
-            <div className="px-5 pt-3 pb-4 border-b border-[#F2F2F2]">
-              <p className="text-[16px] font-bold text-[#121111]">选择分类</p>
-              <p className="text-[12px] text-[#878787] mt-0.5">筛选你感兴趣的知识类目</p>
+            <div className="px-5 pt-3 pb-4 border-b border-border">
+              <p className="text-[16px] font-bold text-text-main">选择分类</p>
+              <p className="text-[12px] text-text-muted mt-0.5">筛选你感兴趣的知识类目</p>
             </div>
 
             {/* Grid */}
@@ -83,8 +84,8 @@ function CategoryModal({
                     className={clsx(
                       'relative flex flex-col items-center gap-2 py-3.5 px-2 rounded-[16px] transition-colors',
                       isActive
-                        ? 'bg-[#292526]'
-                        : 'bg-[#F2F2F2] active:bg-[#DFDEDE]'
+                        ? 'bg-primary'
+                        : 'bg-bg-page active:bg-border'
                     )}
                   >
                     {isActive && (
@@ -94,17 +95,17 @@ function CategoryModal({
                     )}
                     <div className={clsx(
                       'w-9 h-9 rounded-[12px] flex items-center justify-center',
-                      isActive ? 'bg-white/15' : 'bg-[#FDFDFD]'
+                      isActive ? 'bg-white/15' : 'bg-bg-card'
                     )}>
                       {createElement(IconComp, {
                         size: 18,
                         strokeWidth: 2,
-                        className: isActive ? 'text-[#FDFDFD]' : 'text-[#292526]',
+                        className: isActive ? 'text-[#FDFDFD]' : 'text-primary',
                       })}
                     </div>
                     <p className={clsx(
                       'text-[12px] font-medium text-center leading-tight',
-                      isActive ? 'text-[#FDFDFD]' : 'text-[#121111]'
+                      isActive ? 'text-[#FDFDFD]' : 'text-text-main'
                     )}>
                       {cat.name}
                     </p>
@@ -117,7 +118,7 @@ function CategoryModal({
               <motion.button
                 whileTap={{ scale: 0.97 }}
                 onClick={onClose}
-                className="w-full py-3.5 rounded-[14px] border border-[#DFDEDE] text-[14px] font-medium text-[#878787]"
+                className="w-full py-3.5 rounded-[14px] border border-border text-[14px] font-medium text-text-muted"
               >
                 关闭
               </motion.button>
@@ -138,12 +139,14 @@ export function Home() {
   const [hasCheckedIn, setHasCheckedIn] = useState(false);
   const [checkInDismissed, setCheckInDismissed] = useState(false);
   const [viewedCount, setViewedCount] = useState(0);
+  const { settings } = useSettings();
 
   const [isAISheetOpen, setIsAISheetOpen] = useState(false);
   const [activeCardId, setActiveCardId] = useState('');
   const [activeCardTitle, setActiveCardTitle] = useState('');
 
   const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
   const exitTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [categories, setCategories] = useState<{ id: string; name: string; icon: string }[]>([]);
   const PAGE_SIZE = 20;
@@ -227,13 +230,13 @@ export function Home() {
   // 卡片切换时上报上一张卡片的浏览时长
   useEffect(() => {
     const prevCard = filteredCards[prevIndexRef.current];
-    if (prevCard && prevIndexRef.current !== currentIndex) {
+    if (prevCard && prevIndexRef.current !== currentIndex && settings.dataCollection) {
       const duration = Math.floor((Date.now() - browseStartRef.current) / 1000);
       reportBehavior(prevCard.id, 'browse', duration).catch(() => {});
     }
     browseStartRef.current = Date.now();
     prevIndexRef.current = currentIndex;
-  }, [currentIndex, filteredCards]);
+  }, [currentIndex, filteredCards, settings.dataCollection]);
 
   const handleSwipeUp = () => {
     if (currentIndex < filteredCards.length - 1) {
@@ -326,6 +329,25 @@ export function Home() {
     };
   }, []);
 
+  // 自动播放：每隔 5 秒切换到下一张卡片，弹窗打开时暂停
+  const hasOpenModal = showCategoryModal || isAISheetOpen || reportOpen;
+  useEffect(() => {
+    if (!settings.autoPlay || filteredCards.length <= 1 || hasOpenModal) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => {
+        if (prev < filteredCards.length - 1) {
+          const next = prev + 1;
+          if (next >= pageRef.current * PAGE_SIZE - PRELOAD_THRESHOLD && hasMore) {
+            loadMore();
+          }
+          return next;
+        }
+        return prev;
+      });
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [settings.autoPlay, filteredCards.length, hasMore, hasOpenModal]);
+
   // Sync favorite state from detail page
   useEffect(() => {
     return favoriteEvents.subscribe(({ cardId, isFavorited }) => {
@@ -342,7 +364,7 @@ export function Home() {
     categories.find((c) => c.id === activeCategory)?.name ?? '全部';
 
   return (
-    <div className="flex flex-col h-full bg-[#F2F2F2] relative">
+    <div className="flex flex-col h-full bg-bg-page relative">
       {/* Top Header */}
       <PageHeader
         title="冷知识星球"
@@ -352,7 +374,7 @@ export function Home() {
           <motion.button
             whileTap={{ scale: 0.88 }}
             onClick={() => setShowCategoryModal(true)}
-            className="w-[38px] h-[38px] bg-[#292526] rounded-[12px] flex items-center justify-center shadow-[0_4px_12px_rgba(41,37,38,0.2)]"
+            className="w-[38px] h-[38px] bg-primary rounded-[12px] flex items-center justify-center shadow-[0_4px_12px_rgba(41,37,38,0.2)]"
           >
             <SlidersHorizontal size={18} strokeWidth={2} className="text-[#FDFDFD]" />
           </motion.button>
@@ -369,8 +391,8 @@ export function Home() {
               className={clsx(
                 'whitespace-nowrap px-4 py-2 rounded-[100px] text-[13px] font-medium transition-all duration-200 shrink-0',
                 activeCategory === category.id
-                  ? 'bg-[#292526] text-[#FDFDFD] shadow-[0_2px_8px_rgba(41,37,38,0.2)]'
-                  : 'bg-[#FDFDFD] text-[#787676] border border-[#DFDEDE]'
+                  ? 'bg-primary text-[#FDFDFD] shadow-[0_2px_8px_rgba(41,37,38,0.2)]'
+                  : 'bg-bg-card text-text-sub border border-border'
               )}
             >
               {category.name}
@@ -390,8 +412,8 @@ export function Home() {
             className={clsx(
               'flex items-center justify-center gap-2 text-[12px] font-medium cursor-pointer shrink-0 overflow-hidden',
               hasCheckedIn
-                ? 'bg-[#FDFDFD] text-[#787676]'
-                : 'bg-[#292526] text-[#FDFDFD]'
+                ? 'bg-bg-card text-text-sub'
+                : 'bg-primary text-[#FDFDFD]'
             )}
             onClick={handleCheckIn}
           >
@@ -413,9 +435,9 @@ export function Home() {
             animate={refreshing ? { rotate: 360 } : { rotate: pullDistance >= PULL_THRESHOLD ? 180 : 0 }}
             transition={refreshing ? { duration: 0.8, repeat: Infinity, ease: 'linear' } : { duration: 0.2 }}
           >
-            <RefreshCw size={16} strokeWidth={2} className="text-[#878787]" />
+            <RefreshCw size={16} strokeWidth={2} className="text-text-muted" />
           </motion.div>
-          <span className="text-[12px] text-[#878787]">
+          <span className="text-[12px] text-text-muted">
             {refreshing ? '刷新中...' : pullDistance >= PULL_THRESHOLD ? '松开刷新' : '下拉刷新'}
           </span>
         </div>
@@ -442,11 +464,16 @@ export function Home() {
                   onPullProgress={handlePullProgress}
                   onPullEnd={handlePullEnd}
                   onFavoriteToggle={(id, isFavorited) => {
-                    reportBehavior(id, 'favorite').catch(() => {});
+                    if (settings.dataCollection) {
+                      reportBehavior(id, 'favorite').catch(() => {});
+                    }
                   }}
                   onAIClick={(id) => {
-                    reportBehavior(id, 'ai_extend').catch(() => {});
+                    if (settings.dataCollection) {
+                      reportBehavior(id, 'ai_extend').catch(() => {});
+                    }
                   }}
+                  onReportToggle={setReportOpen}
                 />
               );
             })
@@ -454,7 +481,7 @@ export function Home() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex flex-col items-center justify-center h-full text-[#878787]"
+              className="flex flex-col items-center justify-center h-full text-text-muted"
             >
               <p className="text-[14px]">这个类目下还没有卡片哦</p>
             </motion.div>
@@ -470,8 +497,8 @@ export function Home() {
                 className={clsx(
                   'rounded-[100px] transition-all duration-300',
                   i === currentIndex
-                    ? 'w-1.5 h-4 bg-[#292526]'
-                    : 'w-1.5 h-1.5 bg-[#DFDEDE]'
+                    ? 'w-1.5 h-4 bg-primary'
+                    : 'w-1.5 h-1.5 bg-border'
                 )}
               />
             ))}
@@ -479,12 +506,12 @@ export function Home() {
         )}
 
         {currentIndex === filteredCards.length - 1 && filteredCards.length > 0 && !hasMore && (
-          <div className="absolute bottom-5 left-0 right-0 text-center text-[#878787] text-[11px] pointer-events-none z-0">
+          <div className="absolute bottom-5 left-0 right-0 text-center text-text-muted text-[11px] pointer-events-none z-0">
             已经到底啦，换个类目看看吧～
           </div>
         )}
         {loadingMore && (
-          <div className="absolute bottom-5 left-0 right-0 text-center text-[#878787] text-[11px] pointer-events-none z-0">
+          <div className="absolute bottom-5 left-0 right-0 text-center text-text-muted text-[11px] pointer-events-none z-0">
             加载中...
           </div>
         )}

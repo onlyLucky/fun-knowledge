@@ -4,7 +4,7 @@ import { ModalRoute } from "@/components/ModalRoute";
 import { Home, CardDetailPage, CategoryDetail } from "@/pages/home";
 import { Discover, HotSearchPage } from "@/pages/discover";
 import { Profile, ProfileEditPage, AvatarEditPage, AvatarCropPage, NicknameEditPage, SignatureEditPage, Favorites, BrowseHistory, CalendarPage } from "@/pages/profile";
-import { SettingsPage, AboutPage, ContactUsPage, PrivacyPolicyPage, UserAgreementPage } from "@/pages/settings";
+import { SettingsPage, AccountEditPage, AboutPage, ContactUsPage, PrivacyPolicyPage, UserAgreementPage } from "@/pages/settings";
 import { ErrorReportPage, ErrorReportDetailPage, ReportContentPage } from "@/pages/report";
 import { WelcomePage, LoginPage, RegisterPage } from "@/pages/auth";
 
@@ -59,6 +59,7 @@ export const router = createBrowserRouter([
   { path: "/profile/edit/signature", Component: wrap(SignatureEditPage) },
   { path: "/calendar",              Component: wrap(CalendarPage) },
   { path: "/settings",          Component: wrap(SettingsPage) },
+  { path: "/settings/account",  Component: wrap(AccountEditPage) },
   { path: "/about",             Component: wrap(AboutPage) },
   { path: "/error-reports",     Component: wrap(ErrorReportPage) },
   { path: "/error-reports/:id", Component: wrap(ErrorReportDetailPage) },

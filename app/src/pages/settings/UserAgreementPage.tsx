@@ -41,12 +41,12 @@ const SECTIONS = [
 
 export function UserAgreementPage() {
   return (
-    <div className="flex flex-col h-full bg-[#F2F2F2]">
+    <div className="flex flex-col h-full bg-bg-page">
       <PageHeader title="用户协议" subtitle="最后更新于 2026年1月1日" />
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pb-8 space-y-3">
         {/* Intro */}
-        <div className="bg-[#292526] rounded-[20px] p-5">
+        <div className="bg-primary rounded-[20px] p-5">
           <p className="text-[#FDFDFD]/80 text-[13px] leading-relaxed">
             欢迎使用冷知识星球！在使用我们的服务之前，请仔细阅读以下用户协议。使用本服务即表示您同意遵守以下条款。
           </p>
@@ -59,10 +59,10 @@ export function UserAgreementPage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.04 }}
-            className="bg-[#FDFDFD] rounded-[18px] p-4 border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]"
+            className="bg-bg-card rounded-[18px] p-4 border border-border/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]"
           >
-            <p className="text-[13px] font-bold text-[#121111] mb-2">{section.title}</p>
-            <p className="text-[13px] text-[#787676] leading-[1.8]">{section.content}</p>
+            <p className="text-[13px] font-bold text-text-main mb-2">{section.title}</p>
+            <p className="text-[13px] text-text-sub leading-[1.8]">{section.content}</p>
           </motion.div>
         ))}
 

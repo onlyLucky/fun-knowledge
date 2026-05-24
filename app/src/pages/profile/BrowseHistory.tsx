@@ -216,7 +216,7 @@ export function BrowseHistory() {
   const groups = groupBySemanticDate(items);
 
   return (
-    <div className="flex flex-col h-full bg-[#F2F2F2] relative">
+    <div className="flex flex-col h-full bg-bg-page relative">
       <PageHeader
         title="浏览历史"
         subtitle={`共 ${total} 条记录`}
@@ -231,12 +231,12 @@ export function BrowseHistory() {
                 setBatchMode(true);
               }
             }}
-            className="w-[38px] h-[38px] bg-[#FDFDFD] rounded-[12px] border border-[#DFDEDE] flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.06)]"
+            className="w-[38px] h-[38px] bg-bg-card rounded-[12px] border border-border flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.06)]"
           >
             {batchMode ? (
-              <X size={18} strokeWidth={2.5} className="text-[#121111]" />
+              <X size={18} strokeWidth={2.5} className="text-text-main" />
             ) : (
-              <CheckSquare size={18} strokeWidth={2} className="text-[#121111]" />
+              <CheckSquare size={18} strokeWidth={2} className="text-text-main" />
             )}
           </motion.button>
         }
@@ -244,15 +244,15 @@ export function BrowseHistory() {
 
       {/* Search bar */}
       <div className="px-5 pb-3 shrink-0">
-        <div className="bg-[#FDFDFD] border border-[#DFDEDE] rounded-[14px] flex items-center gap-2 px-4 py-3 shadow-[0_2px_6px_rgba(41,37,38,0.04)]">
-          <Search size={16} strokeWidth={2} className="text-[#878787] shrink-0" />
+        <div className="bg-bg-card border border-border rounded-[14px] flex items-center gap-2 px-4 py-3 shadow-[0_2px_6px_rgba(41,37,38,0.04)]">
+          <Search size={16} strokeWidth={2} className="text-text-muted shrink-0" />
           <input
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="搜索浏览历史…"
-            className="flex-1 bg-transparent text-[14px] text-[#121111] placeholder:text-[#DFDEDE] outline-none"
+            className="flex-1 bg-transparent text-[14px] text-text-main placeholder:text-[#DFDEDE] outline-none"
           />
           {inputValue && (
             <motion.button
@@ -260,15 +260,15 @@ export function BrowseHistory() {
               animate={{ opacity: 1, scale: 1 }}
               whileTap={{ scale: 0.8 }}
               onClick={handleClearInput}
-              className="w-5 h-5 rounded-full bg-[#DFDEDE] flex items-center justify-center shrink-0"
+              className="w-5 h-5 rounded-full bg-border flex items-center justify-center shrink-0"
             >
-              <X size={12} strokeWidth={2.5} className="text-[#878787]" />
+              <X size={12} strokeWidth={2.5} className="text-text-muted" />
             </motion.button>
           )}
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={executeSearch}
-            className="px-3 py-1 bg-[#292526] text-[#FDFDFD] text-[13px] font-medium rounded-[100px] shrink-0"
+            className="px-3 py-1 bg-primary text-[#FDFDFD] text-[13px] font-medium rounded-[100px] shrink-0"
           >
             搜索
           </motion.button>
@@ -285,9 +285,9 @@ export function BrowseHistory() {
             animate={refreshing ? { rotate: 360 } : { rotate: pullDistance >= PULL_THRESHOLD ? 180 : 0 }}
             transition={refreshing ? { duration: 0.8, repeat: Infinity, ease: 'linear' } : { duration: 0.2 }}
           >
-            <RefreshCw size={16} strokeWidth={2} className="text-[#878787]" />
+            <RefreshCw size={16} strokeWidth={2} className="text-text-muted" />
           </motion.div>
-          <span className="text-[12px] text-[#878787]">
+          <span className="text-[12px] text-text-muted">
             {refreshing ? '刷新中...' : pullDistance >= PULL_THRESHOLD ? '松开刷新' : '下拉刷新'}
           </span>
         </div>
@@ -310,7 +310,7 @@ export function BrowseHistory() {
         {loading ? (
           <div className="flex flex-col items-center justify-center h-60">
             <motion.div
-              className="w-6 h-6 border-2 border-[#DFDEDE] border-t-[#292526] rounded-full"
+              className="w-6 h-6 border-2 border-border border-t-primary rounded-full"
               animate={{ rotate: 360 }}
               transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
             />
@@ -319,16 +319,16 @@ export function BrowseHistory() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col items-center justify-center h-60 text-[#878787]"
+            className="flex flex-col items-center justify-center h-60 text-text-muted"
           >
-            <div className="w-16 h-16 bg-[#FDFDFD] rounded-[20px] border border-[#DFDEDE] flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-bg-card rounded-[20px] border border-border flex items-center justify-center mb-4">
               <Clock size={28} strokeWidth={1.5} className="text-[#DFDEDE]" />
             </div>
-            <p className="text-[14px] font-medium text-[#787676]">
+            <p className="text-[14px] font-medium text-text-sub">
               {submittedQuery ? `没有找到「${submittedQuery}」相关记录` : '还没有浏览记录'}
             </p>
             {!submittedQuery && (
-              <p className="text-[12px] text-[#878787] mt-1">浏览知识卡片后会自动记录</p>
+              <p className="text-[12px] text-text-muted mt-1">浏览知识卡片后会自动记录</p>
             )}
           </motion.div>
         ) : (
@@ -336,7 +336,7 @@ export function BrowseHistory() {
             {groups.map((group) => (
               <div key={group.label} className="mb-3">
                 {/* Date group label */}
-                <p className="text-[12px] font-medium text-[#878787] mb-2 px-1">
+                <p className="text-[12px] font-medium text-text-muted mb-2 px-1">
                   {group.label}
                 </p>
 
@@ -373,7 +373,7 @@ export function BrowseHistory() {
                             {batchMode && (
                               <div className="w-8 shrink-0 flex items-center justify-center">
                                 {selected.has(item.id) ? (
-                                  <CheckSquare size={18} strokeWidth={2} className="text-[#292526]" />
+                                  <CheckSquare size={18} strokeWidth={2} className="text-primary" />
                                 ) : (
                                   <Square size={18} strokeWidth={2} className="text-[#DFDEDE]" />
                                 )}
@@ -381,9 +381,9 @@ export function BrowseHistory() {
                             )}
 
                             {/* Card */}
-                            <div className="flex-1 bg-[#FDFDFD] rounded-[18px] overflow-hidden border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)] flex">
+                            <div className="flex-1 bg-bg-card rounded-[18px] overflow-hidden border border-border/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)] flex">
                             {/* Thumbnail */}
-                            <div className="w-[90px] shrink-0 bg-[#F2F2F2] relative">
+                            <div className="w-[90px] shrink-0 bg-bg-page relative">
                               <img
                                 src={imageUrl}
                                 alt={item.title}
@@ -399,11 +399,11 @@ export function BrowseHistory() {
                             {/* Content */}
                             <div className="flex-1 p-4 flex flex-col justify-between min-w-0">
                               <div>
-                                <h3 className="text-[14px] font-bold text-[#121111] leading-snug line-clamp-2">
+                                <h3 className="text-[14px] font-bold text-text-main leading-snug line-clamp-2">
                                   {item.title}
                                 </h3>
                                 {item.content && (
-                                  <p className="text-[12px] text-[#878787] mt-1.5 leading-snug line-clamp-1">
+                                  <p className="text-[12px] text-text-muted mt-1.5 leading-snug line-clamp-1">
                                     {item.content}
                                   </p>
                                 )}
@@ -412,24 +412,24 @@ export function BrowseHistory() {
                                 <div className="flex flex-col min-w-0">
                                   {item.source && (
                                     <div className="flex items-center gap-1 min-w-0">
-                                      <div className="w-1 h-1 rounded-full bg-[#DFDEDE] shrink-0" />
-                                      <span className="text-[10px] text-[#878787] truncate">{item.source}</span>
+                                      <div className="w-1 h-1 rounded-full bg-border shrink-0" />
+                                      <span className="text-[10px] text-text-muted truncate">{item.source}</span>
                                     </div>
                                   )}
                                   <div className="flex items-center gap-1">
-                                    <Clock size={10} strokeWidth={2} className="text-[#878787] shrink-0" />
-                                    <span className="text-[10px] text-[#878787]">{viewTime}</span>
+                                    <Clock size={10} strokeWidth={2} className="text-text-muted shrink-0" />
+                                    <span className="text-[10px] text-text-muted">{viewTime}</span>
                                   </div>
                                 </div>
                                 <motion.button
                                   whileTap={{ scale: 0.8 }}
-                                  className="w-7 h-7 bg-[#F2F2F2] rounded-[8px] flex items-center justify-center shrink-0"
+                                  className="w-7 h-7 bg-bg-page rounded-[8px] flex items-center justify-center shrink-0"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     setAiSheet({ open: true, title: item.title, knowledgeId: item.knowledge_id });
                                   }}
                                 >
-                                  <Sparkles size={13} strokeWidth={2} className="text-[#292526]" />
+                                  <Sparkles size={13} strokeWidth={2} className="text-primary" />
                                 </motion.button>
                               </div>
                             </div>
@@ -443,7 +443,7 @@ export function BrowseHistory() {
               </div>
             ))}
             {loadingMore && (
-              <p className="text-center text-[12px] text-[#878787] py-3">加载中...</p>
+              <p className="text-center text-[12px] text-text-muted py-3">加载中...</p>
             )}
             {!hasMore && items.length > 0 && (
               <p className="text-center text-[12px] text-[#DFDEDE] py-3">没有更多了</p>
@@ -460,16 +460,16 @@ export function BrowseHistory() {
             animate={{ y: 0 }}
             exit={{ y: 80 }}
             transition={{ type: 'spring', damping: 26, stiffness: 300 }}
-            className="absolute bottom-0 left-0 right-0 bg-[#FDFDFD] border-t border-[#DFDEDE] px-5 py-3 flex items-center justify-between shadow-[0_-4px_16px_rgba(41,37,38,0.08)]"
+            className="absolute bottom-0 left-0 right-0 bg-bg-card border-t border-border px-5 py-3 flex items-center justify-between shadow-[0_-4px_16px_rgba(41,37,38,0.08)]"
           >
             <button
               onClick={toggleSelectAll}
-              className="text-[13px] text-[#878787] font-medium"
+              className="text-[13px] text-text-muted font-medium"
             >
               {selected.size === items.length ? '取消全选' : '全选'}
             </button>
             <div className="flex items-center gap-3">
-              <span className="text-[13px] text-[#878787]">
+              <span className="text-[13px] text-text-muted">
                 已选 {selected.size} 项
               </span>
               <motion.button

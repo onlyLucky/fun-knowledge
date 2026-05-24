@@ -53,25 +53,25 @@ export function NicknameEditPage() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#F2F2F2] relative">
+    <div className="flex flex-col h-full bg-bg-page relative">
       {/* Header */}
-      <div className="bg-[#F2F2F2] shrink-0">
+      <div className="bg-bg-page shrink-0">
         <div className="flex items-center justify-between px-5 py-4">
           <motion.button
             whileTap={{ scale: 0.88 }}
             onClick={() => navigate(-1)}
-            className="w-[38px] h-[38px] bg-[#FDFDFD] rounded-[12px] border border-[#DFDEDE] flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.06)]"
+            className="w-[38px] h-[38px] bg-bg-card rounded-[12px] border border-border flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.06)]"
           >
-            <ChevronLeft size={20} strokeWidth={2.5} className="text-[#121111]" />
+            <ChevronLeft size={20} strokeWidth={2.5} className="text-text-main" />
           </motion.button>
 
-          <span className="text-[16px] font-bold text-[#121111]">修改昵称</span>
+          <span className="text-[16px] font-bold text-text-main">修改昵称</span>
 
           <motion.button
             whileTap={{ scale: 0.88 }}
             onClick={handleSave}
             disabled={saving || isReviewing}
-            className="w-[38px] h-[38px] bg-[#292526] rounded-[12px] flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.2)] disabled:opacity-50"
+            className="w-[38px] h-[38px] bg-primary rounded-[12px] flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.2)] disabled:opacity-50"
           >
             <Check size={18} strokeWidth={2.5} className={`text-white ${saving ? 'animate-pulse' : ''}`} />
           </motion.button>
@@ -80,8 +80,8 @@ export function NicknameEditPage() {
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pt-4 pb-10">
         {/* Nickname Input */}
-        <div className="bg-[#FDFDFD] rounded-[18px] px-5 py-4 border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]">
-          <p className="text-[11px] font-medium text-[#878787] mb-2">昵称</p>
+        <div className="bg-bg-card rounded-[18px] px-5 py-4 border border-border/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]">
+          <p className="text-[11px] font-medium text-text-muted mb-2">昵称</p>
           <input
             type="text"
             value={nickname}
@@ -90,7 +90,7 @@ export function NicknameEditPage() {
             placeholder="输入昵称..."
             autoFocus
             disabled={isReviewing}
-            className="w-full text-[15px] text-[#121111] bg-transparent outline-none placeholder:text-[#DFDEDE] disabled:opacity-50"
+            className="w-full text-[15px] text-text-main bg-transparent outline-none placeholder:text-[#DFDEDE] disabled:opacity-50"
           />
           <div className="flex justify-end mt-2">
             <span className="text-[10px] text-[#DFDEDE]">{nickname.length}/16</span>

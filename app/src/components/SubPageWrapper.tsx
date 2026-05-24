@@ -4,7 +4,7 @@
  */
 export function SubPageWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className="w-full h-screen max-h-[896px] bg-[#F2F2F2] flex flex-col overflow-hidden">
+    <div className="w-full h-screen max-h-[896px] bg-bg-page flex flex-col overflow-hidden">
       {children}
     </div>
   );

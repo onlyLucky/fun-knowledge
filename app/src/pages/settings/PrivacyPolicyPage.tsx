@@ -44,12 +44,12 @@ const SECTIONS = [
 
 export function PrivacyPolicyPage() {
   return (
-    <div className="flex flex-col h-full bg-[#F2F2F2]">
+    <div className="flex flex-col h-full bg-bg-page">
       <PageHeader title="隐私政策" subtitle="最后更新于 2026年1月1日" />
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pb-8 space-y-3">
         {/* Shield banner */}
-        <div className="bg-[#292526] rounded-[20px] p-5 flex items-center gap-4">
+        <div className="bg-primary rounded-[20px] p-5 flex items-center gap-4">
           <div className="w-12 h-12 bg-white/10 rounded-[14px] border border-white/15 flex items-center justify-center shrink-0">
             <Shield size={22} strokeWidth={2} className="text-[#FDFDFD]" />
           </div>
@@ -66,13 +66,13 @@ export function PrivacyPolicyPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: i * 0.05 }}
-              className="bg-[#FDFDFD] rounded-[16px] p-4 border border-[#DFDEDE]/50"
+              className="bg-bg-card rounded-[16px] p-4 border border-border/50"
             >
-              <div className="w-8 h-8 bg-[#F2F2F2] rounded-[10px] flex items-center justify-center mb-2">
-                <item.icon size={16} strokeWidth={2} className="text-[#292526]" />
+              <div className="w-8 h-8 bg-bg-page rounded-[10px] flex items-center justify-center mb-2">
+                <item.icon size={16} strokeWidth={2} className="text-primary" />
               </div>
-              <p className="text-[12px] font-bold text-[#121111] mb-1">{item.title}</p>
-              <p className="text-[11px] text-[#878787] leading-relaxed">{item.desc}</p>
+              <p className="text-[12px] font-bold text-text-main mb-1">{item.title}</p>
+              <p className="text-[11px] text-text-muted leading-relaxed">{item.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -84,17 +84,17 @@ export function PrivacyPolicyPage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 + i * 0.04 }}
-            className="bg-[#FDFDFD] rounded-[18px] p-4 border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]"
+            className="bg-bg-card rounded-[18px] p-4 border border-border/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]"
           >
-            <p className="text-[13px] font-bold text-[#121111] mb-2">{section.title}</p>
-            <p className="text-[13px] text-[#787676] leading-[1.8]">{section.content}</p>
+            <p className="text-[13px] font-bold text-text-main mb-2">{section.title}</p>
+            <p className="text-[13px] text-text-sub leading-[1.8]">{section.content}</p>
           </motion.div>
         ))}
 
         {/* Contact note */}
-        <div className="bg-[#F2F2F2] rounded-[14px] p-4 border border-[#DFDEDE]/50 flex items-start gap-2">
-          <Bell size={14} strokeWidth={2} className="text-[#878787] mt-0.5 shrink-0" />
-          <p className="text-[12px] text-[#878787] leading-relaxed">
+        <div className="bg-bg-page rounded-[14px] p-4 border border-border/50 flex items-start gap-2">
+          <Bell size={14} strokeWidth={2} className="text-text-muted mt-0.5 shrink-0" />
+          <p className="text-[12px] text-text-muted leading-relaxed">
             如有隐私相关问题，请通过「联系我们」页面联系我们，我们将在 5 个工作日内回复。
           </p>
         </div>

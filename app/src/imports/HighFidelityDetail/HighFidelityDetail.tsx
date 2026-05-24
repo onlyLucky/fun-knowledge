@@ -101,8 +101,8 @@ function Review() {
           </svg>
         </div>
       </div>
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[0] relative shrink-0 text-[#878787] text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
-        <span className="leading-[1.2] text-[#787676]">5.0</span>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[0] relative shrink-0 text-text-muted text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+        <span className="leading-[1.2] text-text-sub">5.0</span>
         <span className="leading-[1.2]">{` `}</span>
         <span className="leading-[1.2] text-[#347efb]">(7.932 reviews)</span>
       </p>
@@ -113,7 +113,7 @@ function Review() {
 function Text1() {
   return (
     <div className="content-stretch flex flex-col gap-[4px] items-start justify-center relative shrink-0" data-name="Text">
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold h-[32px] leading-[1.3] relative shrink-0 text-[#121111] text-[24px] w-[195px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold h-[32px] leading-[1.3] relative shrink-0 text-text-main text-[24px] w-[195px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         Light Dress Bless
       </p>
       <Review />
@@ -178,7 +178,7 @@ function AddItem() {
   return (
     <div className="content-stretch flex gap-[12px] items-center justify-center relative shrink-0" data-name="Add Item">
       <Minus />
-      <p className="font-['Encode_Sans:Bold',sans-serif] font-bold leading-[1.2] relative shrink-0 text-[#292526] text-[16px] w-[7px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Bold',sans-serif] font-bold leading-[1.2] relative shrink-0 text-primary text-[16px] w-[7px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         1
       </p>
       <Add />
@@ -199,13 +199,13 @@ function Detail1() {
   return (
     <div className="absolute content-stretch flex flex-col gap-[16px] items-start left-[24px] top-[24px]" data-name="Detail">
       <Text />
-      <div className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[0] relative shrink-0 text-[#878787] text-[0px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
-        <p className="leading-[1.5] mb-0 text-[#787676] text-[12px]">Its simple and elegant shape makes it perfect for</p>
-        <p className="leading-[1.5] mb-0 text-[#787676] text-[12px]">those of you who like you who want minimalist</p>
+      <div className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[0] relative shrink-0 text-text-muted text-[0px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+        <p className="leading-[1.5] mb-0 text-text-sub text-[12px]">Its simple and elegant shape makes it perfect for</p>
+        <p className="leading-[1.5] mb-0 text-text-sub text-[12px]">those of you who like you who want minimalist</p>
         <p>
-          <span className="leading-[1.5] text-[#787676] text-[12px]">clothes</span>
+          <span className="leading-[1.5] text-text-sub text-[12px]">clothes</span>
           <span className="leading-[1.5] text-[12px]">{` `}</span>
-          <span className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[1.5] text-[#121111] text-[14px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+          <span className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[1.5] text-text-main text-[14px]" style={{ fontVariationSettings: "'wdth' 100" }}>
             Read More. . .
           </span>
         </p>
@@ -218,7 +218,7 @@ function SizeS() {
   return (
     <div className="content-stretch flex flex-col items-center justify-center p-[10px] relative rounded-[32px] shrink-0 size-[26px]" data-name="Size s">
       <div aria-hidden="true" className="absolute border border-[#dfdede] border-solid inset-0 pointer-events-none rounded-[32px]" />
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[1.5] relative shrink-0 text-[#292526] text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[1.5] relative shrink-0 text-primary text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         S
       </p>
     </div>
@@ -229,7 +229,7 @@ function SizeM() {
   return (
     <div className="content-stretch flex flex-col items-center justify-center p-[10px] relative rounded-[32px] shrink-0 size-[26px]" data-name="Size m">
       <div aria-hidden="true" className="absolute border border-[#dfdede] border-solid inset-0 pointer-events-none rounded-[32px]" />
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[1.5] relative shrink-0 text-[#292526] text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[1.5] relative shrink-0 text-primary text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         M
       </p>
     </div>
@@ -238,7 +238,7 @@ function SizeM() {
 
 function SizeL() {
   return (
-    <div className="bg-[#292526] content-stretch flex flex-col items-center justify-center p-[10px] relative rounded-[32px] shrink-0 size-[26px]" data-name="Size l">
+    <div className="bg-primary content-stretch flex flex-col items-center justify-center p-[10px] relative rounded-[32px] shrink-0 size-[26px]" data-name="Size l">
       <p className="font-['Encode_Sans:Bold',sans-serif] font-bold leading-[1.5] relative shrink-0 text-[#fdfdfd] text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         L
       </p>
@@ -250,7 +250,7 @@ function SizeXl() {
   return (
     <div className="content-stretch flex flex-col items-center justify-center p-[10px] relative rounded-[32px] shrink-0 size-[26px]" data-name="Size xl">
       <div aria-hidden="true" className="absolute border border-[#dfdede] border-solid inset-0 pointer-events-none rounded-[32px]" />
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[1.5] relative shrink-0 text-[#292526] text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[1.5] relative shrink-0 text-primary text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         XL
       </p>
     </div>
@@ -271,7 +271,7 @@ function Frame() {
 function Size() {
   return (
     <div className="absolute content-stretch flex flex-col gap-[8px] items-start justify-center left-[24px] top-[184px]" data-name="Size">
-      <p className="font-['Encode_Sans:Bold',sans-serif] font-bold leading-[1.5] relative shrink-0 text-[#121111] text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Bold',sans-serif] font-bold leading-[1.5] relative shrink-0 text-text-main text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         Choose Size
       </p>
       <Frame />
@@ -280,7 +280,7 @@ function Size() {
 }
 
 function Component() {
-  return <div className="bg-[#787676] rounded-[100px] shrink-0 size-[26px]" data-name="1" />;
+  return <div className="bg-text-sub rounded-[100px] shrink-0 size-[26px]" data-name="1" />;
 }
 
 function Component1() {
@@ -308,7 +308,7 @@ function ChooseColor() {
 function Color() {
   return (
     <div className="absolute content-stretch flex flex-col gap-[8px] items-start justify-center left-[257px] top-[184px]" data-name="Color">
-      <p className="font-['Encode_Sans:Bold',sans-serif] font-bold leading-[1.5] relative shrink-0 text-[#121111] text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Bold',sans-serif] font-bold leading-[1.5] relative shrink-0 text-text-main text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         Color
       </p>
       <ChooseColor />
@@ -319,7 +319,7 @@ function Color() {
 function Detail() {
   return (
     <div className="-translate-x-1/2 absolute bg-[#fdfdfd] bottom-0 h-[352px] left-1/2 overflow-clip w-[375px]" data-name="Detail">
-      <div className="-translate-x-1/2 absolute bg-[#292526] content-stretch flex gap-[8px] items-center justify-center left-1/2 px-[16px] py-[18px] rounded-[45px] top-[260px] w-[327px]" data-name="Button">
+      <div className="-translate-x-1/2 absolute bg-primary content-stretch flex gap-[8px] items-center justify-center left-1/2 px-[16px] py-[18px] rounded-[45px] top-[260px] w-[327px]" data-name="Button">
         <div className="relative shrink-0 size-[24px]" data-name="Main Icon">
           <VuesaxOutlineShoppingCart />
         </div>

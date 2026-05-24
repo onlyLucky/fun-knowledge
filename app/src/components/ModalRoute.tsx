@@ -8,7 +8,7 @@ export function ModalRoute({ children }: { children: React.ReactNode }) {
   return (
     <AuthSubGuard>
       {createPortal(
-        <div className="absolute inset-0 z-50 bg-[#F2F2F2] flex flex-col overflow-hidden">
+        <div className="absolute inset-0 z-50 bg-bg-page flex flex-col overflow-hidden">
           {children}
         </div>,
         container

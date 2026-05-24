@@ -89,9 +89,9 @@ export function WelcomePage() {
       >
         {/* Quick login label */}
         <div className="flex items-center gap-3">
-          <div className="flex-1 h-[1px] bg-[#FDFDFD]/10" />
+          <div className="flex-1 h-[1px] bg-bg-card/10" />
           <span className="text-[11px] text-[#FDFDFD]/30 tracking-wider">快捷登录</span>
-          <div className="flex-1 h-[1px] bg-[#FDFDFD]/10" />
+          <div className="flex-1 h-[1px] bg-bg-card/10" />
         </div>
 
         {/* Social buttons */}
@@ -108,7 +108,7 @@ export function WelcomePage() {
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={() => handleQuickLogin('apple')}
-            className="flex-1 flex items-center justify-center gap-2 bg-[#FDFDFD] rounded-[14px] py-3.5"
+            className="flex-1 flex items-center justify-center gap-2 bg-bg-card rounded-[14px] py-3.5"
           >
             <AppleIcon color="#1C1A1B" />
             <span className="text-[#1C1A1B] text-[14px] font-medium">Apple 登录</span>
@@ -117,9 +117,9 @@ export function WelcomePage() {
 
         {/* Divider */}
         <div className="flex items-center gap-3">
-          <div className="flex-1 h-[1px] bg-[#FDFDFD]/10" />
+          <div className="flex-1 h-[1px] bg-bg-card/10" />
           <span className="text-[11px] text-[#FDFDFD]/30">其他方式</span>
-          <div className="flex-1 h-[1px] bg-[#FDFDFD]/10" />
+          <div className="flex-1 h-[1px] bg-bg-card/10" />
         </div>
 
         {/* Phone / Email login */}

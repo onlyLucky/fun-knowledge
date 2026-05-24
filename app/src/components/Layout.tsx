@@ -22,7 +22,7 @@ export function Layout() {
 
   return (
     <FavoritesProvider>
-        <div className="flex flex-col h-full w-full bg-[#F2F2F2] overflow-hidden relative">
+        <div className="flex flex-col h-full w-full bg-bg-page overflow-hidden relative">
           {/* Main Content Area - always render the background outlet */}
           <div className="flex-1 overflow-hidden relative">
             {backgroundOutlet.current}
@@ -30,8 +30,8 @@ export function Layout() {
 
           {/* Bottom Tab Bar - hidden when modal is active */}
           {!isModal && (
-            <div className="shrink-0 flex justify-center px-6 pt-2 pb-6 bg-[#F2F2F2]">
-              <div className="bg-[#292526] rounded-[100px] flex items-center justify-around px-3 w-full h-[58px] shadow-[0_8px_28px_rgba(41,37,38,0.40)]">
+            <div className="shrink-0 flex justify-center px-6 pt-2 pb-6 bg-bg-page">
+              <div className="bg-primary rounded-[100px] flex items-center justify-around px-3 w-full h-[58px] shadow-[0_8px_28px_rgba(41,37,38,0.40)]">
                 {/* Home */}
                 <NavLink
                   to="/"

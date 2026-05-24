@@ -46,14 +46,14 @@ function MenuRow({
       className="w-full flex items-center justify-between px-4 py-3.5 transition-colors"
     >
       <div className="flex items-center gap-3">
-        <div className="w-[34px] h-[34px] bg-[#F2F2F2] rounded-[10px] flex items-center justify-center">
+        <div className="w-[34px] h-[34px] bg-bg-page rounded-[10px] flex items-center justify-center">
           {icon}
         </div>
-        <span className="text-[#121111] text-[14px] font-medium">{title}</span>
+        <span className="text-text-main text-[14px] font-medium">{title}</span>
       </div>
-      <div className="flex items-center gap-2 text-[#878787]">
+      <div className="flex items-center gap-2 text-text-muted">
         {value && (
-          <span className="text-[12px] bg-[#F2F2F2] px-2 py-0.5 rounded-[100px] text-[#787676] font-medium">
+          <span className="text-[12px] bg-bg-page px-2 py-0.5 rounded-[100px] text-text-sub font-medium">
             {value}
           </span>
         )}
@@ -77,11 +77,12 @@ export function Profile() {
       setSaved(res.total);
     }).catch(() => {});
 
-    // Compute this week's check-in days
+    // Compute this week's check-in days (Monday-first)
     const today = new Date();
-    const dayOfWeek = today.getDay(); // 0=Sun
+    const dayOfWeek = today.getDay(); // 0=Sun, 1=Mon ...
+    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
     const weekStart = new Date(today);
-    weekStart.setDate(today.getDate() - dayOfWeek);
+    weekStart.setDate(today.getDate() + mondayOffset);
     weekStart.setHours(0, 0, 0, 0);
     const monthStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
     checkinService.getCheckInHistory({ month: monthStr, pageSize: 31 }).then((res) => {
@@ -92,17 +93,17 @@ export function Profile() {
       for (let i = 0; i < 7; i++) {
         const d = new Date(weekStart);
         d.setDate(weekStart.getDate() + i);
-        const key = d.toISOString().slice(0, 10);
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         week.push(checked.has(key));
       }
       setCheckedDays(week);
     }).catch(() => {});
   }, []);
 
-  const days = ['日', '一', '二', '三', '四', '五', '六'];
+  const days = ['一', '二', '三', '四', '五', '六', '日'];
 
   return (
-    <div className="flex flex-col h-full bg-[#F2F2F2] overflow-y-auto no-scrollbar">
+    <div className="flex flex-col h-full bg-bg-page overflow-y-auto no-scrollbar">
       <PageHeader
         title="我的"
         subtitle="个人中心"
@@ -111,16 +112,16 @@ export function Profile() {
           <motion.button
             whileTap={{ scale: 0.88 }}
             onClick={() => navigate('/settings')}
-            className="w-[38px] h-[38px] bg-[#FDFDFD] rounded-[12px] border border-[#DFDEDE] flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.06)]"
+            className="w-[38px] h-[38px] bg-bg-card rounded-[12px] border border-border flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.06)]"
           >
-            <Settings size={18} strokeWidth={2} className="text-[#121111]" />
+            <Settings size={18} strokeWidth={2} className="text-text-main" />
           </motion.button>
         }
       />
 
       {/* ── Profile Stats Card ── */}
       <div className="px-5 pb-4 shrink-0">
-        <div className="bg-[#292526] rounded-[24px] p-5 relative overflow-hidden shadow-[0_8px_24px_rgba(41,37,38,0.25)]">
+        <div className="bg-primary rounded-[24px] p-5 relative overflow-hidden shadow-[0_8px_24px_rgba(41,37,38,0.25)]">
           {/* Decorative blobs */}
           <div className="absolute top-0 right-0 w-36 h-36 bg-white/5 rounded-full translate-x-10 -translate-y-10 pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -translate-x-8 translate-y-8 pointer-events-none" />
@@ -135,7 +136,7 @@ export function Profile() {
                 onClick={() => navigate('/profile/edit/avatar')}
                 className="absolute -bottom-0.5 -right-0.5 w-[20px] h-[20px] bg-white rounded-full flex items-center justify-center shadow-md"
               >
-                <Pencil size={10} strokeWidth={2.5} className="text-[#292526]" />
+                <Pencil size={10} strokeWidth={2.5} className="text-primary" />
               </motion.button>
             </div>
             <div className="flex-1 min-w-0">
@@ -193,12 +194,12 @@ export function Profile() {
 
       {/* ── 7-Day Check-in ── */}
       <div className="px-5 pb-4 shrink-0">
-        <div className="bg-[#FDFDFD] rounded-[20px] p-4 border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)]">
+        <div className="bg-bg-card rounded-[20px] p-4 border border-border/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)]">
           <div className="flex items-center justify-between mb-3">
-            <p className="text-[13px] font-bold text-[#121111]">本周打卡</p>
+            <p className="text-[13px] font-bold text-text-main">本周打卡</p>
             <button
               onClick={() => navigate('/calendar')}
-              className="text-[11px] text-[#878787] flex items-center gap-0.5 active:opacity-60"
+              className="text-[11px] text-text-muted flex items-center gap-0.5 active:opacity-60"
             >
               查看全部 <ChevronRight size={12} strokeWidth={2.5} />
             </button>
@@ -206,13 +207,13 @@ export function Profile() {
           <div className="flex justify-between">
             {days.map((day, i) => (
               <div key={day} className="flex flex-col items-center gap-1.5">
-                <p className="text-[10px] text-[#878787]">{day}</p>
+                <p className="text-[10px] text-text-muted">{day}</p>
                 <motion.div
                   whileTap={{ scale: 0.88 }}
                   className={`w-8 h-8 rounded-[100px] flex items-center justify-center text-[12px] font-medium transition-colors ${
                     checkedDays[i]
-                      ? 'bg-[#292526] text-[#FDFDFD]'
-                      : 'bg-[#F2F2F2] text-[#DFDEDE] border border-[#DFDEDE]'
+                      ? 'bg-primary text-[#FDFDFD]'
+                      : 'bg-bg-page text-[#DFDEDE] border border-border'
                   }`}
                 >
                   {checkedDays[i] ? '✓' : '·'}
@@ -226,43 +227,43 @@ export function Profile() {
       {/* ── Menu Groups ── */}
       <div className="px-5 pb-8 space-y-3">
         {/* Learning group */}
-        <div className="bg-[#FDFDFD] rounded-[20px] overflow-hidden border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]">
+        <div className="bg-bg-card rounded-[20px] overflow-hidden border border-border/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]">
           <MenuRow
-            icon={<Star size={18} strokeWidth={2} className="text-[#292526]" />}
+            icon={<Star size={18} strokeWidth={2} className="text-primary" />}
             title="我的收藏"
             value={String(saved)}
             onClick={() => navigate('/favorites')}
           />
-          <div className="h-[1px] bg-[#F2F2F2] mx-4" />
+          <div className="h-[1px] bg-bg-page mx-4" />
           <MenuRow
-            icon={<Calendar size={18} strokeWidth={2} className="text-[#292526]" />}
+            icon={<Calendar size={18} strokeWidth={2} className="text-primary" />}
             title="打卡日历"
             onClick={() => navigate('/calendar')}
           />
-          <div className="h-[1px] bg-[#F2F2F2] mx-4" />
+          <div className="h-[1px] bg-bg-page mx-4" />
           <MenuRow
-            icon={<BookOpen size={18} strokeWidth={2} className="text-[#292526]" />}
+            icon={<BookOpen size={18} strokeWidth={2} className="text-primary" />}
             title="浏览历史"
             onClick={() => navigate('/browse-history')}
           />
-          <div className="h-[1px] bg-[#F2F2F2] mx-4" />
+          <div className="h-[1px] bg-bg-page mx-4" />
           <MenuRow
-            icon={<AlertCircle size={18} strokeWidth={2} className="text-[#292526]" />}
+            icon={<AlertCircle size={18} strokeWidth={2} className="text-primary" />}
             title="纠错记录"
             onClick={() => navigate('/error-reports')}
           />
         </div>
 
         {/* System group */}
-        <div className="bg-[#FDFDFD] rounded-[20px] overflow-hidden border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]">
+        <div className="bg-bg-card rounded-[20px] overflow-hidden border border-border/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]">
           <MenuRow
-            icon={<Settings size={18} strokeWidth={2} className="text-[#878787]" />}
+            icon={<Settings size={18} strokeWidth={2} className="text-text-muted" />}
             title="设置"
             onClick={() => navigate('/settings')}
           />
-          <div className="h-[1px] bg-[#F2F2F2] mx-4" />
+          <div className="h-[1px] bg-bg-page mx-4" />
           <MenuRow
-            icon={<Info size={18} strokeWidth={2} className="text-[#878787]" />}
+            icon={<Info size={18} strokeWidth={2} className="text-text-muted" />}
             title="关于冷知识星球"
             onClick={() => navigate('/about')}
           />

@@ -90,26 +90,26 @@ export function AvatarEditPage() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#F2F2F2] relative">
+    <div className="flex flex-col h-full bg-bg-page relative">
       {/* Header */}
-      <div className="bg-[#F2F2F2] shrink-0">
+      <div className="bg-bg-page shrink-0">
         <div className="flex items-center justify-between px-5 py-4">
           <motion.button
             whileTap={{ scale: 0.88 }}
             onClick={() => navigate(-1)}
-            className="w-[38px] h-[38px] bg-[#FDFDFD] rounded-[12px] border border-[#DFDEDE] flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.06)]"
+            className="w-[38px] h-[38px] bg-bg-card rounded-[12px] border border-border flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.06)]"
           >
-            <ChevronLeft size={20} strokeWidth={2.5} className="text-[#121111]" />
+            <ChevronLeft size={20} strokeWidth={2.5} className="text-text-main" />
           </motion.button>
 
-          <span className="text-[16px] font-bold text-[#121111]">更换头像</span>
+          <span className="text-[16px] font-bold text-text-main">更换头像</span>
 
           {previewUrl ? (
             <motion.button
               whileTap={{ scale: 0.88 }}
               onClick={handleConfirm}
               disabled={saving || isReviewing}
-              className="w-[38px] h-[38px] bg-[#292526] rounded-[12px] flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.2)] disabled:opacity-50"
+              className="w-[38px] h-[38px] bg-primary rounded-[12px] flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.2)] disabled:opacity-50"
             >
               <Check size={18} strokeWidth={2.5} className={`text-white ${saving ? 'animate-pulse' : ''}`} />
             </motion.button>
@@ -144,7 +144,7 @@ export function AvatarEditPage() {
         )}
 
         {/* 提示文字 */}
-        <p className="text-[13px] text-[#878787] mb-6">
+        <p className="text-[13px] text-text-muted mb-6">
           {isReviewing ? '头像正在审核中' : previewUrl ? '点击右上角确认按钮保存' : '选择一张新头像'}
         </p>
 
@@ -153,7 +153,7 @@ export function AvatarEditPage() {
           whileTap={{ scale: 0.96 }}
           onClick={() => setShowOptions(true)}
           disabled={isReviewing}
-          className="w-full max-w-[280px] py-3.5 bg-[#292526] rounded-[14px] text-[15px] text-white font-medium disabled:opacity-50"
+          className="w-full max-w-[280px] py-3.5 bg-primary rounded-[14px] text-[15px] text-white font-medium disabled:opacity-50"
         >
           {previewUrl ? '重新选择' : '选择新头像'}
         </motion.button>
@@ -179,39 +179,39 @@ export function AvatarEditPage() {
               animate={{ y: 0 }}
               exit={{ y: '100%' }}
               transition={{ type: 'spring', damping: 26, stiffness: 300 }}
-              className="absolute bottom-0 left-0 right-0 bg-[#FDFDFD] rounded-t-[28px] overflow-hidden"
+              className="absolute bottom-0 left-0 right-0 bg-bg-card rounded-t-[28px] overflow-hidden"
             >
               <div className="flex justify-center pt-3">
-                <div className="w-10 h-1 bg-[#DFDEDE] rounded-full" />
+                <div className="w-10 h-1 bg-border rounded-full" />
               </div>
               <div className="px-5 py-4">
-                <h3 className="text-[16px] font-bold text-[#121111] text-center">选择头像</h3>
+                <h3 className="text-[16px] font-bold text-text-main text-center">选择头像</h3>
               </div>
               <div className="px-5 pb-8 space-y-3">
                 <motion.button
                   whileTap={{ scale: 0.96 }}
                   onClick={() => cameraInputRef.current?.click()}
-                  className="w-full flex items-center gap-4 bg-[#F2F2F2] rounded-[16px] px-5 py-4"
+                  className="w-full flex items-center gap-4 bg-bg-page rounded-[16px] px-5 py-4"
                 >
-                  <div className="w-10 h-10 bg-[#292526] rounded-[12px] flex items-center justify-center">
+                  <div className="w-10 h-10 bg-primary rounded-[12px] flex items-center justify-center">
                     <Camera size={18} className="text-white" />
                   </div>
                   <div className="text-left">
-                    <p className="text-[15px] font-medium text-[#121111]">拍照</p>
-                    <p className="text-[12px] text-[#878787] mt-0.5">使用相机拍摄新头像</p>
+                    <p className="text-[15px] font-medium text-text-main">拍照</p>
+                    <p className="text-[12px] text-text-muted mt-0.5">使用相机拍摄新头像</p>
                   </div>
                 </motion.button>
                 <motion.button
                   whileTap={{ scale: 0.96 }}
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-full flex items-center gap-4 bg-[#F2F2F2] rounded-[16px] px-5 py-4"
+                  className="w-full flex items-center gap-4 bg-bg-page rounded-[16px] px-5 py-4"
                 >
-                  <div className="w-10 h-10 bg-[#292526] rounded-[12px] flex items-center justify-center">
+                  <div className="w-10 h-10 bg-primary rounded-[12px] flex items-center justify-center">
                     <ImageIcon size={18} className="text-white" />
                   </div>
                   <div className="text-left">
-                    <p className="text-[15px] font-medium text-[#121111]">从相册选择</p>
-                    <p className="text-[12px] text-[#878787] mt-0.5">从手机相册中选取照片</p>
+                    <p className="text-[15px] font-medium text-text-main">从相册选择</p>
+                    <p className="text-[12px] text-text-muted mt-0.5">从手机相册中选取照片</p>
                   </div>
                 </motion.button>
               </div>

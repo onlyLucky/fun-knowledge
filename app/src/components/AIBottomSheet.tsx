@@ -65,24 +65,24 @@ export function AIBottomSheet({ isOpen, onClose, title, knowledgeId }: AIBottomS
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 28, stiffness: 220 }}
-            className="absolute bottom-0 left-0 right-0 h-[72%] bg-[#FDFDFD] rounded-t-[24px] flex flex-col overflow-hidden"
+            className="absolute bottom-0 left-0 right-0 h-[72%] bg-bg-card rounded-t-[24px] flex flex-col overflow-hidden"
           >
             {/* Handle */}
             <div className="flex justify-center pt-3 pb-1 shrink-0">
-              <div className="w-9 h-1 rounded-[100px] bg-[#DFDEDE]" />
+              <div className="w-9 h-1 rounded-[100px] bg-border" />
             </div>
 
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-3 shrink-0">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-[100px] bg-[#292526] flex items-center justify-center">
+                <div className="w-7 h-7 rounded-[100px] bg-primary flex items-center justify-center">
                   <Sparkles size={14} className="text-[#FDFDFD]" />
                 </div>
-                <h3 className="text-[16px] font-bold text-[#121111]">AI 延伸解读</h3>
+                <h3 className="text-[16px] font-bold text-text-main">AI 延伸解读</h3>
               </div>
               <button
                 onClick={onClose}
-                className="w-[32px] h-[32px] rounded-[100px] border border-[#DFDEDE] flex items-center justify-center text-[#878787] active:bg-[#F2F2F2] transition-colors"
+                className="w-[32px] h-[32px] rounded-[100px] border border-border flex items-center justify-center text-text-muted active:bg-bg-page transition-colors"
               >
                 <X size={16} strokeWidth={2} />
               </button>
@@ -90,40 +90,40 @@ export function AIBottomSheet({ isOpen, onClose, title, knowledgeId }: AIBottomS
 
             {/* Topic pill */}
             <div className="px-5 pb-3 shrink-0">
-              <div className="bg-[#F2F2F2] rounded-[10px] px-4 py-3">
-                <p className="text-[12px] text-[#787676] leading-relaxed">
-                  基于「<span className="text-[#121111] font-medium">{title}</span>」，AI 为你生成了以下延伸知识
+              <div className="bg-bg-page rounded-[10px] px-4 py-3">
+                <p className="text-[12px] text-text-sub leading-relaxed">
+                  基于「<span className="text-text-main font-medium">{title}</span>」，AI 为你生成了以下延伸知识
                 </p>
               </div>
             </div>
 
             {/* Divider */}
-            <div className="h-[1px] bg-[#F2F2F2] mx-5 shrink-0" />
+            <div className="h-[1px] bg-bg-page mx-5 shrink-0" />
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto no-scrollbar px-5 py-4 space-y-5">
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-12 gap-3">
                   <motion.div
-                    className="w-6 h-6 border-2 border-[#DFDEDE] border-t-[#292526] rounded-full"
+                    className="w-6 h-6 border-2 border-border border-t-primary rounded-full"
                     animate={{ rotate: 360 }}
                     transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
                   />
-                  <p className="text-[13px] text-[#878787]">AI 正在生成延伸知识...</p>
+                  <p className="text-[13px] text-text-muted">AI 正在生成延伸知识...</p>
                 </div>
               ) : quotaExceeded ? (
                 <div className="flex flex-col items-center justify-center py-12 gap-4">
-                  <div className="w-16 h-16 bg-[#F2F2F2] rounded-full flex items-center justify-center">
-                    <Lock size={28} strokeWidth={2} className="text-[#878787]" />
+                  <div className="w-16 h-16 bg-bg-page rounded-full flex items-center justify-center">
+                    <Lock size={28} strokeWidth={2} className="text-text-muted" />
                   </div>
                   <div className="text-center">
-                    <p className="text-[16px] font-bold text-[#121111] mb-1">今日免费次数已用完</p>
-                    <p className="text-[13px] text-[#878787]">每天有 {dailyLimit} 次免费 AI 解读机会</p>
+                    <p className="text-[16px] font-bold text-text-main mb-1">今日免费次数已用完</p>
+                    <p className="text-[13px] text-text-muted">每天有 {dailyLimit} 次免费 AI 解读机会</p>
                   </div>
                   <motion.button
                     whileTap={{ scale: 0.97 }}
                     onClick={onClose}
-                    className="w-[200px] bg-[#292526] text-[#FDFDFD] py-3.5 rounded-[100px] font-bold text-[14px] flex items-center justify-center gap-2 shadow-[0_4px_12px_rgba(41,37,38,0.2)]"
+                    className="w-[200px] bg-primary text-[#FDFDFD] py-3.5 rounded-[100px] font-bold text-[14px] flex items-center justify-center gap-2 shadow-[0_4px_12px_rgba(41,37,38,0.2)]"
                   >
                     知道了
                   </motion.button>
@@ -135,12 +135,12 @@ export function AIBottomSheet({ isOpen, onClose, title, knowledgeId }: AIBottomS
                       {String(i + 1).padStart(2, '0')}
                     </span>
                     <div className="flex-1">
-                      <h4 className="text-[14px] font-bold text-[#121111] mb-1.5">{item.title}</h4>
-                      <p className="text-[13px] text-[#787676] leading-relaxed mb-2">{item.content}</p>
+                      <h4 className="text-[14px] font-bold text-text-main mb-1.5">{item.title}</h4>
+                      <p className="text-[13px] text-text-sub leading-relaxed mb-2">{item.content}</p>
                       {item.source && (
                         <div className="flex items-center gap-1.5">
-                          <div className="w-1 h-1 rounded-full bg-[#DFDEDE]" />
-                          <span className="text-[10px] text-[#878787]">{item.source}</span>
+                          <div className="w-1 h-1 rounded-full bg-border" />
+                          <span className="text-[10px] text-text-muted">{item.source}</span>
                         </div>
                       )}
                     </div>
@@ -148,19 +148,19 @@ export function AIBottomSheet({ isOpen, onClose, title, knowledgeId }: AIBottomS
                 ))
               ) : (
                 <div className="flex flex-col items-center justify-center py-12 gap-3">
-                  <p className="text-[13px] text-[#878787]">暂无延伸知识</p>
+                  <p className="text-[13px] text-text-muted">暂无延伸知识</p>
                 </div>
               )}
             </div>
 
             {/* Footer Button */}
             {!quotaExceeded && (
-              <div className="px-5 py-4 shrink-0 border-t border-[#F2F2F2]">
+              <div className="px-5 py-4 shrink-0 border-t border-border">
                 <motion.button
                   whileTap={{ scale: 0.97 }}
                   onClick={fetchItems}
                   disabled={loading}
-                  className="w-full bg-[#292526] text-[#FDFDFD] py-4 rounded-[100px] font-bold text-[14px] flex items-center justify-center gap-2 active:opacity-80 transition-opacity shadow-[0_4px_12px_rgba(41,37,38,0.2)]"
+                  className="w-full bg-primary text-[#FDFDFD] py-4 rounded-[100px] font-bold text-[14px] flex items-center justify-center gap-2 active:opacity-80 transition-opacity shadow-[0_4px_12px_rgba(41,37,38,0.2)]"
                 >
                   <RefreshCw size={15} strokeWidth={2.5} className={loading ? 'animate-spin' : ''} />
                   换一批延伸知识

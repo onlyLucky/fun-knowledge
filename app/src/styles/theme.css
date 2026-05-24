@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 @theme {
   --font-sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --color-primary: #292526;
@@ -11,6 +13,16 @@
   --color-bg-card: #FDFDFD;
   --color-border: #DFDEDE;
   --color-accent: #347EFB;
+}
+
+.dark {
+  --color-text-main: #EDEDED;
+  --color-text-sub: #A0A0A0;
+  --color-text-muted: #707070;
+  --color-bg-page: #1A1A1A;
+  --color-bg-card: #252525;
+  --color-border: #3A3A3A;
+  --color-primary: #484848;
 }
 
 body {

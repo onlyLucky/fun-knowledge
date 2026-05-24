@@ -36,19 +36,19 @@ export function ProfileEditPage() {
   const signatureStatus = profile.reviewInfo.signature?.status ?? 0;
 
   return (
-    <div className="flex flex-col h-full bg-[#F2F2F2] relative">
+    <div className="flex flex-col h-full bg-bg-page relative">
       {/* Header */}
-      <div className="bg-[#F2F2F2] shrink-0">
+      <div className="bg-bg-page shrink-0">
         <div className="flex items-center justify-between px-5 py-4">
           <motion.button
             whileTap={{ scale: 0.88 }}
             onClick={() => navigate(-1)}
-            className="w-[38px] h-[38px] bg-[#FDFDFD] rounded-[12px] border border-[#DFDEDE] flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.06)]"
+            className="w-[38px] h-[38px] bg-bg-card rounded-[12px] border border-border flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.06)]"
           >
-            <ChevronLeft size={20} strokeWidth={2.5} className="text-[#121111]" />
+            <ChevronLeft size={20} strokeWidth={2.5} className="text-text-main" />
           </motion.button>
 
-          <span className="text-[16px] font-bold text-[#121111]">编辑资料</span>
+          <span className="text-[16px] font-bold text-text-main">编辑资料</span>
 
           <div className="w-[38px]" />
         </div>
@@ -66,13 +66,13 @@ export function ProfileEditPage() {
               {profile.avatarUrl ? (
                 <img src={profile.avatarUrl} alt="avatar" className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full bg-[#292526] flex items-center justify-center">
+                <div className="w-full h-full bg-primary flex items-center justify-center">
                   <img src={DefaultAvatar} alt="avatar" className="w-full h-full object-cover" />
                 </div>
               )}
             </div>
             {/* Edit badge */}
-            <div className="absolute bottom-0 right-0 w-7 h-7 bg-[#292526] rounded-full flex items-center justify-center border-2 border-[#F2F2F2] shadow-md">
+            <div className="absolute bottom-0 right-0 w-7 h-7 bg-primary rounded-full flex items-center justify-center border-2 border-border shadow-md">
               <Pencil size={13} strokeWidth={2.5} className="text-white" />
             </div>
           </motion.button>
@@ -84,7 +84,7 @@ export function ProfileEditPage() {
             </div>
           )}
 
-          <p className="text-[12px] text-[#878787] mt-2">点击更换头像</p>
+          <p className="text-[12px] text-text-muted mt-2">点击更换头像</p>
         </div>
 
         {/* Fields */}
@@ -93,11 +93,11 @@ export function ProfileEditPage() {
           <motion.button
             whileTap={{ scale: 0.98 }}
             onClick={() => navigate('/profile/edit/nickname')}
-            className="w-full bg-[#FDFDFD] rounded-[18px] px-5 py-4 border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)] flex items-center justify-between"
+            className="w-full bg-bg-card rounded-[18px] px-5 py-4 border border-border/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)] flex items-center justify-between"
           >
             <div className="flex-1 text-left">
-              <p className="text-[11px] font-medium text-[#878787] mb-1">昵称</p>
-              <p className="text-[15px] text-[#121111]">{profile.nickname}</p>
+              <p className="text-[11px] font-medium text-text-muted mb-1">昵称</p>
+              <p className="text-[15px] text-text-main">{profile.nickname}</p>
             </div>
             <div className="flex items-center gap-2">
               <StatusBadge status={nicknameStatus} msg={profile.reviewInfo.nickname?.msg} />
@@ -109,11 +109,11 @@ export function ProfileEditPage() {
           <motion.button
             whileTap={{ scale: 0.98 }}
             onClick={() => navigate('/profile/edit/signature')}
-            className="w-full bg-[#FDFDFD] rounded-[18px] px-5 py-4 border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)] flex items-center justify-between"
+            className="w-full bg-bg-card rounded-[18px] px-5 py-4 border border-border/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)] flex items-center justify-between"
           >
             <div className="flex-1 text-left">
-              <p className="text-[11px] font-medium text-[#878787] mb-1">个性签名</p>
-              <p className="text-[15px] text-[#121111]">{profile.bio || '暂无签名'}</p>
+              <p className="text-[11px] font-medium text-text-muted mb-1">个性签名</p>
+              <p className="text-[15px] text-text-main">{profile.bio || '暂无签名'}</p>
             </div>
             <div className="flex items-center gap-2">
               <StatusBadge status={signatureStatus} msg={profile.reviewInfo.signature?.msg} />

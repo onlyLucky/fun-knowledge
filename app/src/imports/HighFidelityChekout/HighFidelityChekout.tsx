@@ -50,7 +50,7 @@ function Checkout() {
   return (
     <div className="-translate-x-1/2 absolute content-stretch flex gap-[89px] items-center justify-center left-1/2 px-[24px] py-[16px] top-[68px] w-[375px]" data-name="Checkout">
       <Back />
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[1.4] relative shrink-0 text-[#121111] text-[16px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[1.4] relative shrink-0 text-text-main text-[16px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         Checkout
       </p>
       <Menu />
@@ -71,10 +71,10 @@ function ProductCart() {
 function Headline() {
   return (
     <div className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0" data-name="headline">
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-[#121111] text-[14px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-text-main text-[14px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         Modern light clothes
       </p>
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-[#787676] text-[10px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-text-sub text-[10px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         Dress modern
       </p>
     </div>
@@ -85,7 +85,7 @@ function Detail1() {
   return (
     <div className="content-stretch flex flex-col gap-[16px] items-start leading-[normal] relative shrink-0 whitespace-nowrap" data-name="Detail">
       <Headline />
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-[#292526] text-[14px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-primary text-[14px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         $162.99
       </p>
     </div>
@@ -171,7 +171,7 @@ function AddItem() {
   return (
     <div className="content-stretch flex gap-[12px] items-center justify-center relative shrink-0" data-name="Add Item">
       <Minus />
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[1.2] relative shrink-0 text-[#292526] text-[14px] w-[7px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[1.2] relative shrink-0 text-primary text-[14px] w-[7px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         1
       </p>
       <Add />
@@ -227,10 +227,10 @@ function ProductCart1() {
 function Headline1() {
   return (
     <div className="content-stretch flex flex-col gap-[4px] items-start relative shrink-0" data-name="Headline">
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-[#121111] text-[14px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-text-main text-[14px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         Modern light clothes
       </p>
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-[#787676] text-[10px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-text-sub text-[10px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         Dress modern
       </p>
     </div>
@@ -241,7 +241,7 @@ function Detail3() {
   return (
     <div className="content-stretch flex flex-col gap-[16px] items-start leading-[normal] relative shrink-0 whitespace-nowrap" data-name="Detail">
       <Headline1 />
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-[#292526] text-[14px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-primary text-[14px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         $212.99
       </p>
     </div>
@@ -327,7 +327,7 @@ function AddItem1() {
   return (
     <div className="content-stretch flex gap-[12px] items-center justify-center relative shrink-0" data-name="Add Item">
       <Minus1 />
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[1.2] relative shrink-0 text-[#292526] text-[14px] w-[7px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[1.2] relative shrink-0 text-primary text-[14px] w-[7px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         4
       </p>
       <Add1 />
@@ -391,10 +391,10 @@ function CartView() {
 function SubTotal() {
   return (
     <div className="absolute content-stretch flex gap-[209px] items-center justify-center leading-[normal] left-[24px] text-[14px] top-[264px] whitespace-nowrap" data-name="Sub Total">
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-[#292526]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-primary" style={{ fontVariationSettings: "'wdth' 100" }}>
         Sub Total
       </p>
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-[#121111] text-right" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-text-main text-right" style={{ fontVariationSettings: "'wdth' 100" }}>
         $1,014.95
       </p>
     </div>
@@ -404,7 +404,7 @@ function SubTotal() {
 function Total() {
   return (
     <div className="content-stretch flex gap-[178px] items-center justify-center relative shrink-0" data-name="Total">
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-[#292526]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-primary" style={{ fontVariationSettings: "'wdth' 100" }}>
         Total (9 items)
       </p>
       <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-[#171516] text-right" style={{ fontVariationSettings: "'wdth' 100" }}>
@@ -417,10 +417,10 @@ function Total() {
 function Shipping() {
   return (
     <div className="content-stretch flex gap-[206px] items-center justify-center relative shrink-0" data-name="Shipping">
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-[#292526]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-primary" style={{ fontVariationSettings: "'wdth' 100" }}>
         Shipping Fee
       </p>
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-[#121111] text-right" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-text-main text-right" style={{ fontVariationSettings: "'wdth' 100" }}>
         $.0.00
       </p>
     </div>
@@ -430,10 +430,10 @@ function Shipping() {
 function Discount() {
   return (
     <div className="content-stretch flex gap-[230px] items-center justify-center relative shrink-0" data-name="Discount">
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-[#292526]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-primary" style={{ fontVariationSettings: "'wdth' 100" }}>
         Discount
       </p>
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-[#121111] text-right" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-text-main text-right" style={{ fontVariationSettings: "'wdth' 100" }}>
         $.0.00
       </p>
     </div>
@@ -460,7 +460,7 @@ function VisaMaster() {
           </div>
         </div>
       </div>
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[0] relative shrink-0 text-[#292526] text-[14px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[0] relative shrink-0 text-primary text-[14px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         <span className="leading-[1.4]">{`**** **** **** `}</span>
         <span className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[1.4]" style={{ fontVariationSettings: "'wdth' 100" }}>
           2143
@@ -505,7 +505,7 @@ function Card() {
 function Payment() {
   return (
     <div className="absolute content-stretch flex flex-col gap-[16px] items-start left-[24px] top-[24px]" data-name="Payment">
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[1.4] relative shrink-0 text-[#121111] text-[14px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[1.4] relative shrink-0 text-text-main text-[14px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         Shipping Information
       </p>
       <Card />
@@ -516,7 +516,7 @@ function Payment() {
 function DetailPrice() {
   return (
     <div className="-translate-x-1/2 absolute bg-white bottom-0 h-[418px] left-1/2 overflow-clip w-[375px]" data-name="Detail Price">
-      <div className="-translate-x-1/2 absolute bg-[#292526] bottom-[32px] content-stretch flex items-center justify-center left-1/2 px-[16px] py-[20px] rounded-[45px] w-[327px]" data-name="Button">
+      <div className="-translate-x-1/2 absolute bg-primary bottom-[32px] content-stretch flex items-center justify-center left-1/2 px-[16px] py-[20px] rounded-[45px] w-[327px]" data-name="Button">
         <p className="font-['Encode_Sans:Bold',sans-serif] font-bold leading-[1.4] relative shrink-0 text-[#fdfdfd] text-[14px] text-center whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
           Pay
         </p>

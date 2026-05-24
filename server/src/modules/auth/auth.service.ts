@@ -18,6 +18,7 @@ import { LoginPlatform, Status } from '../../common/enums/status.enum';
 import { LoginDto } from './dto/login.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { BindPlatformDto } from './dto/bind-platform.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { RegisterDto, RegisterPlatform } from './dto/register.dto';
 import { SmsService } from '../sms/sms.service';
 
@@ -479,6 +480,36 @@ export class AuthService {
     }
 
     return this.userRepository.save(user);
+  }
+
+  /**
+   * 修改密码
+   */
+  async changePassword(userId: string, dto: ChangePasswordDto): Promise<void> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException('用户不存在');
+    }
+
+    // 检查是否有邮箱密码登录方式
+    const passwordHash = user.user_auths?.email?.passwordHash;
+    if (!passwordHash) {
+      throw new BadRequestException('当前账号未设置密码，请使用邮箱绑定功能设置密码');
+    }
+
+    // 验证旧密码
+    const isOldPasswordValid = await bcrypt.compare(dto.oldPassword, passwordHash);
+    if (!isOldPasswordValid) {
+      throw new BadRequestException('当前密码错误');
+    }
+
+    // 更新密码
+    const newHashedPassword = await bcrypt.hash(dto.newPassword, 10);
+    user.user_auths.email.passwordHash = newHashedPassword;
+
+    await this.userRepository.save(user);
+    this.logger.log(`用户 ${userId} 修改密码成功`);
   }
 
   /**

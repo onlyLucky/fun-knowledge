@@ -24,7 +24,7 @@ export function ReportContentPage() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#F2F2F2]">
+    <div className="flex flex-col h-full bg-bg-page">
       <PageHeader title="内容举报" subtitle="帮助我们维护健康的内容环境" />
 
       <div className="flex-1 overflow-y-auto no-scrollbar pb-8">
@@ -40,14 +40,14 @@ export function ReportContentPage() {
                 <CheckCircle2 size={38} strokeWidth={1.8} className="text-green-600" />
               </div>
               <div>
-                <p className="text-[18px] font-bold text-[#121111] mb-2">举报已提交</p>
-                <p className="text-[13px] text-[#878787] leading-relaxed">
+                <p className="text-[18px] font-bold text-text-main mb-2">举报已提交</p>
+                <p className="text-[13px] text-text-muted leading-relaxed">
                   感谢你帮助维护内容质量。我们将在 24 小时内审核，并在处理完成后通知你。
                 </p>
               </div>
-              <div className="bg-[#F2F2F2] rounded-[16px] p-4 w-full">
-                <p className="text-[12px] text-[#878787] text-left">
-                  <span className="font-medium text-[#121111]">举报类型：</span>{selected}
+              <div className="bg-bg-page rounded-[16px] p-4 w-full">
+                <p className="text-[12px] text-text-muted text-left">
+                  <span className="font-medium text-text-main">举报类型：</span>{selected}
                 </p>
               </div>
             </motion.div>
@@ -62,7 +62,7 @@ export function ReportContentPage() {
 
               {/* Report type */}
               <div>
-                <p className="text-[11px] font-medium text-[#878787] uppercase tracking-wider mb-3 px-1">
+                <p className="text-[11px] font-medium text-text-muted uppercase tracking-wider mb-3 px-1">
                   举报类型 <span className="text-red-400">*</span>
                 </p>
                 <div className="space-y-2">
@@ -73,22 +73,22 @@ export function ReportContentPage() {
                       onClick={() => setSelected(type.label)}
                       className={`w-full flex items-center gap-3 p-3.5 rounded-[16px] border transition-all text-left ${
                         selected === type.label
-                          ? 'bg-[#292526] border-[#292526]'
-                          : 'bg-[#FDFDFD] border-[#DFDEDE]/50'
+                          ? 'bg-primary border-primary'
+                          : 'bg-bg-card border-border/50'
                       }`}
                     >
                       <span className="text-[20px] shrink-0">{type.emoji}</span>
                       <div className="flex-1 min-w-0">
                         <p
                           className={`text-[13px] font-bold ${
-                            selected === type.label ? 'text-[#FDFDFD]' : 'text-[#121111]'
+                            selected === type.label ? 'text-[#FDFDFD]' : 'text-text-main'
                           }`}
                         >
                           {type.label}
                         </p>
                         <p
                           className={`text-[11px] mt-0.5 ${
-                            selected === type.label ? 'text-[#FDFDFD]/60' : 'text-[#878787]'
+                            selected === type.label ? 'text-[#FDFDFD]/60' : 'text-text-muted'
                           }`}
                         >
                           {type.desc}
@@ -97,12 +97,12 @@ export function ReportContentPage() {
                       <div
                         className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
                           selected === type.label
-                            ? 'border-[#FDFDFD] bg-[#FDFDFD]'
-                            : 'border-[#DFDEDE]'
+                            ? 'border-[#FDFDFD] bg-bg-card'
+                            : 'border-border'
                         }`}
                       >
                         {selected === type.label && (
-                          <div className="w-2 h-2 rounded-full bg-[#292526]" />
+                          <div className="w-2 h-2 rounded-full bg-primary" />
                         )}
                       </div>
                     </motion.button>
@@ -112,7 +112,7 @@ export function ReportContentPage() {
 
               {/* Detail */}
               <div>
-                <p className="text-[11px] font-medium text-[#878787] uppercase tracking-wider mb-3 px-1">
+                <p className="text-[11px] font-medium text-text-muted uppercase tracking-wider mb-3 px-1">
                   补充说明
                 </p>
                 <textarea
@@ -120,13 +120,13 @@ export function ReportContentPage() {
                   onChange={(e) => setDetail(e.target.value)}
                   placeholder="请描述具体问题，例如：哪条内容、哪个部分存在问题..."
                   rows={4}
-                  className="w-full bg-[#FDFDFD] border border-[#DFDEDE]/50 rounded-[16px] px-4 py-3 text-[13px] text-[#121111] placeholder:text-[#DFDEDE] outline-none resize-none shadow-[0_2px_8px_rgba(41,37,38,0.04)]"
+                  className="w-full bg-bg-card border border-border/50 rounded-[16px] px-4 py-3 text-[13px] text-text-main placeholder:text-[#DFDEDE] outline-none resize-none shadow-[0_2px_8px_rgba(41,37,38,0.04)]"
                 />
               </div>
 
               {/* Contact */}
               <div>
-                <p className="text-[11px] font-medium text-[#878787] uppercase tracking-wider mb-3 px-1">
+                <p className="text-[11px] font-medium text-text-muted uppercase tracking-wider mb-3 px-1">
                   联系方式（选填）
                 </p>
                 <input
@@ -134,7 +134,7 @@ export function ReportContentPage() {
                   value={contact}
                   onChange={(e) => setContact(e.target.value)}
                   placeholder="邮箱或手机号，方便我们回复你"
-                  className="w-full bg-[#FDFDFD] border border-[#DFDEDE]/50 rounded-[14px] px-4 py-3 text-[13px] text-[#121111] placeholder:text-[#DFDEDE] outline-none shadow-[0_2px_8px_rgba(41,37,38,0.04)]"
+                  className="w-full bg-bg-card border border-border/50 rounded-[14px] px-4 py-3 text-[13px] text-text-main placeholder:text-[#DFDEDE] outline-none shadow-[0_2px_8px_rgba(41,37,38,0.04)]"
                 />
               </div>
 
@@ -145,8 +145,8 @@ export function ReportContentPage() {
                 disabled={!selected}
                 className={`w-full py-4 rounded-[100px] flex items-center justify-center gap-2 text-[14px] font-bold transition-all ${
                   selected
-                    ? 'bg-[#292526] text-[#FDFDFD] shadow-[0_4px_16px_rgba(41,37,38,0.2)]'
-                    : 'bg-[#F2F2F2] text-[#DFDEDE]'
+                    ? 'bg-primary text-[#FDFDFD] shadow-[0_4px_16px_rgba(41,37,38,0.2)]'
+                    : 'bg-bg-page text-[#DFDEDE]'
                 }`}
               >
                 <Send size={15} strokeWidth={2.5} />

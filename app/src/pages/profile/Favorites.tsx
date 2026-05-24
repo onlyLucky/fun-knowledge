@@ -176,7 +176,7 @@ export function Favorites() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#F2F2F2] relative">
+    <div className="flex flex-col h-full bg-bg-page relative">
       <PageHeader
         title="我的收藏"
         subtitle={`共 ${total} 张知识卡片`}
@@ -184,15 +184,15 @@ export function Favorites() {
 
       {/* Search bar */}
       <div className="px-5 pb-3 shrink-0">
-        <div className="bg-[#FDFDFD] border border-[#DFDEDE] rounded-[14px] flex items-center gap-2 px-4 py-3 shadow-[0_2px_6px_rgba(41,37,38,0.04)]">
-          <Search size={16} strokeWidth={2} className="text-[#878787] shrink-0" />
+        <div className="bg-bg-card border border-border rounded-[14px] flex items-center gap-2 px-4 py-3 shadow-[0_2px_6px_rgba(41,37,38,0.04)]">
+          <Search size={16} strokeWidth={2} className="text-text-muted shrink-0" />
           <input
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="搜索收藏的知识卡片…"
-            className="flex-1 bg-transparent text-[14px] text-[#121111] placeholder:text-[#DFDEDE] outline-none"
+            className="flex-1 bg-transparent text-[14px] text-text-main placeholder:text-[#DFDEDE] outline-none"
           />
           {inputValue && (
             <motion.button
@@ -200,15 +200,15 @@ export function Favorites() {
               animate={{ opacity: 1, scale: 1 }}
               whileTap={{ scale: 0.8 }}
               onClick={handleClearInput}
-              className="w-5 h-5 rounded-full bg-[#DFDEDE] flex items-center justify-center shrink-0"
+              className="w-5 h-5 rounded-full bg-border flex items-center justify-center shrink-0"
             >
-              <X size={12} strokeWidth={2.5} className="text-[#878787]" />
+              <X size={12} strokeWidth={2.5} className="text-text-muted" />
             </motion.button>
           )}
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={executeSearch}
-            className="px-3 py-1 bg-[#292526] text-[#FDFDFD] text-[13px] font-medium rounded-[100px] shrink-0"
+            className="px-3 py-1 bg-primary text-[#FDFDFD] text-[13px] font-medium rounded-[100px] shrink-0"
           >
             搜索
           </motion.button>
@@ -225,9 +225,9 @@ export function Favorites() {
             animate={refreshing ? { rotate: 360 } : { rotate: pullDistance >= PULL_THRESHOLD ? 180 : 0 }}
             transition={refreshing ? { duration: 0.8, repeat: Infinity, ease: 'linear' } : { duration: 0.2 }}
           >
-            <RefreshCw size={16} strokeWidth={2} className="text-[#878787]" />
+            <RefreshCw size={16} strokeWidth={2} className="text-text-muted" />
           </motion.div>
-          <span className="text-[12px] text-[#878787]">
+          <span className="text-[12px] text-text-muted">
             {refreshing ? '刷新中...' : pullDistance >= PULL_THRESHOLD ? '松开刷新' : '下拉刷新'}
           </span>
         </div>
@@ -250,7 +250,7 @@ export function Favorites() {
         {loading ? (
           <div className="flex flex-col items-center justify-center h-60">
             <motion.div
-              className="w-6 h-6 border-2 border-[#DFDEDE] border-t-[#292526] rounded-full"
+              className="w-6 h-6 border-2 border-border border-t-primary rounded-full"
               animate={{ rotate: 360 }}
               transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
             />
@@ -259,16 +259,16 @@ export function Favorites() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col items-center justify-center h-60 text-[#878787]"
+            className="flex flex-col items-center justify-center h-60 text-text-muted"
           >
-            <div className="w-16 h-16 bg-[#FDFDFD] rounded-[20px] border border-[#DFDEDE] flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-bg-card rounded-[20px] border border-border flex items-center justify-center mb-4">
               <Star size={28} strokeWidth={1.5} className="text-[#DFDEDE]" />
             </div>
-            <p className="text-[14px] font-medium text-[#787676]">
+            <p className="text-[14px] font-medium text-text-sub">
               {submittedQuery ? `没有找到「${submittedQuery}」相关收藏` : '还没有收藏任何卡片'}
             </p>
             {!submittedQuery && (
-              <p className="text-[12px] text-[#878787] mt-1">在首页点击 ☆ 收藏感兴趣的知识</p>
+              <p className="text-[12px] text-text-muted mt-1">在首页点击 ☆ 收藏感兴趣的知识</p>
             )}
           </motion.div>
         ) : (
@@ -281,11 +281,11 @@ export function Favorites() {
                 animate={{ opacity: toggling === card.id ? 0.5 : 1, y: 0, scale: toggling === card.id ? 0.97 : 1 }}
                 exit={{ opacity: 0, height: 0, marginBottom: 0 }}
                 transition={{ duration: 0.28, delay: i * 0.04 }}
-                className="bg-[#FDFDFD] rounded-[18px] overflow-hidden border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)] flex cursor-pointer active:opacity-80 transition-opacity"
+                className="bg-bg-card rounded-[18px] overflow-hidden border border-border/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)] flex cursor-pointer active:opacity-80 transition-opacity"
                 onClick={() => navigate(`/card/${card.id}`)}
               >
                 {/* Thumbnail */}
-                <div className="w-[90px] shrink-0 bg-[#F2F2F2] relative">
+                <div className="w-[90px] shrink-0 bg-bg-page relative">
                   <img
                     src={card.image}
                     alt={card.title}
@@ -301,40 +301,40 @@ export function Favorites() {
                 {/* Content */}
                 <div className="flex-1 p-4 flex flex-col justify-between min-w-0">
                   <div>
-                    <h3 className="text-[14px] font-bold text-[#121111] leading-snug line-clamp-2">
+                    <h3 className="text-[14px] font-bold text-text-main leading-snug line-clamp-2">
                       {card.title}
                     </h3>
                     {card.description && (
-                      <p className="text-[12px] text-[#878787] mt-1.5 leading-snug line-clamp-1">
+                      <p className="text-[12px] text-text-muted mt-1.5 leading-snug line-clamp-1">
                         {card.description}
                       </p>
                     )}
                   </div>
                   <div className="flex items-center justify-between mt-2">
                     <div className="flex items-center gap-1 min-w-0">
-                      <div className="w-1 h-1 rounded-full bg-[#DFDEDE] shrink-0" />
-                      <span className="text-[10px] text-[#878787] truncate">{card.source}</span>
+                      <div className="w-1 h-1 rounded-full bg-border shrink-0" />
+                      <span className="text-[10px] text-text-muted truncate">{card.source}</span>
                     </div>
                     <div className="flex gap-2 shrink-0">
                       <motion.button
                         whileTap={{ scale: 0.8 }}
-                        className="w-7 h-7 bg-[#F2F2F2] rounded-[8px] flex items-center justify-center"
+                        className="w-7 h-7 bg-bg-page rounded-[8px] flex items-center justify-center"
                         onClick={(e) => {
                           e.stopPropagation();
                           setAiSheet({ open: true, title: card.title, knowledgeId: card.id });
                         }}
                       >
-                        <Sparkles size={13} strokeWidth={2} className="text-[#292526]" />
+                        <Sparkles size={13} strokeWidth={2} className="text-primary" />
                       </motion.button>
                       <motion.button
                         whileTap={{ scale: 0.8 }}
-                        className="w-7 h-7 bg-[#F2F2F2] rounded-[8px] flex items-center justify-center"
+                        className="w-7 h-7 bg-bg-page rounded-[8px] flex items-center justify-center"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleToggleFavorite(card.id);
                         }}
                       >
-                        <Star size={13} strokeWidth={2} className="text-[#292526] fill-[#292526]" />
+                        <Star size={13} strokeWidth={2} className="text-primary fill-primary" />
                       </motion.button>
                     </div>
                   </div>
@@ -342,7 +342,7 @@ export function Favorites() {
               </motion.div>
             ))}
             {loadingMore && (
-              <p className="text-center text-[12px] text-[#878787] py-3">加载中...</p>
+              <p className="text-center text-[12px] text-text-muted py-3">加载中...</p>
             )}
             {!hasMore && saved.length > 0 && (
               <p className="text-center text-[12px] text-[#DFDEDE] py-3">没有更多了</p>

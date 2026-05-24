@@ -27,10 +27,12 @@ const DEFAULT_PROFILE: UserProfile = {
 interface UserContextType {
   profile: UserProfile;
   updateProfile: (updates: Partial<UserProfile>) => void;
-  /** 启动时初始化：拉取 profile + categories */
+  /** 初始化 profile */
   initProfile: () => Promise<void>;
   /** 仅刷新 profile（不拉取 categories） */
   refreshProfile: () => Promise<void>;
+  /** 初始化类目列表（仅首页需要） */
+  initCategories: () => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType>({
@@ -38,6 +40,7 @@ const UserContext = createContext<UserContextType>({
   updateProfile: () => {},
   initProfile: async () => {},
   refreshProfile: async () => {},
+  initCategories: async () => {},
 });
 
 export function UserProvider({ children }: { children: ReactNode }) {
@@ -66,10 +69,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const initProfile = useCallback(async () => {
     try {
-      const [serverUser, cats] = await Promise.all([
-        authService.getProfile(),
-        categoryService.getCategories(),
-      ]);
+      const serverUser = await authService.getProfile();
       setProfile((prev) => ({
         ...prev,
         nickname: serverUser.nickname || prev.nickname,
@@ -79,9 +79,17 @@ export function UserProvider({ children }: { children: ReactNode }) {
         totalCheckInDays: serverUser.total_check_in_days ?? prev.totalCheckInDays,
         reviewInfo: serverUser.review_info || prev.reviewInfo,
       }));
-      setCategoryMap(cats);
     } catch {
       // Server unavailable, keep localStorage defaults
+    }
+  }, []);
+
+  const initCategories = useCallback(async () => {
+    try {
+      const cats = await categoryService.getCategories();
+      setCategoryMap(cats);
+    } catch {
+      // ignore
     }
   }, []);
 
@@ -103,7 +111,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <UserContext.Provider value={{ profile, updateProfile, initProfile, refreshProfile }}>
+    <UserContext.Provider value={{ profile, updateProfile, initProfile, refreshProfile, initCategories }}>
       {children}
     </UserContext.Provider>
   );

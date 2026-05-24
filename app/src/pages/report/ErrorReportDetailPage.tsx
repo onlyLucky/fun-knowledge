@@ -27,9 +27,9 @@ const STATUS_CONFIG: Record<Status, { label: string; icon: typeof CheckCircle2; 
   rejected: {
     label: '未采纳',
     icon: XCircle,
-    color: 'text-[#878787]',
-    bg: 'bg-[#F2F2F2]',
-    border: 'border-[#DFDEDE]',
+    color: 'text-text-muted',
+    bg: 'bg-bg-page',
+    border: 'border-border',
   },
 };
 
@@ -71,11 +71,11 @@ export function ErrorReportDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col h-full bg-[#F2F2F2]">
+      <div className="flex flex-col h-full bg-bg-page">
         <PageHeader title="纠错详情" />
         <div className="flex-1 flex items-center justify-center">
           <motion.div
-            className="w-6 h-6 border-2 border-[#DFDEDE] border-t-[#292526] rounded-full"
+            className="w-6 h-6 border-2 border-border border-t-primary rounded-full"
             animate={{ rotate: 360 }}
             transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
           />
@@ -86,9 +86,9 @@ export function ErrorReportDetailPage() {
 
   if (!report) {
     return (
-      <div className="flex flex-col h-full bg-[#F2F2F2]">
+      <div className="flex flex-col h-full bg-bg-page">
         <PageHeader title="纠错详情" />
-        <div className="flex-1 flex items-center justify-center text-[#878787] text-[14px]">
+        <div className="flex-1 flex items-center justify-center text-text-muted text-[14px]">
           找不到该纠错记录
         </div>
       </div>
@@ -101,7 +101,7 @@ export function ErrorReportDetailPage() {
   const timeline = TIMELINE[status];
 
   return (
-    <div className="flex flex-col h-full bg-[#F2F2F2]">
+    <div className="flex flex-col h-full bg-bg-page">
       <PageHeader title="纠错详情" subtitle={`提交于 ${report.created_at.slice(0, 10)}`} />
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pb-8 space-y-4">
@@ -116,7 +116,7 @@ export function ErrorReportDetailPage() {
           </div>
           <div>
             <p className={`text-[14px] font-bold ${cfg.color}`}>{cfg.label}</p>
-            <p className="text-[11px] text-[#878787] mt-0.5">
+            <p className="text-[11px] text-text-muted mt-0.5">
               {status === 'pending' ? '正在审核中，请耐心等待' : `审核完成于 ${report.review_time?.slice(0, 10) || ''}`}
             </p>
           </div>
@@ -129,10 +129,10 @@ export function ErrorReportDetailPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 }}
             onClick={() => navigate(`/card/${card.id}`)}
-            className="bg-[#FDFDFD] rounded-[18px] overflow-hidden border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)] flex cursor-pointer active:opacity-80 transition-opacity"
+            className="bg-bg-card rounded-[18px] overflow-hidden border border-border/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)] flex cursor-pointer active:opacity-80 transition-opacity"
           >
             {/* Thumbnail */}
-            <div className="w-[90px] shrink-0 bg-[#F2F2F2] relative">
+            <div className="w-[90px] shrink-0 bg-bg-page relative">
               <img
                 src={resolveImageUrl(card.resource_url)}
                 alt={card.title}
@@ -147,19 +147,19 @@ export function ErrorReportDetailPage() {
             {/* Content */}
             <div className="flex-1 p-4 flex flex-col justify-between min-w-0">
               <div>
-                <h3 className="text-[14px] font-bold text-[#121111] leading-snug line-clamp-2">
+                <h3 className="text-[14px] font-bold text-text-main leading-snug line-clamp-2">
                   {card.title}
                 </h3>
                 {card.content && (
-                  <p className="text-[12px] text-[#878787] mt-1.5 leading-snug line-clamp-1">
+                  <p className="text-[12px] text-text-muted mt-1.5 leading-snug line-clamp-1">
                     {card.content}
                   </p>
                 )}
               </div>
               <div className="flex items-center mt-2">
                 <div className="flex items-center gap-1 min-w-0">
-                  <div className="w-1 h-1 rounded-full bg-[#DFDEDE] shrink-0" />
-                  <span className="text-[10px] text-[#878787] truncate">{card.source}</span>
+                  <div className="w-1 h-1 rounded-full bg-border shrink-0" />
+                  <span className="text-[10px] text-text-muted truncate">{card.source}</span>
                 </div>
               </div>
             </div>
@@ -171,16 +171,16 @@ export function ErrorReportDetailPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.09 }}
-          className="bg-[#FDFDFD] rounded-[20px] p-4 border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]"
+          className="bg-bg-card rounded-[20px] p-4 border border-border/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]"
         >
-          <p className="text-[10px] font-medium text-[#878787] uppercase tracking-wider mb-3">纠错内容</p>
+          <p className="text-[10px] font-medium text-text-muted uppercase tracking-wider mb-3">纠错内容</p>
           <div className="flex items-center gap-2 mb-3">
-            <FileText size={14} strokeWidth={2} className="text-[#292526] shrink-0" />
-            <span className="text-[13px] font-medium text-[#292526]">{correctionTypeLabel(report.type)}</span>
+            <FileText size={14} strokeWidth={2} className="text-primary shrink-0" />
+            <span className="text-[13px] font-medium text-primary">{correctionTypeLabel(report.type)}</span>
           </div>
           {report.description && (
-            <div className="bg-[#F2F2F2] rounded-[12px] p-3">
-              <p className="text-[13px] text-[#787676] leading-relaxed">{report.description}</p>
+            <div className="bg-bg-page rounded-[12px] p-3">
+              <p className="text-[13px] text-text-sub leading-relaxed">{report.description}</p>
             </div>
           )}
         </motion.div>
@@ -190,9 +190,9 @@ export function ErrorReportDetailPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.13 }}
-          className="bg-[#FDFDFD] rounded-[20px] p-4 border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]"
+          className="bg-bg-card rounded-[20px] p-4 border border-border/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]"
         >
-          <p className="text-[10px] font-medium text-[#878787] uppercase tracking-wider mb-4">处理进度</p>
+          <p className="text-[10px] font-medium text-text-muted uppercase tracking-wider mb-4">处理进度</p>
 
           <div className="flex items-start gap-0">
             {timeline.map((item, i) => (
@@ -202,13 +202,13 @@ export function ErrorReportDetailPage() {
                   {i > 0 && (
                     <div
                       className={`flex-1 h-[2px] ${
-                        item.done ? 'bg-[#292526]' : 'bg-[#DFDEDE]'
+                        item.done ? 'bg-primary' : 'bg-border'
                       }`}
                     />
                   )}
                   <div
                     className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
-                      item.done ? 'bg-[#292526]' : 'bg-[#DFDEDE]'
+                      item.done ? 'bg-primary' : 'bg-border'
                     }`}
                   >
                     {item.done && (
@@ -218,14 +218,14 @@ export function ErrorReportDetailPage() {
                   {i < timeline.length - 1 && (
                     <div
                       className={`flex-1 h-[2px] ${
-                        timeline[i + 1].done ? 'bg-[#292526]' : 'bg-[#DFDEDE]'
+                        timeline[i + 1].done ? 'bg-primary' : 'bg-border'
                       }`}
                     />
                   )}
                 </div>
                 <p
                   className={`text-[10px] text-center leading-tight ${
-                    item.done ? 'text-[#292526] font-medium' : 'text-[#DFDEDE]'
+                    item.done ? 'text-primary font-medium' : 'text-[#DFDEDE]'
                   }`}
                 >
                   {item.step}
@@ -241,22 +241,22 @@ export function ErrorReportDetailPage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.17 }}
-            className="bg-[#FDFDFD] rounded-[20px] p-4 border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]"
+            className="bg-bg-card rounded-[20px] p-4 border border-border/50 shadow-[0_2px_8px_rgba(41,37,38,0.04)]"
           >
             <div className="flex items-center gap-2 mb-3">
-              <MessageSquare size={14} strokeWidth={2} className="text-[#292526]" />
-              <p className="text-[10px] font-medium text-[#878787] uppercase tracking-wider">编辑团队回复</p>
+              <MessageSquare size={14} strokeWidth={2} className="text-primary" />
+              <p className="text-[10px] font-medium text-text-muted uppercase tracking-wider">编辑团队回复</p>
             </div>
-            <div className="bg-[#F2F2F2] rounded-[12px] p-3">
-              <p className="text-[13px] text-[#787676] leading-relaxed">{report.review_remark}</p>
+            <div className="bg-bg-page rounded-[12px] p-3">
+              <p className="text-[13px] text-text-sub leading-relaxed">{report.review_remark}</p>
             </div>
             <p className="text-[10px] text-[#DFDEDE] mt-2 text-right">{report.review_time?.slice(0, 10)}</p>
           </motion.div>
         )}
 
         {/* Info note */}
-        <div className="bg-[#F2F2F2] rounded-[14px] p-3 border border-[#DFDEDE]/50">
-          <p className="text-[11px] text-[#878787] leading-relaxed text-center">
+        <div className="bg-bg-page rounded-[14px] p-3 border border-border/50">
+          <p className="text-[11px] text-text-muted leading-relaxed text-center">
             纠错内容将由编辑团队在 3 个工作日内审核，感谢你为知识质量的贡献 ✨
           </p>
         </div>

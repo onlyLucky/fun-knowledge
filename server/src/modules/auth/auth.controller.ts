@@ -27,6 +27,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { BindPlatformDto } from './dto/bind-platform.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { RegisterDto } from './dto/register.dto';
 import { SendSmsDto } from './dto/send-sms.dto';
 import { UserReviewService } from '../user-review/user-review.service';
@@ -356,6 +357,31 @@ export class AuthController {
         id: updated.id,
         user_auths: updated.user_auths,
       },
+    };
+  }
+
+  /**
+   * 修改密码
+   */
+  @Post('change-password')
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: '修改密码',
+    description: '验证旧密码后设置新密码，仅限邮箱注册用户',
+  })
+  @ApiResponse({ status: 200, description: '修改成功' })
+  @ApiResponse({ status: 400, description: '参数错误或旧密码错误' })
+  @ApiResponse({ status: 401, description: '未登录' })
+  async changePassword(
+    @CurrentUser() user: User,
+    @Body() dto: ChangePasswordDto,
+  ) {
+    await this.authService.changePassword(user.id, dto);
+    return {
+      code: 200,
+      message: '密码修改成功',
+      data: null,
     };
   }
 }

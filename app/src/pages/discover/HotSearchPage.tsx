@@ -10,21 +10,21 @@ import { PageHeader } from '@/components/PageHeader';
 
 function HotSearchItemRow({ item, onClick }: { item: HotSearchItem; onClick: () => void }) {
   const TrendIcon = item.trend === 'up' ? TrendingUp : item.trend === 'down' ? TrendingDown : Minus;
-  const trendColor = item.trend === 'up' ? 'text-[#FF4D4F]' : item.trend === 'down' ? 'text-[#52C41A]' : 'text-[#878787]';
+  const trendColor = item.trend === 'up' ? 'text-[#FF4D4F]' : item.trend === 'down' ? 'text-[#52C41A]' : 'text-text-muted';
   const isTop3 = item.rank <= 3;
 
   return (
     <motion.button
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className="w-full flex items-center gap-3 py-3 px-1 text-left border-b border-[#F2F2F2] last:border-b-0"
+      className="w-full flex items-center gap-3 py-3 px-1 text-left border-b border-border last:border-b-0"
     >
-      <span className={`text-[16px] font-bold w-6 text-center ${isTop3 ? 'text-[#FF4D4F]' : 'text-[#878787]'}`}>
+      <span className={`text-[16px] font-bold w-6 text-center ${isTop3 ? 'text-[#FF4D4F]' : 'text-text-muted'}`}>
         {item.rank}
       </span>
       <div className="flex-1 min-w-0">
-        <p className="text-[15px] text-[#121111] truncate">{item.keyword}</p>
-        <p className="text-[11px] text-[#878787] mt-0.5">{item.heat.toLocaleString()} 热度</p>
+        <p className="text-[15px] text-text-main truncate">{item.keyword}</p>
+        <p className="text-[11px] text-text-muted mt-0.5">{item.heat.toLocaleString()} 热度</p>
       </div>
       <div className="flex items-center gap-1 shrink-0">
         {isTop3 && <Flame size={14} strokeWidth={2} className="text-[#FF4D4F]" />}
@@ -51,17 +51,17 @@ export function HotSearchPage() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#F2F2F2]">
+    <div className="flex flex-col h-full bg-bg-page">
       <PageHeader title="热搜榜单" />
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pb-6">
-        <div className="bg-[#FDFDFD] rounded-[20px] border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)] overflow-hidden">
+        <div className="bg-bg-card rounded-[20px] border border-border/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)] overflow-hidden">
           <div className="px-4 pt-4 pb-2">
             <div className="flex items-center gap-2">
               <Flame size={18} strokeWidth={2} className="text-[#FF4D4F]" />
-              <p className="text-[16px] font-bold text-[#121111]">全部热搜</p>
+              <p className="text-[16px] font-bold text-text-main">全部热搜</p>
             </div>
-            <p className="text-[12px] text-[#878787] mt-1">实时更新 · 基于用户搜索热度</p>
+            <p className="text-[12px] text-text-muted mt-1">实时更新 · 基于用户搜索热度</p>
           </div>
 
           <div className="px-4 pb-3">

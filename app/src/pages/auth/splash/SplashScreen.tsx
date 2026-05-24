@@ -53,7 +53,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
         {[0, 1, 2].map((i) => (
           <motion.div
             key={i}
-            className="w-1.5 h-1.5 rounded-full bg-[#FDFDFD]/30"
+            className="w-1.5 h-1.5 rounded-full bg-bg-card/30"
             animate={{ opacity: [0.3, 1, 0.3] }}
             transition={{ duration: 1.1, repeat: Infinity, delay: i * 0.2 }}
           />

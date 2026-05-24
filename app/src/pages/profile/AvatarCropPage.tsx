@@ -77,25 +77,25 @@ export function AvatarCropPage() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#F2F2F2] relative">
+    <div className="flex flex-col h-full bg-bg-page relative">
       {/* Header */}
-      <div className="bg-[#F2F2F2] shrink-0">
+      <div className="bg-bg-page shrink-0">
         <div className="flex items-center justify-between px-5 py-4">
           <motion.button
             whileTap={{ scale: 0.88 }}
             onClick={() => navigate(-1)}
-            className="w-[38px] h-[38px] bg-[#FDFDFD] rounded-[12px] border border-[#DFDEDE] flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.06)]"
+            className="w-[38px] h-[38px] bg-bg-card rounded-[12px] border border-border flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.06)]"
           >
-            <ChevronLeft size={20} strokeWidth={2.5} className="text-[#121111]" />
+            <ChevronLeft size={20} strokeWidth={2.5} className="text-text-main" />
           </motion.button>
 
-          <span className="text-[16px] font-bold text-[#121111]">调整头像</span>
+          <span className="text-[16px] font-bold text-text-main">调整头像</span>
 
           <motion.button
             whileTap={{ scale: 0.88 }}
             onClick={handleSave}
             disabled={saving}
-            className="w-[38px] h-[38px] bg-[#292526] rounded-[12px] flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.2)] disabled:opacity-50"
+            className="w-[38px] h-[38px] bg-primary rounded-[12px] flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.2)] disabled:opacity-50"
           >
             <Check size={18} strokeWidth={2.5} className={`text-white ${saving ? 'animate-pulse' : ''}`} />
           </motion.button>
@@ -120,9 +120,9 @@ export function AvatarCropPage() {
           </div>
 
           {/* Zoom Slider */}
-          <div className="shrink-0 px-8 py-5 bg-[#FDFDFD]">
+          <div className="shrink-0 px-8 py-5 bg-bg-card">
             <div className="flex items-center gap-4">
-              <span className="text-[12px] text-[#878787]">小</span>
+              <span className="text-[12px] text-text-muted">小</span>
               <input
                 type="range"
                 min={1}
@@ -130,18 +130,18 @@ export function AvatarCropPage() {
                 step={0.01}
                 value={zoom}
                 onChange={(e) => setZoom(Number(e.target.value))}
-                className="flex-1 accent-[#292526]"
+                className="flex-1 accent-primary"
               />
-              <span className="text-[12px] text-[#878787]">大</span>
+              <span className="text-[12px] text-text-muted">大</span>
             </div>
           </div>
 
           {/* Re-select buttons */}
-          <div className="shrink-0 px-5 pb-6 bg-[#FDFDFD] space-y-3">
+          <div className="shrink-0 px-5 pb-6 bg-bg-card space-y-3">
             <motion.button
               whileTap={{ scale: 0.96 }}
               onClick={() => cameraInputRef.current?.click()}
-              className="w-full py-3 bg-[#292526] rounded-[14px] text-[14px] text-white font-medium flex items-center justify-center gap-2"
+              className="w-full py-3 bg-primary rounded-[14px] text-[14px] text-white font-medium flex items-center justify-center gap-2"
             >
               <Camera size={16} />
               拍照
@@ -149,7 +149,7 @@ export function AvatarCropPage() {
             <motion.button
               whileTap={{ scale: 0.96 }}
               onClick={() => fileInputRef.current?.click()}
-              className="w-full py-3 bg-[#F2F2F2] rounded-[14px] text-[14px] text-[#121111] font-medium flex items-center justify-center gap-2"
+              className="w-full py-3 bg-bg-page rounded-[14px] text-[14px] text-text-main font-medium flex items-center justify-center gap-2"
             >
               <ImageIcon size={16} />
               从相册选择
@@ -158,11 +158,11 @@ export function AvatarCropPage() {
         </div>
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center px-5">
-          <p className="text-[14px] text-[#878787] mb-6">请先选择一张图片</p>
+          <p className="text-[14px] text-text-muted mb-6">请先选择一张图片</p>
           <motion.button
             whileTap={{ scale: 0.96 }}
             onClick={() => cameraInputRef.current?.click()}
-            className="w-full max-w-[280px] py-3.5 bg-[#292526] rounded-[14px] text-[15px] text-white font-medium flex items-center justify-center gap-2"
+            className="w-full max-w-[280px] py-3.5 bg-primary rounded-[14px] text-[15px] text-white font-medium flex items-center justify-center gap-2"
           >
             <Camera size={18} />
             拍照
@@ -170,7 +170,7 @@ export function AvatarCropPage() {
           <motion.button
             whileTap={{ scale: 0.96 }}
             onClick={() => fileInputRef.current?.click()}
-            className="w-full max-w-[280px] py-3.5 bg-[#F2F2F2] rounded-[14px] text-[15px] text-[#121111] font-medium mt-3 flex items-center justify-center gap-2"
+            className="w-full max-w-[280px] py-3.5 bg-bg-page rounded-[14px] text-[15px] text-text-main font-medium mt-3 flex items-center justify-center gap-2"
           >
             <ImageIcon size={18} />
             从相册选择

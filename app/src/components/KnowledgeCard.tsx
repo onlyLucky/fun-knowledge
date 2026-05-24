@@ -21,9 +21,10 @@ interface KnowledgeCardProps {
   onPullEnd?: () => void;
   onFavoriteToggle?: (id: string, isFavorited: boolean) => void;
   onAIClick?: (id: string) => void;
+  onReportToggle?: (open: boolean) => void;
 }
 
-export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen, onSave, zIndex, initialSaved, isFirstCard, onPullProgress, onPullEnd, onFavoriteToggle, onAIClick }: KnowledgeCardProps) {
+export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen, onSave, zIndex, initialSaved, isFirstCard, onPullProgress, onPullEnd, onFavoriteToggle, onAIClick, onReportToggle }: KnowledgeCardProps) {
   const [isSaved, setIsSaved] = useState(initialSaved ?? false);
 
   useEffect(() => {
@@ -117,7 +118,7 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
 
       <motion.div
         className={clsx(
-          "bg-[#FDFDFD] rounded-[20px] flex flex-col overflow-hidden h-full w-full shadow-[0_4px_20px_rgba(41,37,38,0.08)]",
+          "bg-bg-card rounded-[20px] flex flex-col overflow-hidden h-full w-full shadow-[0_4px_20px_rgba(41,37,38,0.08)]",
           isActive ? "pointer-events-auto" : "pointer-events-none"
         )}
         drag={isActive ? "y" : false}
@@ -130,7 +131,7 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
       >
         {/* Image Area — tappable to view detail */}
         <div
-          className="relative w-full flex-[0_0_45%] bg-[#F2F2F2] overflow-hidden cursor-pointer"
+          className="relative w-full flex-[0_0_45%] bg-bg-page overflow-hidden cursor-pointer"
           onClick={handleContentClick}
         >
           <img
@@ -140,7 +141,7 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
             draggable={false}
           />
           {/* Category Badge */}
-          <div className="absolute top-4 left-4 bg-[#292526] text-[#FDFDFD] text-[10px] px-3 py-1.5 rounded-[100px] font-medium tracking-wide shadow-sm">
+          <div className="absolute top-4 left-4 bg-primary text-[#FDFDFD] text-[10px] px-3 py-1.5 rounded-[100px] font-medium tracking-wide shadow-sm">
             {card.category}
           </div>
           {/* Swipe hint */}
@@ -157,21 +158,21 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
           className="px-5 pt-5 pb-3 flex-1 flex flex-col cursor-pointer"
           onClick={handleContentClick}
         >
-          <h2 className="text-[20px] leading-snug font-bold text-[#121111] mb-3 line-clamp-1">
+          <h2 className="text-[20px] leading-snug font-bold text-text-main mb-3 line-clamp-1">
             {card.title}
           </h2>
-          <p className="text-[14px] leading-relaxed text-[#787676] line-clamp-6 overflow-hidden">
+          <p className="text-[14px] leading-relaxed text-text-sub line-clamp-6 overflow-hidden">
             {card.description}
           </p>
 
-          <div className="flex items-center mt-4 pt-4 border-t border-[#DFDEDE]">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#DFDEDE] mr-2" />
-            <span className="text-[11px] text-[#878787] line-clamp-1 overflow-hidden">来源：{card.source}</span>
+          <div className="flex items-center mt-4 pt-4 border-t border-border">
+            <div className="w-1.5 h-1.5 rounded-full bg-border mr-2" />
+            <span className="text-[11px] text-text-muted line-clamp-1 overflow-hidden">来源：{card.source}</span>
           </div>
         </div>
 
         {/* Action Bar */}
-        <div className="h-[64px] flex items-center justify-between px-6 bg-[#FDFDFD] shrink-0">
+        <div className="h-[64px] flex items-center justify-between px-6 bg-bg-card shrink-0">
           {/* Save */}
           <motion.button
             whileTap={{ scale: 0.78 }}
@@ -196,14 +197,14 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
                 setSavingFavorite(false);
               }
             }}
-            className="w-[40px] h-[40px] rounded-[100px] border border-[#DFDEDE] flex items-center justify-center"
+            className="w-[40px] h-[40px] rounded-[100px] border border-border flex items-center justify-center"
           >
             <Star
               size={18}
               strokeWidth={2}
               className={clsx(
                 "transition-colors duration-200",
-                isSaved ? "text-[#292526] fill-[#292526]" : "text-[#878787]"
+                isSaved ? "text-primary fill-primary" : "text-text-muted"
               )}
             />
           </motion.button>
@@ -212,7 +213,7 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
           <motion.button
             whileTap={{ scale: 0.92 }}
             onClick={() => { onAIClick?.(card.id); onAIOpen(card.id, card.title); }}
-            className="flex items-center gap-2 bg-[#292526] text-[#FDFDFD] px-5 py-2.5 rounded-[100px] shadow-[0_4px_12px_rgba(41,37,38,0.25)]"
+            className="flex items-center gap-2 bg-primary text-[#FDFDFD] px-5 py-2.5 rounded-[100px] shadow-[0_4px_12px_rgba(41,37,38,0.25)]"
           >
             <Sparkles size={15} strokeWidth={2} />
             <span className="text-[13px] font-medium">AI 解读</span>
@@ -221,16 +222,16 @@ export function KnowledgeCard({ card, isActive, onSwipeUp, onSwipeDown, onAIOpen
           {/* Error Report */}
           <motion.button
             whileTap={{ scale: 0.78 }}
-            onClick={() => setShowReport(true)}
-            className="w-[40px] h-[40px] rounded-[100px] border border-[#DFDEDE] flex items-center justify-center"
+            onClick={() => { setShowReport(true); onReportToggle?.(true); }}
+            className="w-[40px] h-[40px] rounded-[100px] border border-border flex items-center justify-center"
           >
-            <AlertCircle size={18} strokeWidth={2} className="text-[#878787]" />
+            <AlertCircle size={18} strokeWidth={2} className="text-text-muted" />
           </motion.button>
         </div>
       </motion.div>
 
       {/* Error Report Sheet */}
-      <ErrorReportSheet isOpen={showReport} onClose={() => setShowReport(false)} knowledgeId={card.id} />
+      <ErrorReportSheet isOpen={showReport} onClose={() => { setShowReport(false); onReportToggle?.(false); }} knowledgeId={card.id} />
     </motion.div>
   );
 }

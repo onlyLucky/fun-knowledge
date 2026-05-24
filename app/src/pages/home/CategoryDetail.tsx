@@ -49,7 +49,7 @@ export function CategoryDetail() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#F2F2F2]">
+    <div className="flex flex-col h-full bg-bg-page">
       <PageHeader
         title={categoryName}
         subtitle={loading ? '加载中...' : `${displayCards.length} 张卡片`}
@@ -63,51 +63,51 @@ export function CategoryDetail() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05, duration: 0.25 }}
             onClick={() => navigate(`/card/${card.id}`)}
-            className="bg-[#FDFDFD] rounded-[20px] overflow-hidden border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)] active:opacity-80 transition-opacity cursor-pointer"
+            className="bg-bg-card rounded-[20px] overflow-hidden border border-border/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)] active:opacity-80 transition-opacity cursor-pointer"
           >
             {/* Image */}
-            <div className="w-full h-[160px] bg-[#F2F2F2] relative overflow-hidden">
+            <div className="w-full h-[160px] bg-bg-page relative overflow-hidden">
               <img
                 src={card.image}
                 alt={card.title}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-              <span className="absolute top-3 left-3 bg-[#292526] text-[#FDFDFD] text-[10px] px-2.5 py-1 rounded-[100px] font-medium">
+              <span className="absolute top-3 left-3 bg-primary text-[#FDFDFD] text-[10px] px-2.5 py-1 rounded-[100px] font-medium">
                 {card.category}
               </span>
             </div>
 
             {/* Body */}
             <div className="p-4">
-              <h3 className="text-[15px] font-bold text-[#121111] leading-snug mb-2">
+              <h3 className="text-[15px] font-bold text-text-main leading-snug mb-2">
                 {card.title}
               </h3>
-              <p className="text-[13px] text-[#787676] leading-relaxed line-clamp-3">
+              <p className="text-[13px] text-text-sub leading-relaxed line-clamp-3">
                 {card.description}
               </p>
 
-              <div className="flex items-center justify-between mt-4 pt-3 border-t border-[#F2F2F2]">
+              <div className="flex items-center justify-between mt-4 pt-3 border-t border-border">
                 <div className="flex items-center gap-1.5">
-                  <div className="w-1 h-1 rounded-full bg-[#DFDEDE]" />
-                  <span className="text-[10px] text-[#878787]">{card.source}</span>
+                  <div className="w-1 h-1 rounded-full bg-border" />
+                  <span className="text-[10px] text-text-muted">{card.source}</span>
                 </div>
                 <div className="flex gap-2">
                   <motion.button
                     whileTap={{ scale: 0.8 }}
                     onClick={(e) => handleToggleSave(card.id, e)}
-                    className="w-8 h-8 bg-[#F2F2F2] rounded-[10px] flex items-center justify-center"
+                    className="w-8 h-8 bg-bg-page rounded-[10px] flex items-center justify-center"
                   >
                     <Star
                       size={15}
                       strokeWidth={2}
-                      className={isSaved(card.id) ? 'text-[#292526] fill-[#292526]' : 'text-[#878787]'}
+                      className={isSaved(card.id) ? 'text-primary fill-primary' : 'text-text-muted'}
                     />
                   </motion.button>
                   <motion.button
                     whileTap={{ scale: 0.8 }}
                     onClick={(e) => { e.stopPropagation(); navigate(`/card/${card.id}`); }}
-                    className="flex items-center gap-1.5 bg-[#292526] text-[#FDFDFD] px-3 py-1.5 rounded-[100px]"
+                    className="flex items-center gap-1.5 bg-primary text-[#FDFDFD] px-3 py-1.5 rounded-[100px]"
                   >
                     <Sparkles size={12} strokeWidth={2} />
                     <span className="text-[11px] font-medium">查看详情</span>

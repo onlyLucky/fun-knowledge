@@ -19,7 +19,7 @@ function Product4() {
 
 function Heart() {
   return (
-    <div className="absolute bg-[#292526] right-[14px] rounded-[32px] size-[24px] top-[14px]" data-name="heart">
+    <div className="absolute bg-primary right-[14px] rounded-[32px] size-[24px] top-[14px]" data-name="heart">
       <div className="-translate-x-1/2 -translate-y-1/2 absolute left-1/2 size-[16px] top-1/2" data-name="Main Icon">
         <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
           <g id="heart">
@@ -45,10 +45,10 @@ function Image() {
 function Text1() {
   return (
     <div className="content-stretch flex flex-col gap-[4px] items-start leading-[1.5] relative shrink-0 whitespace-nowrap" data-name="Text">
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-[#121111] text-[14px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-text-main text-[14px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         Light Dress Yellow
       </p>
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-[#787676] text-[10px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-text-sub text-[10px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         Dress Modern
       </p>
     </div>
@@ -65,7 +65,7 @@ function Review() {
           </svg>
         </div>
       </div>
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[1.5] relative shrink-0 text-[#292526] text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[1.5] relative shrink-0 text-primary text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         5.0
       </p>
     </div>
@@ -75,7 +75,7 @@ function Review() {
 function Price() {
   return (
     <div className="content-stretch flex gap-[24px] items-center relative shrink-0" data-name="Price">
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[1.5] relative shrink-0 text-[#292526] text-[14px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[1.5] relative shrink-0 text-primary text-[14px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         $122.99
       </p>
       <Review />
@@ -103,7 +103,7 @@ function Product3() {
 
 function Heart1() {
   return (
-    <div className="absolute bg-[#292526] left-[115px] rounded-[32px] size-[24px] top-[16px]" data-name="heart">
+    <div className="absolute bg-primary left-[115px] rounded-[32px] size-[24px] top-[16px]" data-name="heart">
       <div className="-translate-x-1/2 -translate-y-1/2 absolute left-1/2 size-[16px] top-1/2" data-name="Main Icon">
         <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
           <g id="heart">
@@ -126,7 +126,7 @@ function Product5() {
 
 function Heart2() {
   return (
-    <div className="absolute bg-[#292526] left-[117px] rounded-[32px] size-[24px] top-[14px]" data-name="heart">
+    <div className="absolute bg-primary left-[117px] rounded-[32px] size-[24px] top-[14px]" data-name="heart">
       <div className="-translate-x-1/2 -translate-y-1/2 absolute left-1/2 size-[16px] top-1/2" data-name="Main Icon">
         <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
           <g id="heart">
@@ -152,10 +152,10 @@ function Image1() {
 function Text3() {
   return (
     <div className="content-stretch flex flex-col gap-[4px] items-start leading-[1.5] relative shrink-0 whitespace-nowrap" data-name="Text">
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-[#121111] text-[14px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-text-main text-[14px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         Maroon Dark Top
       </p>
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-[#787676] text-[10px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-text-sub text-[10px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         Dress
       </p>
     </div>
@@ -172,7 +172,7 @@ function Review1() {
           </svg>
         </div>
       </div>
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[1.5] relative shrink-0 text-[#292526] text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[1.5] relative shrink-0 text-primary text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         5.0
       </p>
     </div>
@@ -182,7 +182,7 @@ function Review1() {
 function Price1() {
   return (
     <div className="content-stretch flex gap-[24px] items-center relative shrink-0" data-name="Price">
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[1.5] relative shrink-0 text-[#292526] text-[14px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[1.5] relative shrink-0 text-primary text-[14px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         $194.99
       </p>
       <Review1 />
@@ -231,7 +231,7 @@ function Heart4() {
 
 function Heart3() {
   return (
-    <div className="absolute bg-[#292526] right-[14px] rounded-[32px] size-[24px] top-[14px]" data-name="heart">
+    <div className="absolute bg-primary right-[14px] rounded-[32px] size-[24px] top-[14px]" data-name="heart">
       <Heart4 />
     </div>
   );
@@ -249,10 +249,10 @@ function Image2() {
 function Text5() {
   return (
     <div className="content-stretch flex flex-col gap-[4px] items-start leading-[1.5] relative shrink-0 whitespace-nowrap" data-name="Text">
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-[#121111] text-[14px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-text-main text-[14px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         Light Dress Bless
       </p>
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-[#787676] text-[10px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-text-sub text-[10px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         Dress modern
       </p>
     </div>
@@ -269,7 +269,7 @@ function Review2() {
           </svg>
         </div>
       </div>
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[1.5] relative shrink-0 text-[#292526] text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[1.5] relative shrink-0 text-primary text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         5.0
       </p>
     </div>
@@ -279,7 +279,7 @@ function Review2() {
 function Price2() {
   return (
     <div className="content-stretch flex gap-[24px] items-center relative shrink-0" data-name="Price">
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[1.5] relative shrink-0 text-[#292526] text-[14px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[1.5] relative shrink-0 text-primary text-[14px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         $162.99
       </p>
       <Review2 />
@@ -315,7 +315,7 @@ function Product8() {
 
 function Heart5() {
   return (
-    <div className="absolute bg-[#292526] left-[117px] rounded-[32px] size-[24px] top-[14px]" data-name="heart">
+    <div className="absolute bg-primary left-[117px] rounded-[32px] size-[24px] top-[14px]" data-name="heart">
       <div className="-translate-x-1/2 -translate-y-1/2 absolute left-1/2 size-[16px] top-1/2" data-name="Main Icon">
         <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
           <g id="heart">
@@ -340,10 +340,10 @@ function Image3() {
 function Text7() {
   return (
     <div className="content-stretch flex flex-col gap-[4px] items-start leading-[1.5] relative shrink-0 whitespace-nowrap" data-name="Text">
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-[#121111] text-[14px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold relative shrink-0 text-text-main text-[14px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         Modern Light Clothes
       </p>
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-[#787676] text-[10px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-text-sub text-[10px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         T-Shirt
       </p>
     </div>
@@ -360,7 +360,7 @@ function Review3() {
           </svg>
         </div>
       </div>
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[1.5] relative shrink-0 text-[#292526] text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal leading-[1.5] relative shrink-0 text-primary text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         5.0
       </p>
     </div>
@@ -370,7 +370,7 @@ function Review3() {
 function Price3() {
   return (
     <div className="content-stretch flex gap-[24px] items-center relative shrink-0" data-name="Price">
-      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[1.5] relative shrink-0 text-[#292526] text-[14px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:SemiBold',sans-serif] font-semibold leading-[1.5] relative shrink-0 text-primary text-[14px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         $212.99
       </p>
       <Review3 />
@@ -414,7 +414,7 @@ function DefaultLinearCategory() {
 
 function AllItems() {
   return (
-    <div className="bg-[#292526] content-stretch flex gap-[4px] items-center px-[12px] py-[8px] relative rounded-[8px] shrink-0" data-name="All Items">
+    <div className="bg-primary content-stretch flex gap-[4px] items-center px-[12px] py-[8px] relative rounded-[8px] shrink-0" data-name="All Items">
       <div className="relative shrink-0 size-[16px]" data-name="Default Icon">
         <DefaultLinearCategory />
       </div>
@@ -444,7 +444,7 @@ function Dress() {
       <div className="relative shrink-0 size-[16px]" data-name="Default Icon">
         <DefaultLinearDress />
       </div>
-      <p className="font-['Encode_Sans:Medium',sans-serif] font-medium leading-[1.5] relative shrink-0 text-[#292526] text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Medium',sans-serif] font-medium leading-[1.5] relative shrink-0 text-primary text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         Dress
       </p>
     </div>
@@ -471,7 +471,7 @@ function TShirt() {
       <div className="relative shrink-0 size-[16px]" data-name="Default Icon">
         <DefaultLinearTshirt />
       </div>
-      <p className="font-['Encode_Sans:Medium',sans-serif] font-medium leading-[1.5] relative shrink-0 text-[#292526] text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Medium',sans-serif] font-medium leading-[1.5] relative shrink-0 text-primary text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         T-Shirt
       </p>
     </div>
@@ -497,7 +497,7 @@ function Jeans() {
       <div className="relative shrink-0 size-[16px]" data-name="Default Icon">
         <DefaultLinearJeans />
       </div>
-      <p className="font-['Encode_Sans:Medium',sans-serif] font-medium leading-[1.5] relative shrink-0 text-[#292526] text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Medium',sans-serif] font-medium leading-[1.5] relative shrink-0 text-primary text-[12px] whitespace-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
         Jeans
       </p>
     </div>
@@ -563,7 +563,7 @@ function Filter1() {
 
 function Filter() {
   return (
-    <div className="bg-[#292526] content-stretch flex items-center justify-center p-[12px] relative rounded-[8px] shrink-0" data-name="Filter">
+    <div className="bg-primary content-stretch flex items-center justify-center p-[12px] relative rounded-[8px] shrink-0" data-name="Filter">
       <Filter1 />
     </div>
   );
@@ -581,10 +581,10 @@ function SearchBar() {
 function Text8() {
   return (
     <div className="content-stretch flex flex-col gap-[4px] items-start leading-[1.5] relative shrink-0 whitespace-nowrap" data-name="Text">
-      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-[#787676] text-[12px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Regular',sans-serif] font-normal relative shrink-0 text-text-sub text-[12px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         Hello, Welcome 👋
       </p>
-      <p className="font-['Encode_Sans:Bold',sans-serif] font-bold relative shrink-0 text-[#121111] text-[16px]" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <p className="font-['Encode_Sans:Bold',sans-serif] font-bold relative shrink-0 text-text-main text-[16px]" style={{ fontVariationSettings: "'wdth' 100" }}>
         Albert Stevano
       </p>
     </div>
@@ -768,7 +768,7 @@ function Account() {
 
 function BottomNavigation() {
   return (
-    <div className="-translate-x-1/2 absolute bg-[#292526] bottom-[32px] content-stretch flex gap-[45px] items-start left-1/2 px-[16px] py-[10px] rounded-[44px]" data-name="Bottom Navigation">
+    <div className="-translate-x-1/2 absolute bg-primary bottom-[32px] content-stretch flex gap-[45px] items-start left-1/2 px-[16px] py-[10px] rounded-[44px]" data-name="Bottom Navigation">
       <Home />
       <Cart />
       <Favourite />

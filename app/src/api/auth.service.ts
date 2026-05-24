@@ -141,3 +141,30 @@ export async function refreshToken(refreshToken: string): Promise<LoginTokens> {
   }
   return client.post('/v1/auth/refresh', { refresh_token: refreshToken });
 }
+
+export async function changePassword(data: { oldPassword: string; newPassword: string }): Promise<void> {
+  if (USE_MOCK) {
+    await new Promise((r) => setTimeout(r, 500));
+    return;
+  }
+  return client.post('/v1/auth/change-password', data);
+}
+
+export async function bindPlatform(
+  platform: string,
+  data?: { code?: string; phone?: string; email?: string; password?: string; smsCode?: string }
+): Promise<{ id: string; user_auths: Record<string, any> }> {
+  if (USE_MOCK) {
+    await new Promise((r) => setTimeout(r, 500));
+    return { id: 'mock-1', user_auths: { [platform]: true } };
+  }
+  return client.post(`/v1/auth/bind/${platform}`, data || {});
+}
+
+export async function unbindPlatform(platform: string): Promise<{ id: string; user_auths: Record<string, any> }> {
+  if (USE_MOCK) {
+    await new Promise((r) => setTimeout(r, 500));
+    return { id: 'mock-1', user_auths: {} };
+  }
+  return client.delete(`/v1/auth/unbind/${platform}`);
+}

@@ -35,7 +35,7 @@ function AIRecognitionOverlay({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
-          className="absolute inset-0 z-[9999] flex flex-col items-center justify-center bg-[#292526]/92 backdrop-blur-sm"
+          className="absolute inset-0 z-[9999] flex flex-col items-center justify-center bg-primary/92 backdrop-blur-sm"
         >
           {!result ? (
             <>
@@ -72,7 +72,7 @@ function AIRecognitionOverlay({
                 {[0, 1, 2].map((i) => (
                   <motion.div
                     key={i}
-                    className="w-1.5 h-1.5 bg-[#FDFDFD]/60 rounded-full"
+                    className="w-1.5 h-1.5 bg-bg-card/60 rounded-full"
                     animate={{ opacity: [0.3, 1, 0.3] }}
                     transition={{ duration: 1, repeat: Infinity, delay: i * 0.25 }}
                   />
@@ -87,7 +87,7 @@ function AIRecognitionOverlay({
                 transition={{ type: 'spring', damping: 20, stiffness: 300 }}
                 className="flex flex-col items-center"
               >
-                <div className="w-20 h-20 bg-[#FDFDFD]/10 rounded-[24px] flex items-center justify-center mb-6">
+                <div className="w-20 h-20 bg-bg-card/10 rounded-[24px] flex items-center justify-center mb-6">
                   <Search size={36} strokeWidth={1.5} className="text-[#FDFDFD]" />
                 </div>
                 <p className="text-[#FDFDFD] text-[16px] font-bold mb-2">识别完成</p>
@@ -98,14 +98,14 @@ function AIRecognitionOverlay({
                   <motion.button
                     whileTap={{ scale: 0.95 }}
                     onClick={onClose}
-                    className="px-6 py-3 bg-[#FDFDFD]/15 text-[#FDFDFD] rounded-[100px] text-[14px] font-medium"
+                    className="px-6 py-3 bg-bg-card/15 text-[#FDFDFD] rounded-[100px] text-[14px] font-medium"
                   >
                     取消
                   </motion.button>
                   <motion.button
                     whileTap={{ scale: 0.95 }}
                     onClick={onNavigate}
-                    className="px-6 py-3 bg-[#FDFDFD] text-[#292526] rounded-[100px] text-[14px] font-bold"
+                    className="px-6 py-3 bg-bg-card text-primary rounded-[100px] text-[14px] font-bold"
                   >
                     {result.knowledge_id ? '查看详情' : '搜索'}
                   </motion.button>
@@ -129,16 +129,16 @@ function SearchResultCard({ card, onClick }: { card: KnowledgeCard; onClick: () 
       animate={{ opacity: 1, y: 0 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className="w-full bg-[#FDFDFD] rounded-[16px] p-3 flex items-center gap-3 border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)] text-left"
+      className="w-full bg-bg-card rounded-[16px] p-3 flex items-center gap-3 border border-border/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)] text-left"
     >
-      <div className="w-[60px] h-[60px] rounded-[12px] bg-[#F2F2F2] overflow-hidden shrink-0">
+      <div className="w-[60px] h-[60px] rounded-[12px] bg-bg-page overflow-hidden shrink-0">
         <img src={card.image} alt={card.title} className="w-full h-full object-cover" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-[14px] font-medium text-[#121111] truncate">{card.title}</p>
-        <p className="text-[11px] text-[#878787] mt-0.5 line-clamp-2">{card.description}</p>
+        <p className="text-[14px] font-medium text-text-main truncate">{card.title}</p>
+        <p className="text-[11px] text-text-muted mt-0.5 line-clamp-2">{card.description}</p>
         <div className="flex items-center gap-1.5 mt-1.5">
-          <span className="text-[10px] px-2 py-0.5 bg-[#F2F2F2] rounded-[100px] text-[#878787]">{card.category}</span>
+          <span className="text-[10px] px-2 py-0.5 bg-bg-page rounded-[100px] text-text-muted">{card.category}</span>
         </div>
       </div>
     </motion.button>
@@ -149,7 +149,7 @@ function SearchResultCard({ card, onClick }: { card: KnowledgeCard; onClick: () 
 
 function HotSearchItemRow({ item, onClick }: { item: HotSearchItem; onClick: () => void }) {
   const TrendIcon = item.trend === 'up' ? TrendingUp : item.trend === 'down' ? TrendingDown : Minus;
-  const trendColor = item.trend === 'up' ? 'text-[#FF4D4F]' : item.trend === 'down' ? 'text-[#52C41A]' : 'text-[#878787]';
+  const trendColor = item.trend === 'up' ? 'text-[#FF4D4F]' : item.trend === 'down' ? 'text-[#52C41A]' : 'text-text-muted';
   const isTop3 = item.rank <= 3;
 
   return (
@@ -158,11 +158,11 @@ function HotSearchItemRow({ item, onClick }: { item: HotSearchItem; onClick: () 
       onClick={onClick}
       className="w-full flex items-center gap-3 py-2.5 px-1 text-left"
     >
-      <span className={`text-[14px] font-bold w-5 text-center ${isTop3 ? 'text-[#FF4D4F]' : 'text-[#878787]'}`}>
+      <span className={`text-[14px] font-bold w-5 text-center ${isTop3 ? 'text-[#FF4D4F]' : 'text-text-muted'}`}>
         {item.rank}
       </span>
       <div className="flex-1 min-w-0">
-        <p className="text-[14px] text-[#121111] truncate">{item.keyword}</p>
+        <p className="text-[14px] text-text-main truncate">{item.keyword}</p>
       </div>
       <div className="flex items-center gap-1 shrink-0">
         {isTop3 && <Flame size={12} strokeWidth={2} className="text-[#FF4D4F]" />}
@@ -371,7 +371,7 @@ export function Discover() {
   const isSearching = submittedQuery.trim().length > 0;
 
   return (
-    <div className="flex flex-col h-full bg-[#F2F2F2] relative">
+    <div className="flex flex-col h-full bg-bg-page relative">
       {/* Header with AI button */}
       <PageHeader
         title="发现"
@@ -381,7 +381,7 @@ export function Discover() {
           <motion.button
             whileTap={{ scale: 0.88 }}
             onClick={handleAIRecognize}
-            className="w-[38px] h-[38px] bg-[#292526] rounded-[12px] flex items-center justify-center shadow-[0_4px_12px_rgba(41,37,38,0.2)]"
+            className="w-[38px] h-[38px] bg-primary rounded-[12px] flex items-center justify-center shadow-[0_4px_12px_rgba(41,37,38,0.2)]"
           >
             <Camera size={18} strokeWidth={2} className="text-[#FDFDFD]" />
           </motion.button>
@@ -390,15 +390,15 @@ export function Discover() {
 
       {/* Search bar */}
       <div className="px-5 pb-3 shrink-0">
-        <div className="bg-[#FDFDFD] border border-[#DFDEDE] rounded-[14px] flex items-center gap-2 px-4 py-3 shadow-[0_2px_6px_rgba(41,37,38,0.04)]">
-          <Search size={16} strokeWidth={2} className="text-[#878787] shrink-0" />
+        <div className="bg-bg-card border border-border rounded-[14px] flex items-center gap-2 px-4 py-3 shadow-[0_2px_6px_rgba(41,37,38,0.04)]">
+          <Search size={16} strokeWidth={2} className="text-text-muted shrink-0" />
           <input
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="搜索知识卡片…"
-            className="flex-1 bg-transparent text-[14px] text-[#121111] placeholder:text-[#DFDEDE] outline-none"
+            className="flex-1 bg-transparent text-[14px] text-text-main placeholder:text-[#DFDEDE] outline-none"
           />
           {inputValue && (
             <motion.button
@@ -406,15 +406,15 @@ export function Discover() {
               animate={{ opacity: 1, scale: 1 }}
               whileTap={{ scale: 0.8 }}
               onClick={handleClearInput}
-              className="w-5 h-5 rounded-full bg-[#DFDEDE] flex items-center justify-center shrink-0"
+              className="w-5 h-5 rounded-full bg-border flex items-center justify-center shrink-0"
             >
-              <X size={12} strokeWidth={2.5} className="text-[#878787]" />
+              <X size={12} strokeWidth={2.5} className="text-text-muted" />
             </motion.button>
           )}
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={executeSearch}
-            className="px-3 py-1 bg-[#292526] text-[#FDFDFD] text-[13px] font-medium rounded-[100px] shrink-0"
+            className="px-3 py-1 bg-primary text-[#FDFDFD] text-[13px] font-medium rounded-[100px] shrink-0"
           >
             搜索
           </motion.button>
@@ -435,11 +435,11 @@ export function Discover() {
         {isSearching ? (
           /* Search Results */
           <div>
-            <p className="text-[11px] font-medium text-[#878787] uppercase tracking-wider mb-3">
+            <p className="text-[11px] font-medium text-text-muted uppercase tracking-wider mb-3">
               搜索结果 · {searchResults.length} 张
             </p>
             {searchResults.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-[#878787]">
+              <div className="flex flex-col items-center justify-center py-16 text-text-muted">
                 <Search size={32} strokeWidth={1.5} className="text-[#DFDEDE] mb-3" />
                 <p className="text-[14px]">没有找到「{submittedQuery}」相关卡片</p>
               </div>
@@ -453,7 +453,7 @@ export function Discover() {
                   />
                 ))}
                 {loadingMore && (
-                  <p className="text-center text-[12px] text-[#878787] py-3">加载中...</p>
+                  <p className="text-center text-[12px] text-text-muted py-3">加载中...</p>
                 )}
                 {!hasMore && searchResults.length > 0 && (
                   <p className="text-center text-[12px] text-[#DFDEDE] py-3">没有更多了</p>
@@ -467,12 +467,12 @@ export function Discover() {
             {recentSearches.length > 0 && (
               <div className="mb-5">
                 <div className="flex items-center justify-between mb-3">
-                  <p className="text-[11px] font-medium text-[#878787] uppercase tracking-wider">
+                  <p className="text-[11px] font-medium text-text-muted uppercase tracking-wider">
                     最近搜索
                   </p>
                   <button
                     onClick={clearRecentSearches}
-                    className="text-[11px] text-[#878787] active:text-[#121111]"
+                    className="text-[11px] text-text-muted active:text-text-main"
                   >
                     清除
                   </button>
@@ -492,7 +492,7 @@ export function Discover() {
                       onPointerDown={() => handlePointerDown(term)}
                       onPointerUp={clearLongPressTimer}
                       onPointerLeave={clearLongPressTimer}
-                      className="flex items-center gap-1.5 px-3 py-2 bg-[#FDFDFD] border border-[#DFDEDE] rounded-[100px] text-[13px] text-[#121111] shadow-[0_1px_4px_rgba(41,37,38,0.04)] max-w-full"
+                      className="flex items-center gap-1.5 px-3 py-2 bg-bg-card border border-border rounded-[100px] text-[13px] text-text-main shadow-[0_1px_4px_rgba(41,37,38,0.04)] max-w-full"
                     >
                       {pressedTerm === term ? (
                         <>
@@ -509,7 +509,7 @@ export function Discover() {
                         </>
                       ) : (
                         <>
-                          <Clock size={12} strokeWidth={2} className="text-[#878787] shrink-0" />
+                          <Clock size={12} strokeWidth={2} className="text-text-muted shrink-0" />
                           <span className="truncate">{term.length > 8 ? term.slice(0, 8) + '...' : term}</span>
                         </>
                       )}
@@ -521,23 +521,23 @@ export function Discover() {
 
             {/* Hot Search Ranking */}
             {top10HotSearches.length > 0 && (
-            <div className="bg-[#FDFDFD] rounded-[20px] border border-[#DFDEDE]/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)] overflow-hidden">
+            <div className="bg-bg-card rounded-[20px] border border-border/50 shadow-[0_2px_8px_rgba(41,37,38,0.05)] overflow-hidden">
               <div className="flex items-center justify-between px-4 pt-4 pb-2">
                 <div className="flex items-center gap-2">
                   <Flame size={16} strokeWidth={2} className="text-[#FF4D4F]" />
-                  <p className="text-[15px] font-bold text-[#121111]">热搜榜单</p>
+                  <p className="text-[15px] font-bold text-text-main">热搜榜单</p>
                 </div>
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => navigate('/hot-searches')}
-                  className="flex items-center gap-0.5 text-[12px] text-[#878787]"
+                  className="flex items-center gap-0.5 text-[12px] text-text-muted"
                 >
                   查看全部
                   <ChevronRight size={14} strokeWidth={2} />
                 </motion.button>
               </div>
 
-              <div className="grid grid-cols-2 divide-x divide-[#F2F2F2]">
+              <div className="grid grid-cols-2 divide-x divide-border">
                 {/* Left column: rank 1-5 */}
                 <div className="px-3 pb-2">
                   {top10HotSearches.slice(0, 5).map((item) => (

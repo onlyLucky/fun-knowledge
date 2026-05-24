@@ -97,15 +97,15 @@ export function LoginPage() {
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-[#F2F2F2] overflow-hidden">
+    <div className="w-full h-full flex flex-col bg-bg-page overflow-hidden">
       {/* Header */}
       <div className="flex items-center px-5 pt-4 pb-2 shrink-0">
         <motion.button
           whileTap={{ scale: 0.88 }}
           onClick={() => navigate(-1)}
-          className="w-[38px] h-[38px] bg-[#FDFDFD] rounded-[12px] border border-[#DFDEDE] flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.06)]"
+          className="w-[38px] h-[38px] bg-bg-card rounded-[12px] border border-border flex items-center justify-center shadow-[0_2px_6px_rgba(41,37,38,0.06)]"
         >
-          <ChevronLeft size={20} strokeWidth={2.5} className="text-[#121111]" />
+          <ChevronLeft size={20} strokeWidth={2.5} className="text-text-main" />
         </motion.button>
       </div>
 
@@ -113,15 +113,15 @@ export function LoginPage() {
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pb-8">
         {/* Logo + Title */}
         <div className="flex flex-col items-center pt-4 pb-8">
-          <div className="w-[72px] h-[72px] bg-[#292526] rounded-[18px] flex items-center justify-center mb-4 shadow-[0_6px_20px_rgba(41,37,38,0.22)]">
+          <div className="w-[72px] h-[72px] bg-primary rounded-[18px] flex items-center justify-center mb-4 shadow-[0_6px_20px_rgba(41,37,38,0.22)]">
             <AppLogo size={58} />
           </div>
-          <h1 className="text-[22px] font-bold text-[#121111] mb-1">欢迎回来</h1>
-          <p className="text-[13px] text-[#878787]">登录以继续探索冷知识</p>
+          <h1 className="text-[22px] font-bold text-text-main mb-1">欢迎回来</h1>
+          <p className="text-[13px] text-text-muted">登录以继续探索冷知识</p>
         </div>
 
         {/* Tab switcher */}
-        <div className="flex bg-[#FDFDFD] rounded-[14px] p-1 border border-[#DFDEDE]/60 mb-6 shadow-[0_2px_6px_rgba(41,37,38,0.04)]">
+        <div className="flex bg-bg-card rounded-[14px] p-1 border border-border/60 mb-6 shadow-[0_2px_6px_rgba(41,37,38,0.04)]">
           {(['phone', 'email'] as Tab[]).map((t) => (
             <motion.button
               key={t}
@@ -129,8 +129,8 @@ export function LoginPage() {
               onClick={() => { setTab(t); setErrors({}); }}
               className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-[11px] transition-all duration-200 text-[13px] font-medium ${
                 tab === t
-                  ? 'bg-[#292526] text-[#FDFDFD] shadow-[0_2px_8px_rgba(41,37,38,0.2)]'
-                  : 'text-[#878787]'
+                  ? 'bg-primary text-[#FDFDFD] shadow-[0_2px_8px_rgba(41,37,38,0.2)]'
+                  : 'text-text-muted'
               }`}
             >
               {t === 'phone'
@@ -167,7 +167,7 @@ export function LoginPage() {
                     className={`shrink-0 text-[12px] font-medium px-3 py-1.5 rounded-[8px] transition-all ${
                       countdown > 0
                         ? 'text-[#DFDEDE]'
-                        : 'text-[#292526]'
+                        : 'text-primary'
                     }`}
                   >
                     {countdown > 0 ? `${countdown}s` : '获取验证码'}
@@ -227,7 +227,7 @@ export function LoginPage() {
                 }
               />
               <div className="flex justify-end">
-                <button className="text-[12px] text-[#878787] py-1">忘记密码？</button>
+                <button className="text-[12px] text-text-muted py-1">忘记密码？</button>
               </div>
             </motion.div>
           )}
@@ -238,7 +238,7 @@ export function LoginPage() {
           whileTap={{ scale: 0.97 }}
           onClick={handleLogin}
           disabled={isLoading}
-          className="w-full mt-6 py-4 bg-[#292526] rounded-[100px] text-[#FDFDFD] text-[15px] font-bold flex items-center justify-center gap-2 shadow-[0_6px_20px_rgba(41,37,38,0.22)] transition-opacity"
+          className="w-full mt-6 py-4 bg-primary rounded-[100px] text-[#FDFDFD] text-[15px] font-bold flex items-center justify-center gap-2 shadow-[0_6px_20px_rgba(41,37,38,0.22)] transition-opacity"
         >
           {isLoading ? (
             <motion.div
@@ -251,10 +251,10 @@ export function LoginPage() {
 
         {/* Register link */}
         <div className="flex items-center justify-center gap-1.5 mt-5">
-          <span className="text-[13px] text-[#878787]">没有账号？</span>
+          <span className="text-[13px] text-text-muted">没有账号？</span>
           <button
             onClick={() => navigate('/register')}
-            className="text-[13px] text-[#292526] font-medium"
+            className="text-[13px] text-primary font-medium"
           >
             立即注册
           </button>
