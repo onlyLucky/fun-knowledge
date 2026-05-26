@@ -1,0 +1,55 @@
+@import '../../styles/variables.less';
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: @spacing-4 @spacing-5;
+  background-color: @color-bg-page;
+  padding-top: calc(@spacing-4 + env(safe-area-inset-top));
+}
+
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: @spacing-3;
+}
+
+.page-header-back {
+  width: 76px;
+  height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: @color-bg-card;
+  border-radius: @radius-md;
+  border: 1px solid @color-border;
+  box-shadow: 0 4px 12px rgba(41, 37, 38, 0.06);
+  
+  &:active {
+    transform: scale(0.95);
+    opacity: 0.9;
+  }
+}
+
+.page-header-title-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.page-header-title {
+  font-size: 34px;
+  font-weight: @font-weight-bold;
+  color: @color-text-main;
+}
+
+.page-header-subtitle {
+  font-size: 22px;
+  color: @color-text-muted;
+  margin-top: 4px;
+}
+
+.page-header-right {
+  display: flex;
+  align-items: center;
+}

@@ -1,0 +1,137 @@
+@import '../../../styles/variables.less';
+
+.login-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: @color-bg-page;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: @spacing-4 @spacing-5;
+  padding-top: calc(@spacing-4 + env(safe-area-inset-top));
+}
+
+.back-btn {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: @color-text-main;
+  
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.header-title {
+  font-size: @font-size-lg;
+  font-weight: @font-weight-bold;
+  color: @color-text-main;
+}
+
+.header-placeholder {
+  width: 64px;
+}
+
+.form-content {
+  flex: 1;
+  padding: @spacing-6 @spacing-5;
+}
+
+.input-group {
+  margin-bottom: @spacing-5;
+}
+
+.input-label {
+  display: block;
+  font-size: @font-size-sm;
+  color: @color-text-sub;
+  margin-bottom: @spacing-2;
+}
+
+.input-field {
+  width: 100%;
+  padding: @spacing-4;
+  background-color: @color-bg-card;
+  border: 1px solid @color-border;
+  border-radius: @radius-lg;
+  font-size: @font-size-base;
+  color: @color-text-main;
+}
+
+.code-input-wrapper {
+  display: flex;
+  gap: @spacing-3;
+}
+
+.code-input {
+  flex: 1;
+}
+
+.send-code-btn {
+  flex-shrink: 0;
+  padding: @spacing-3 @spacing-4;
+  background-color: @color-primary;
+  color: @color-bg-page;
+  font-size: @font-size-sm;
+  border-radius: @radius-lg;
+  white-space: nowrap;
+  
+  &:active:not(.disabled) {
+    opacity: 0.9;
+  }
+  
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+.submit-btn {
+  margin-top: @spacing-6;
+  padding: @spacing-4;
+  background-color: @color-primary;
+  color: @color-bg-page;
+  font-size: @font-size-lg;
+  font-weight: @font-weight-medium;
+  text-align: center;
+  border-radius: @radius-full;
+  box-shadow: @shadow-button;
+  
+  &:active:not(.loading) {
+    transform: scale(0.98);
+  }
+  
+  &.loading {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: @spacing-6;
+  gap: @spacing-1;
+}
+
+.link-text {
+  font-size: @font-size-sm;
+  color: @color-text-muted;
+}
+
+.link-action {
+  font-size: @font-size-sm;
+  color: @color-primary;
+  font-weight: @font-weight-medium;
+  
+  &:active {
+    opacity: 0.8;
+  }
+}

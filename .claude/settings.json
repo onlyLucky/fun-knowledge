@@ -45,9 +45,17 @@
       "Bash(lsof -ti:5173,5174,5175,5176,5177)",
       "Bash(xargs kill -9)",
       "Bash(./node_modules/.bin/tsc --noEmit)",
-      "Bash(pnpm tsc *)"
+      "Bash(pnpm tsc *)",
+      "Bash(mkdir -p /Users/feynman/Documents/code/2026/@IDEA/FunFact/docs/superpowers/plans)",
+      "Bash(npx @tarojs/cli --version)",
+      "Bash(pnpm add *)",
+      "Bash(taro --version)",
+      "Bash(npx taro *)"
     ],
-    "defaultMode": "bypassPermissions"
+    "defaultMode": "bypassPermissions",
+    "additionalDirectories": [
+      "/Users/feynman/Documents/code/2026/@IDEA/FunFact/docs/superpowers/plans"
+    ]
   },
   "enabledPlugins": {
     "superpowers@claude-plugins-official": true

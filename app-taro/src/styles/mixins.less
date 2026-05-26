@@ -1,0 +1,216 @@
+@import './variables.less';
+
+// ============================================
+// 混入 - Mixins
+// ============================================
+
+// 安全区域
+// ----------------------------------------
+
+.safe-area-top() {
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom() {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-all() {
+  .safe-area-top();
+  .safe-area-bottom();
+}
+
+// 文本处理
+// ----------------------------------------
+
+.ellipsis() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ellipsis-lines(@lines: 2) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: @lines;
+  overflow: hidden;
+}
+
+// 滚动条隐藏
+// ----------------------------------------
+
+.no-scrollbar() {
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  scrollbar-width: none;
+  scrollbar-height: none;
+}
+
+// Flex 布局
+// ----------------------------------------
+
+.flex-center() {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between() {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-column() {
+  display: flex;
+  flex-direction: column;
+}
+
+// 绝对定位居中
+// ----------------------------------------
+
+.absolute-center() {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.absolute-fill() {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+// 毛玻璃效果
+// ----------------------------------------
+
+.glass(@blur: 12px, @opacity: 0.8) {
+  backdrop-filter: blur(@blur);
+  -webkit-backdrop-filter: blur(@blur);
+  background-color: rgba(28, 26, 27, @opacity);
+}
+
+// 按钮样式
+// ----------------------------------------
+
+.button-base() {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: all @duration-fast @ease-default;
+  
+  &:active {
+    transform: scale(0.97);
+    opacity: 0.9;
+  }
+}
+
+.button-primary() {
+  .button-base();
+  background-color: @color-primary;
+  color: @color-bg-page;
+}
+
+.button-secondary() {
+  .button-base();
+  background-color: @color-bg-card;
+  color: @color-text-main;
+  border: 1px solid @color-border;
+}
+
+// 卡片样式
+// ----------------------------------------
+
+.card() {
+  background-color: @color-bg-card;
+  border-radius: @radius-xl;
+  box-shadow: @shadow-card;
+}
+
+// 输入框样式
+// ----------------------------------------
+
+.input-base() {
+  background-color: @color-bg-page;
+  border: 1px solid @color-border;
+  border-radius: @radius-md;
+  color: @color-text-main;
+  font-size: @font-size-base;
+  padding: @spacing-3 @spacing-4;
+  
+  &::placeholder {
+    color: @color-text-muted;
+  }
+  
+  &:focus {
+    border-color: @color-primary;
+  }
+}
+
+// 禁用状态
+// ----------------------------------------
+
+.disabled() {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+// 选中状态
+// ----------------------------------------
+
+.selected() {
+  background-color: @color-primary;
+  color: @color-bg-page;
+}
+
+// 动画过渡
+// ----------------------------------------
+
+.transition-all() {
+  transition: all @duration-normal @ease-default;
+}
+
+.transition-transform() {
+  transition: transform @duration-normal @ease-default;
+}
+
+.transition-opacity() {
+  transition: opacity @duration-normal @ease-default;
+}
+
+// 响应式断点
+// ----------------------------------------
+
+@screen-sm: 320px;
+@screen-md: 375px;
+@screen-lg: 414px;
+@screen-xl: 750px;
+
+.respond-to-sm(@rules) {
+  @media (max-width: @screen-sm) {
+    @rules();
+  }
+}
+
+.respond-to-md(@rules) {
+  @media (min-width: @screen-sm) and (max-width: @screen-md) {
+    @rules();
+  }
+}
+
+.respond-to-lg(@rules) {
+  @media (min-width: @screen-md) and (max-width: @screen-lg) {
+    @rules();
+  }
+}
