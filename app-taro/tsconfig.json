@@ -18,7 +18,7 @@
     "checkJs": false,
     "resolveJsonModule": true,
     "declaration": false,
-    "lib": ["ES2017"],
+    "lib": ["ES2017", "DOM"],
     "types": ["@tarojs/taro", "@types/node"],
     "baseUrl": ".",
     "paths": {

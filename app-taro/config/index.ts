@@ -64,7 +64,7 @@ const config = {
     }
   },
   h5: {
-    publicPath: './',
+    publicPath: '/',
     staticDirectory: 'static',
     output: {
       filename: 'js/[name].[hash:8].js',
@@ -107,12 +107,7 @@ const config = {
     esnextModules: ['taro-ui', 'nutui-react', 'lodash-es'],
     router: {
       mode: 'hash',
-      basename: '/',
-      customRoutes: {
-        '/pages/home/index': '/home',
-        '/pages/discover/index': '/discover',
-        '/pages/profile/index': '/profile'
-      }
+      basename: '/'
     },
     devServer: {
       port: 10086,
