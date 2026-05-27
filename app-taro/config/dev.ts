@@ -3,6 +3,16 @@ module.exports = {
     NODE_ENV: '"development"'
   },
   defineConstants: {},
+  logger: {
+    quiet: false,
+    stats: true
+  },
+  sourceMap: {
+    enable: true,
+    hidden: false
+  },
   mini: {},
-  h5: {}
+  h5: {
+    sourceMap: true
+  }
 }
