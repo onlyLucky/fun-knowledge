@@ -3,7 +3,7 @@ import { ChevronLeft } from 'lucide-taro-react'
 import { useState } from 'react'
 import Taro from '@tarojs/taro'
 import { useAuthStore } from '@/stores'
-import http from '@/utils/http'
+import { authService } from '@/api'
 import { isValidPhone } from '@/utils'
 import './index.less'
 
@@ -24,7 +24,7 @@ export default function LoginPage() {
     if (countdown > 0) return
     
     try {
-      await http.post('/v1/auth/sms/send', { phone })
+      await authService.sendSmsCode(phone)
       Taro.showToast({ title: '验证码已发送', icon: 'success' })
       
       setCountdown(60)
@@ -56,10 +56,7 @@ export default function LoginPage() {
     setLoading(true)
     
     try {
-      const result = await http.post<{
-        user: any
-        tokens: { accessToken: string; refreshToken: string }
-      }>('/v1/auth/login', { phone, code })
+      const result = await authService.loginByPhone(phone, code)
       
       login(result.user, result.tokens.accessToken, result.tokens.refreshToken)
       Taro.showToast({ title: '登录成功', icon: 'success' })

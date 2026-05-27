@@ -64,6 +64,13 @@ const config = {
           browsers: ['last 3 versions', 'Android >= 4.1', 'ios >= 8']
         }
       },
+      pxtransform: {
+        enable: true,
+        config: {
+          baseFontSize: 100,
+          targetUnit: 'rem'
+        }
+      },
       cssModules: {
         enable: false,
         config: {

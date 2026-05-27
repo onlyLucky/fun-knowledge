@@ -50,7 +50,8 @@
       "Bash(npx @tarojs/cli --version)",
       "Bash(pnpm add *)",
       "Bash(taro --version)",
-      "Bash(npx taro *)"
+      "Bash(npx taro *)",
+      "Bash(npx lessc *)"
     ],
     "defaultMode": "bypassPermissions",
     "additionalDirectories": [

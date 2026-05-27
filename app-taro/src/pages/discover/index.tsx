@@ -3,7 +3,7 @@ import { Search, TrendingUp, TrendingDown, Minus } from 'lucide-taro-react'
 import { useState, useEffect } from 'react'
 import Taro from '@tarojs/taro'
 import { PageHeader } from '@/components'
-import http from '@/utils/http'
+import { discoverService, knowledgeService, mapServerKnowledgeList } from '@/api'
 import { KnowledgeCard, HotSearchItem } from '@/types'
 import './index.less'
 
@@ -20,7 +20,7 @@ export default function Discover() {
 
   async function loadHotSearches() {
     try {
-      const result = await http.get<HotSearchItem[]>('/v1/knowledge/hot-searches')
+      const result = await discoverService.getHotSearches()
       setHotSearches(result)
     } catch (error) {
       console.error('Load hot searches error:', error)
@@ -34,10 +34,8 @@ export default function Discover() {
     setSearched(true)
     
     try {
-      const result = await http.get<{ list: KnowledgeCard[] }>('/v1/knowledge/list', {
-        keyword: searchText.trim()
-      })
-      setSearchResults(result.list)
+      const result = await discoverService.searchKnowledge(searchText.trim())
+      setSearchResults(mapServerKnowledgeList(result.list))
     } catch (error) {
       console.error('Search error:', error)
     } finally {

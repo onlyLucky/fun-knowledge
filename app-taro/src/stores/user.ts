@@ -1,11 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import Taro from '@tarojs/taro'
-import http from '@/utils/http'
-
-// ============================================
-// 类型定义
-// ============================================
 
 interface UserStats {
   checkInDays: number
@@ -18,14 +13,11 @@ interface UserState {
   stats: UserStats
   isLoaded: boolean
   loadStats: () => Promise<void>
+  setStatsFromProfile: (profile: { streak_days?: number; total_check_in_days?: number }) => void
   incrementCheckIn: () => void
   updateFavoriteCount: (count: number) => void
   updateBrowseCount: (count: number) => void
 }
-
-// ============================================
-// Taro 存储适配器
-// ============================================
 
 const taroStorage = {
   getItem: async (name: string): Promise<string | null> => {
@@ -44,10 +36,6 @@ const taroStorage = {
   }
 }
 
-// ============================================
-// User Store
-// ============================================
-
 export const useUserStore = create<UserState>()(
   persist(
     (set, get) => ({
@@ -60,12 +48,18 @@ export const useUserStore = create<UserState>()(
       isLoaded: false,
 
       loadStats: async () => {
-        try {
-          const stats = await http.get<UserStats>('/v1/user/stats')
-          set({ stats, isLoaded: true })
-        } catch {
-          set({ isLoaded: true })
-        }
+        set({ isLoaded: true })
+      },
+
+      setStatsFromProfile: (profile) => {
+        const { stats } = get()
+        set({
+          stats: {
+            ...stats,
+            checkInDays: profile.streak_days ?? stats.checkInDays,
+            totalCheckIns: profile.total_check_in_days ?? stats.totalCheckIns
+          }
+        })
       },
 
       incrementCheckIn: () => {

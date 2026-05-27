@@ -3,9 +3,15 @@ import { SlidersHorizontal, Star, Sparkles, CircleAlert, ChevronUp, RefreshCw } 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import Taro from '@tarojs/taro'
 import { PageHeader } from '@/components'
-import { useAuthStore, useSettingsStore } from '@/stores'
-import http from '@/utils/http'
+import { useAuthStore } from '@/stores'
 import { debounce } from '@/utils'
+import { 
+  categoryService, 
+  knowledgeService, 
+  favoriteService,
+  mapServerCategories,
+  mapServerKnowledgeList
+} from '@/api'
 import { KnowledgeCard, Category } from '@/types'
 import './index.less'
 
@@ -19,7 +25,6 @@ export default function Home() {
   const [pullDistance, setPullDistance] = useState(0)
   
   const { user } = useAuthStore()
-  const { settings } = useSettingsStore()
   
   const PAGE_SIZE = 20
   const pageRef = useRef(1)
@@ -36,17 +41,17 @@ export default function Home() {
     
     try {
       const [catsResult, cardsResult] = await Promise.all([
-        http.get<Category[]>('/v1/category/list'),
+        categoryService.getCategories(),
         activeCategory === 'all'
-          ? http.get<{ list: KnowledgeCard[] }>('/v1/knowledge/recommend', { page: 1, pageSize: PAGE_SIZE })
-          : http.get<{ list: KnowledgeCard[] }>('/v1/knowledge/list', { category_id: activeCategory, page: 1, pageSize: PAGE_SIZE })
+          ? knowledgeService.getRecommendations({ page: 1, pageSize: PAGE_SIZE })
+          : knowledgeService.getKnowledgeList({ category_id: activeCategory, page: 1, pageSize: PAGE_SIZE })
       ])
       
       setCategories([
         { id: 'all', name: '全部', icon: 'Layers', description: '', sort: 0, knowledgeCount: 0 },
-        ...catsResult
+        ...mapServerCategories(catsResult)
       ])
-      setCards(cardsResult.list)
+      setCards(mapServerKnowledgeList(cardsResult.list))
       setHasMore(cardsResult.list.length === PAGE_SIZE)
     } catch (error) {
       console.error('Load data error:', error)
@@ -61,11 +66,11 @@ export default function Home() {
     const nextPage = pageRef.current + 1
     try {
       const result = activeCategory === 'all'
-        ? await http.get<{ list: KnowledgeCard[] }>('/v1/knowledge/recommend', { page: nextPage, pageSize: PAGE_SIZE })
-        : await http.get<{ list: KnowledgeCard[] }>('/v1/knowledge/list', { category_id: activeCategory, page: nextPage, pageSize: PAGE_SIZE })
+        ? await knowledgeService.getRecommendations({ page: nextPage, pageSize: PAGE_SIZE })
+        : await knowledgeService.getKnowledgeList({ category_id: activeCategory, page: nextPage, pageSize: PAGE_SIZE })
       
       if (result.list.length > 0) {
-        setCards(prev => [...prev, ...result.list])
+        setCards(prev => [...prev, ...mapServerKnowledgeList(result.list)])
         pageRef.current = nextPage
         setHasMore(result.list.length === PAGE_SIZE)
       } else {
@@ -123,9 +128,9 @@ export default function Home() {
   const handleFavorite = async (id: string, isFavorited: boolean) => {
     try {
       if (isFavorited) {
-        await http.delete(`/v1/favorite/${id}`)
+        await favoriteService.removeFavorite(id)
       } else {
-        await http.post('/v1/favorite', { knowledge_id: id })
+        await favoriteService.addFavorite(id)
       }
       setCards(prev => prev.map(card => 
         card.id === id ? { ...card, isFavorited: !isFavorited } : card

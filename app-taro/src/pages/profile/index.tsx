@@ -4,22 +4,34 @@ import { useState, useEffect } from 'react'
 import Taro from '@tarojs/taro'
 import { PageHeader } from '@/components'
 import { useAuthStore, useUserStore } from '@/stores'
-import http from '@/utils/http'
+import { checkinService, authService } from '@/api'
 import './index.less'
 
 export default function Profile() {
   const { user, logout } = useAuthStore()
-  const { stats, loadStats } = useUserStore()
+  const { stats, setStatsFromProfile } = useUserStore()
   const [checkedIn, setCheckedIn] = useState(false)
 
   useEffect(() => {
-    loadStats()
+    loadProfile()
     checkTodayCheckIn()
   }, [])
 
+  async function loadProfile() {
+    try {
+      const profile = await authService.getProfile()
+      setStatsFromProfile({
+        streak_days: profile.streak_days,
+        total_check_in_days: profile.total_check_in_days
+      })
+    } catch (error) {
+      console.error('Load profile error:', error)
+    }
+  }
+
   async function checkTodayCheckIn() {
     try {
-      const result = await http.get<{ checked_in: boolean }>('/v1/check-in/status')
+      const result = await checkinService.getCheckInStatus()
       setCheckedIn(result.checked_in)
     } catch (error) {
       console.error('Check checkin status error:', error)
@@ -30,7 +42,7 @@ export default function Profile() {
     if (checkedIn) return
     
     try {
-      await http.post('/v1/check-in')
+      await checkinService.checkIn()
       setCheckedIn(true)
       Taro.showToast({ title: '打卡成功！', icon: 'success' })
     } catch (error) {

@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "lucide-react-taro": {
+      "source": "louisyoungx/lucide-react-taro",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "cedf1af8760b8a15a4d0ca2d6f347d8ea28952b5e6f790c3e43935598ce7420c"
+    }
+  }
+}

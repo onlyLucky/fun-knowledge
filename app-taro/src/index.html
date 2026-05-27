@@ -9,7 +9,44 @@
   <meta name="theme-color" content="#1C1A1B">
   <title>冷知识星球</title>
   <script>
-    !function(n){var e=n.document,t=e.documentElement,i=750,o=i/100,a="orientationchange"in n?"orientationchange":"resize",d=function(){var n=t.clientWidth||320;n>540&&(n=540),t.style.fontSize=n/o+"px"};e.addEventListener&&(n.addEventListener(a,d,!1),e.addEventListener("DOMContentLoaded",d,!1))}(window);
+    (function(win, doc) {
+      var docEl = doc.documentElement;
+      var designWidth = 750;
+      var baseSize = 100;
+      
+      function setRemUnit() {
+        var clientWidth = docEl.clientWidth;
+        if (!clientWidth) return;
+        
+        if (clientWidth > 540) {
+          clientWidth = 540;
+        }
+        
+        var rem = (clientWidth / designWidth) * baseSize;
+        docEl.style.fontSize = rem + 'px';
+      }
+      
+      function handleResize() {
+        setRemUnit();
+      }
+      
+      setRemUnit();
+      
+      win.addEventListener('resize', handleResize);
+      win.addEventListener('orientationchange', handleResize);
+      
+      doc.addEventListener('DOMContentLoaded', function() {
+        setRemUnit();
+      });
+      
+      if (win.addEventListener) {
+        win.addEventListener('pageshow', function(e) {
+          if (e.persisted) {
+            setRemUnit();
+          }
+        });
+      }
+    })(window, document);
   </script>
 </head>
 <body>

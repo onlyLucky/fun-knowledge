@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import http from '@/utils/http'
+import { favoriteService } from '@/api'
 
 // ============================================
 // 类型定义
@@ -37,7 +37,15 @@ export const useFavoritesStore = create<FavoritesState>()((set, get) => ({
   loadFavorites: async () => {
     set({ loading: true })
     try {
-      const items = await http.get<FavoriteItem[]>('/v1/favorite/list')
+      const result = await favoriteService.getFavorites()
+      const items = result.list.map((k: any) => ({
+        id: k.id,
+        knowledgeId: k.id,
+        title: k.title,
+        image: k.resource_url || '',
+        category: k.category?.name || '',
+        createdAt: k.created_at
+      }))
       set({ items, isLoaded: true, loading: false })
     } catch {
       set({ isLoaded: true, loading: false })
@@ -46,12 +54,7 @@ export const useFavoritesStore = create<FavoritesState>()((set, get) => ({
 
   addFavorite: async (knowledgeId) => {
     try {
-      const item = await http.post<FavoriteItem>('/v1/favorite', {
-        knowledge_id: knowledgeId
-      })
-      set((state) => ({
-        items: [item, ...state.items]
-      }))
+      await favoriteService.addFavorite(knowledgeId)
       return true
     } catch {
       return false
@@ -60,7 +63,7 @@ export const useFavoritesStore = create<FavoritesState>()((set, get) => ({
 
   removeFavorite: async (knowledgeId) => {
     try {
-      await http.delete(`/v1/favorite/${knowledgeId}`)
+      await favoriteService.removeFavorite(knowledgeId)
       set((state) => ({
         items: state.items.filter((item) => item.knowledgeId !== knowledgeId)
       }))

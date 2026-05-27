@@ -40,6 +40,17 @@ interface RequestOptions {
   showError?: boolean
 }
 
+function buildQueryString(params: Record<string, any>): string {
+  const parts: string[] = []
+  Object.keys(params).forEach((key) => {
+    const value = params[key]
+    if (value !== undefined && value !== null && value !== '') {
+      parts.push(`${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
+    }
+  })
+  return parts.join('&')
+}
+
 async function request<T = any>(options: RequestOptions): Promise<T> {
   const {
     url,
@@ -65,11 +76,22 @@ async function request<T = any>(options: RequestOptions): Promise<T> {
     Taro.showLoading({ title: '加载中...', mask: true })
   }
 
+  let requestUrl = `${BASE_URL}${url}`
+  let requestData = data
+
+  if (method === 'GET' && data && Object.keys(data).length > 0) {
+    const queryString = buildQueryString(data)
+    if (queryString) {
+      requestUrl = `${requestUrl}?${queryString}`
+    }
+    requestData = undefined
+  }
+
   try {
     const response = await Taro.request({
-      url: `${BASE_URL}${url}`,
+      url: requestUrl,
       method,
-      data,
+      data: requestData,
       header: headers,
       timeout: 10000
     })

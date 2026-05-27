@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import Taro from '@tarojs/taro'
-import http from '@/utils/http'
+import { authService, mapServerUser } from '@/api'
 
 // ============================================
 // 类型定义
@@ -100,7 +100,8 @@ export const useAuthStore = create<AuthState>()(
         }
 
         try {
-          const user = await http.get<AuthUser>('/v1/auth/profile')
+          const serverUser = await authService.getProfile()
+          const user = mapServerUser(serverUser)
           set({
             user,
             isLoggedIn: true
