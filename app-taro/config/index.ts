@@ -87,6 +87,7 @@ const config = {
         config: {
           platform: 'h5',
           designWidth: 750,
+          targetUnit: 'px',
           unitPrecision: 5,
           propList: ['*'],
           selectorBlackList: ['nut-', 'van-', 'taro-'],
