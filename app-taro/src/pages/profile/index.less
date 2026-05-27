@@ -5,217 +5,384 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: @color-bg-page;
+  background-color: var(--color-bg-page);
 }
 
 .profile-content {
   flex: 1;
-  padding: 0 @spacing-5;
+  padding: 0 var(--spacing-5);
 }
 
+// 用户信息卡片 - 主色背景，圆角24px，内边距20px，带阴影
 .user-card {
-  display: flex;
-  align-items: center;
-  gap: @spacing-4;
-  padding: @spacing-5;
-  background-color: @color-bg-card;
-  border-radius: @radius-xl;
-  margin-bottom: @spacing-4;
-}
-
-.avatar-wrapper {
+  .card();
   position: relative;
-  width: 128px;
-  height: 128px;
-  flex-shrink: 0;
+  padding: 40px;
+  border-radius: 48px;
+  margin-bottom: var(--spacing-4);
+  overflow: hidden;
 }
 
-.avatar {
-  width: 100%;
-  height: 100%;
+// 装饰性背景圆
+.user-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 144px;
+  height: 144px;
+  background-color: rgba(255, 255, 255, 0.05);
   border-radius: 50%;
+  transform: translate(20px, -20px);
+  pointer-events: none;
 }
 
-.avatar-edit-hint {
+.user-card::after {
+  content: '';
   position: absolute;
   bottom: 0;
   left: 0;
-  right: 0;
-  padding: 4px 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  border-radius: 0 0 50% 50%;
-  text-align: center;
-  font-size: 18px;
-  color: #fff;
+  width: 96px;
+  height: 96px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  transform: translate(-16px, 16px);
+  pointer-events: none;
 }
 
-.user-info {
-  flex: 1;
-  min-width: 0;
+// 头像容器 - 108px in Taro (54px * 2)
+.avatar-wrapper {
+  position: relative;
+  width: 108px;
+  height: 108px;
+  flex-shrink: 0;
+  z-index: 10;
 }
 
-.nickname {
-  font-size: @font-size-lg;
-  font-weight: @font-weight-bold;
-  color: @color-text-main;
+// 头像 - 圆角100px
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 100px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.signature {
-  margin-top: @spacing-1;
-  font-size: @font-size-sm;
-  color: @color-text-muted;
-  .ellipsis();
-}
-
-.edit-btn {
-  width: 64px;
-  height: 64px;
+// 编辑按钮 - 在头像右下角，40px in Taro (20px * 2)
+.avatar-edit-btn {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 40px;
+  height: 40px;
+  background-color: #fff;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: @color-text-muted;
-  
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 20;
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// 编辑按钮图标
+.avatar-edit-icon {
+  width: 20px;
+  height: 20px;
+  color: @color-primary;
+}
+
+// 用户信息区域
+.user-info {
+  flex: 1;
+  min-width: 0;
+  z-index: 10;
+}
+
+// 昵称
+.nickname {
+  font-size: 34px;
+  font-weight: @font-weight-bold;
+  color: #FDFDFD;
+  margin-bottom: 4px;
+}
+
+// 个性签名
+.signature {
+  font-size: 22px;
+  color: rgba(253, 253, 253, 0.5);
+  .ellipsis();
+}
+
+// 编辑按钮 - 右侧
+.edit-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 100px;
+  z-index: 10;
+
   &:active {
     opacity: 0.8;
   }
 }
 
-.stats-card {
-  display: flex;
-  align-items: center;
-  padding: @spacing-4;
-  background-color: @color-bg-card;
-  border-radius: @radius-xl;
-  margin-bottom: @spacing-4;
+.edit-btn-text {
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.7);
 }
 
+.edit-btn-icon {
+  width: 22px;
+  height: 22px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+// 统计数据区域 - 三个等分卡片
+.stats-row {
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  position: relative;
+  z-index: 10;
+}
+
+// 单个统计卡片 - 白色半透明背景，圆角14px
 .stat-item {
   flex: 1;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 28px;
+}
+
+// 统计项头部（图标+标签）
+.stat-header {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: @spacing-1;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.stat-icon {
+  width: 26px;
+  height: 26px;
+  color: rgba(253, 253, 253, 0.7);
+}
+
+.stat-label {
+  font-size: 20px;
+  color: rgba(253, 253, 253, 0.6);
+}
+
+// 统计数值
+.stat-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-top: 4px;
 }
 
 .stat-value {
+  font-size: 44px;
+  font-weight: @font-weight-bold;
+  color: #FDFDFD;
+  line-height: 1;
+}
+
+.stat-unit {
+  font-size: 20px;
+  color: rgba(253, 253, 253, 0.5);
+}
+
+// 本周打卡卡片 - 背景为卡片色，圆角20px，边框
+.checkin-card {
+  .card();
+  padding: 32px;
+  border: 1px solid var(--color-border);
+  border-radius: 40px;
+  margin-bottom: var(--spacing-4);
+}
+
+// 打卡卡片头部
+.checkin-header {
   display: flex;
   align-items: center;
-  gap: @spacing-1;
-  font-size: @font-size-lg;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.checkin-title {
+  font-size: 26px;
   font-weight: @font-weight-bold;
   color: @color-text-main;
 }
 
-.stat-icon {
-  color: @color-primary;
+.checkin-more {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 22px;
+  color: @color-text-muted;
+
+  &:active {
+    opacity: 0.6;
+  }
 }
 
-.stat-label {
-  font-size: @font-size-xs;
+// 打卡日期格子容器
+.checkin-days {
+  display: flex;
+  justify-content: space-between;
+}
+
+// 单个日期格子
+.checkin-day-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+// 星期标签
+.checkin-day-label {
+  font-size: 20px;
   color: @color-text-muted;
 }
 
-.stat-divider {
-  width: 1px;
-  height: 40px;
-  background-color: @color-border;
-}
-
-.checkin-card {
-  display: flex;
-  align-items: center;
-  gap: @spacing-4;
-  padding: @spacing-4;
-  background-color: @color-bg-card;
-  border-radius: @radius-xl;
-  margin-bottom: @spacing-4;
-  
-  &.checked {
-    opacity: 0.6;
-  }
-  
-  &:active:not(.checked) {
-    transform: scale(0.98);
-  }
-}
-
-.checkin-icon {
-  width: 80px;
-  height: 80px;
+// 打卡日期格子 - 64px in Taro (32px * 2)，圆角100px
+.checkin-day-box {
+  width: 64px;
+  height: 64px;
+  border-radius: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: @color-bg-page;
-  border-radius: @radius-lg;
-  color: @color-primary;
-}
-
-.checkin-content {
-  flex: 1;
-}
-
-.checkin-title {
-  font-size: @font-size-base;
+  font-size: 24px;
   font-weight: @font-weight-medium;
-  color: @color-text-main;
+  transition: all 0.2s;
+
+  &.checked {
+    background-color: @color-primary;
+    color: #FDFDFD;
+  }
+
+  &.unchecked {
+    background-color: @color-bg-page;
+    color: #DFDEDE;
+    border: 1px solid @color-border;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
 }
 
-.checkin-subtitle {
-  font-size: @font-size-sm;
-  color: @color-text-muted;
-  margin-top: 4px;
-}
-
-.checkin-arrow {
-  color: @color-text-muted;
-}
-
+// 菜单分组
 .menu-section {
-  background-color: @color-bg-card;
-  border-radius: @radius-xl;
-  margin-bottom: @spacing-4;
+  .card();
+  border: 1px solid var(--color-border);
+  border-radius: 40px;
+  margin-bottom: 24px;
   overflow: hidden;
 }
 
+// 菜单项 - 高度约56px (112px in Taro)
 .menu-item {
   display: flex;
   align-items: center;
-  gap: @spacing-3;
-  padding: @spacing-4;
-  border-bottom: 1px solid @color-border;
-  
-  &:last-child {
-    border-bottom: none;
-  }
-  
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 112px;
+  transition: background-color 0.2s;
+
   &:active {
     background-color: @color-bg-page;
   }
 }
 
+// 菜单项左侧
+.menu-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+// 菜单图标区域 - 68px in Taro (34px * 2)，圆角10px (20px in Taro)
+.menu-icon-wrapper {
+  .flex-center();
+  width: 68px;
+  height: 68px;
+  background-color: var(--color-bg-page);
+  border-radius: 20px;
+}
+
 .menu-icon {
-  color: @color-primary;
+  width: 36px;
+  height: 36px;
+  color: var(--color-text-main);
 }
 
+.menu-icon-muted {
+  color: var(--color-text-muted);
+}
+
+// 菜单标题
 .menu-label {
-  flex: 1;
-  font-size: @font-size-base;
-  color: @color-text-main;
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--color-text-main);
 }
 
+// 菜单项右侧
+.menu-item-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-muted);
+}
+
+// 菜单值标签
+.menu-value {
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--color-text-sub);
+  background-color: var(--color-bg-page);
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+
+// 菜单箭头
 .menu-arrow {
-  color: @color-text-muted;
+  width: 32px;
+  height: 32px;
+  color: var(--color-text-muted);
 }
 
+// 菜单分隔线
+.menu-divider {
+  height: 2px;
+  background-color: var(--color-bg-page);
+  margin: 0 32px;
+}
+
+// 退出登录按钮
 .logout-btn {
-  padding: @spacing-4;
+  padding: var(--spacing-4);
   text-align: center;
-  font-size: @font-size-base;
-  color: @color-error;
-  background-color: @color-bg-card;
-  border-radius: @radius-xl;
-  margin-bottom: @spacing-8;
-  
+  font-size: 28px;
+  color: var(--color-error);
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--spacing-8);
+
   &:active {
     opacity: 0.9;
   }

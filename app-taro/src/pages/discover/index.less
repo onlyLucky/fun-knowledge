@@ -5,49 +5,67 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: @color-bg-page;
+  background-color: var(--color-bg-page);
 }
 
+// ─── 搜索栏 ───────────────────────────────────────────────────────────────
+
 .search-box {
-  display: flex;
-  align-items: center;
-  gap: @spacing-3;
-  padding: 0 @spacing-5 @spacing-4;
+  .flex-center();
+  gap: var(--spacing-3);
+  padding: 0 var(--spacing-5) var(--spacing-3);
 }
 
 .search-input-wrapper {
   flex: 1;
-  display: flex;
-  align-items: center;
-  gap: @spacing-2;
-  padding: @spacing-3 @spacing-4;
-  background-color: @color-bg-card;
-  border-radius: @radius-full;
-  border: 1px solid @color-border;
+  .flex-center();
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-4);
+  background-color: var(--color-bg-card);
+  border-radius: 28px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 12px rgba(41, 37, 38, 0.04);
 }
 
 .search-icon {
-  color: @color-text-muted;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
 }
 
 .search-input {
   flex: 1;
-  font-size: @font-size-base;
-  color: @color-text-main;
+  font-size: 28px;
+  color: var(--color-text-main);
 }
 
-.search-btn {
-  padding: @spacing-3 @spacing-5;
-  background-color: @color-primary;
-  color: @color-bg-page;
-  font-size: @font-size-sm;
-  font-weight: @font-weight-medium;
-  border-radius: @radius-full;
-  
+// 清除按钮 - 圆形，边框背景
+.clear-btn {
+  .flex-center();
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--color-border);
+  flex-shrink: 0;
+
   &:active {
-    opacity: 0.9;
+    opacity: 0.8;
   }
 }
+
+.clear-icon {
+  color: var(--color-text-muted);
+}
+
+// 搜索按钮 - 主色背景，圆角 100px
+.search-btn {
+  .button-primary();
+  padding: var(--spacing-2) var(--spacing-4);
+  font-size: 24px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+// ─── 搜索结果 ─────────────────────────────────────────────────────────────
 
 .search-results {
   flex: 1;
@@ -61,15 +79,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 200px;
+  height: 400px;
   gap: @spacing-3;
   color: @color-text-muted;
 }
 
 .loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid @color-border;
+  width: 80px;
+  height: 80px;
+  border: 6px solid @color-border;
   border-top-color: @color-primary;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -81,23 +99,26 @@
 }
 
 .result-header {
-  padding: @spacing-3 0;
-  color: @color-text-muted;
-  font-size: @font-size-sm;
+  padding: var(--spacing-3) 0;
+  color: var(--color-text-muted);
+  font-size: 24px;
 }
 
 .result-list {
   flex: 1;
 }
 
+// 搜索结果卡片 - 圆角 16px，图片 120x120px (Taro)
 .result-item {
   display: flex;
-  gap: @spacing-3;
-  padding: @spacing-3;
-  background-color: @color-bg-card;
-  border-radius: @radius-lg;
-  margin-bottom: @spacing-3;
-  
+  gap: var(--spacing-3);
+  padding: var(--spacing-3);
+  background-color: var(--color-bg-card);
+  border-radius: 32px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 16px rgba(41, 37, 38, 0.05);
+  margin-bottom: var(--spacing-2);
+
   &:active {
     opacity: 0.9;
   }
@@ -106,8 +127,10 @@
 .result-image {
   width: 120px;
   height: 120px;
-  border-radius: @radius-md;
+  border-radius: var(--radius-md);
   flex-shrink: 0;
+  background-color: var(--color-bg-page);
+  overflow: hidden;
 }
 
 .result-content {
@@ -115,123 +138,263 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: @spacing-2;
+  gap: var(--spacing-2);
+  min-width: 0;
 }
 
 .result-title {
-  font-size: @font-size-base;
-  font-weight: @font-weight-medium;
-  color: @color-text-main;
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--color-text-main);
   .ellipsis-lines(2);
 }
 
 .result-category {
-  font-size: @font-size-xs;
-  color: @color-text-muted;
+  font-size: 20px;
+  color: var(--color-text-muted);
 }
 
 .empty-state {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 200px;
-  color: @color-text-muted;
-  font-size: @font-size-base;
+  height: 400px;
+  color: var(--color-text-muted);
+  font-size: 28px;
+  gap: var(--spacing-3);
 }
+
+// ─── 最近搜索 ─────────────────────────────────────────────────────────────
+
+.recent-search-section {
+  margin-bottom: var(--spacing-5);
+}
+
+.recent-header {
+  .flex-between();
+  margin-bottom: var(--spacing-3);
+}
+
+.recent-title {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.recent-clear-btn {
+  font-size: 22px;
+  color: var(--color-text-muted);
+
+  &:active {
+    color: var(--color-text-main);
+  }
+}
+
+.recent-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
+
+// 最近搜索标签 - 圆角 100px，卡片背景，边框
+.recent-tag {
+  .flex-center();
+  gap: 6px;
+  padding: var(--spacing-2) var(--spacing-3);
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  box-shadow: 0 2px 8px rgba(41, 37, 38, 0.04);
+  font-size: 26px;
+  color: var(--color-text-main);
+
+  &:active {
+    opacity: 0.95;
+  }
+}
+
+.recent-tag-icon {
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.recent-tag-text {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ─── 热搜榜单 ─────────────────────────────────────────────────────────────
 
 .hot-search-section {
   flex: 1;
-  padding: 0 @spacing-5;
+  padding: 0 var(--spacing-5);
+}
+
+// 热搜榜单卡片 - 背景，圆角 20px，边框
+.hot-search-card {
+  .card();
+  border-radius: 40px;
+  border: 1px solid var(--color-border);
+  overflow: hidden;
 }
 
 .section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: @spacing-4 0;
+  .flex-between();
+  padding: var(--spacing-4) var(--spacing-4) var(--spacing-2);
+}
+
+.section-title-wrapper {
+  .flex-center();
+  gap: var(--spacing-2);
+}
+
+// 热搜标题 - 带火焰图标，粗体
+.section-title-icon {
+  color: var(--color-red);
 }
 
 .section-title {
-  font-size: @font-size-lg;
-  font-weight: @font-weight-bold;
-  color: @color-text-main;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--color-text-main);
 }
 
 .more-btn {
-  font-size: @font-size-sm;
-  color: @color-text-muted;
-  
+  .flex-center();
+  gap: 2px;
+  font-size: 24px;
+  color: var(--color-text-muted);
+
   &:active {
     opacity: 0.8;
   }
 }
 
-.hot-search-list {
+// 热搜项两列布局
+.hot-search-grid {
   display: flex;
-  flex-direction: column;
-  gap: @spacing-2;
 }
 
+.hot-search-column {
+  flex: 1;
+  padding: 0 var(--spacing-3) var(--spacing-2);
+}
+
+.hot-search-column-left {
+  border-right: 1px solid var(--color-border);
+}
+
+// 热搜项 - 高度约 40px
 .hot-search-item {
-  display: flex;
-  align-items: center;
-  gap: @spacing-3;
-  padding: @spacing-3 @spacing-4;
-  background-color: @color-bg-card;
-  border-radius: @radius-lg;
-  
+  .flex-center();
+  gap: var(--spacing-3);
+  padding: var(--spacing-2) 4px;
+  width: 100%;
+
   &:active {
-    opacity: 0.9;
+    opacity: 0.98;
   }
 }
 
+// 前3名排名 - 红色
 .rank-badge {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: @font-size-sm;
-  font-weight: @font-weight-bold;
-  border-radius: @radius-sm;
-  background-color: @color-bg-page;
-  color: @color-text-muted;
-  
-  &.rank-1 {
-    background-color: #FF6B6B;
-    color: #fff;
-  }
-  
-  &.rank-2 {
-    background-color: #FFA94D;
-    color: #fff;
-  }
-  
-  &.rank-3 {
-    background-color: #FFD93D;
-    color: #fff;
+  width: 28px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+
+  &.rank-top {
+    color: var(--color-red);
   }
 }
 
 .hot-keyword {
   flex: 1;
-  font-size: @font-size-base;
-  color: @color-text-main;
+  font-size: 28px;
+  color: var(--color-text-main);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
+.trend-wrapper {
+  .flex-center();
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+// 前3名火焰图标
+.rank-flame-icon {
+  color: var(--color-red);
+}
+
+// 趋势箭头：上升红色，下降绿色，持平灰色
 .trend-icon {
-  display: flex;
-  align-items: center;
+  .flex-center();
 }
 
 .trend-up {
-  color: @color-success;
+  color: var(--color-red);
 }
 
 .trend-down {
-  color: @color-error;
+  color: var(--color-green);
 }
 
 .trend-same {
-  color: @color-text-muted;
+  color: var(--color-text-muted);
+}
+
+// ─── 热搜列表（旧版兼容）─────────────────────────────────────────────────
+
+.hot-search-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.hot-search-item-legacy {
+  .flex-center();
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-4);
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.rank-badge-legacy {
+  .flex-center();
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg-page);
+  color: var(--color-text-muted);
+
+  &.rank-1 {
+    background-color: #FF6B6B;
+    color: #fff;
+  }
+
+  &.rank-2 {
+    background-color: #FFA94D;
+    color: #fff;
+  }
+
+  &.rank-3 {
+    background-color: #FFD93D;
+    color: #fff;
+  }
 }
