@@ -1,37 +1,33 @@
 @import '../../../styles/variables.less';
+@import '../../../styles/mixins.less';
 
 .login-page {
-  display: flex;
-  flex-direction: column;
+  .flex-column();
   height: 100vh;
-  background-color: @color-bg-page;
+  background-color: var(--color-bg-page);
 }
 
 .page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: @spacing-4 @spacing-5;
-  padding-top: calc(@spacing-4 + env(safe-area-inset-top));
+  .flex-between();
+  padding: var(--spacing-4) var(--spacing-5);
+  padding-top: calc(var(--spacing-4) + env(safe-area-inset-top));
 }
 
 .back-btn {
+  .flex-center();
   width: 64px;
   height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: @color-text-main;
-  
+  color: var(--color-text-main);
+
   &:active {
     opacity: 0.8;
   }
 }
 
 .header-title {
-  font-size: @font-size-lg;
-  font-weight: @font-weight-bold;
-  color: @color-text-main;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-text-main);
 }
 
 .header-placeholder {
@@ -40,33 +36,29 @@
 
 .form-content {
   flex: 1;
-  padding: @spacing-6 @spacing-5;
+  padding: var(--spacing-6) var(--spacing-5);
 }
 
 .input-group {
-  margin-bottom: @spacing-5;
+  margin-bottom: var(--spacing-5);
 }
 
 .input-label {
   display: block;
-  font-size: @font-size-sm;
-  color: @color-text-sub;
-  margin-bottom: @spacing-2;
+  font-size: 24px;
+  color: var(--color-text-sub);
+  margin-bottom: var(--spacing-2);
 }
 
 .input-field {
+  .input-base();
   width: 100%;
-  padding: @spacing-4;
-  background-color: @color-bg-card;
-  border: 1px solid @color-border;
-  border-radius: @radius-lg;
-  font-size: @font-size-base;
-  color: @color-text-main;
+  padding: var(--spacing-4);
 }
 
 .code-input-wrapper {
   display: flex;
-  gap: @spacing-3;
+  gap: var(--spacing-3);
 }
 
 .code-input {
@@ -74,39 +66,25 @@
 }
 
 .send-code-btn {
+  .button-primary();
   flex-shrink: 0;
-  padding: @spacing-3 @spacing-4;
-  background-color: @color-primary;
-  color: @color-bg-page;
-  font-size: @font-size-sm;
-  border-radius: @radius-lg;
+  padding: var(--spacing-3) var(--spacing-4);
+  font-size: 24px;
+  border-radius: var(--radius-lg);
   white-space: nowrap;
-  
-  &:active:not(.disabled) {
-    opacity: 0.9;
-  }
-  
+
   &.disabled {
-    opacity: 0.5;
-    pointer-events: none;
+    .disabled();
   }
 }
 
 .submit-btn {
-  margin-top: @spacing-6;
-  padding: @spacing-4;
-  background-color: @color-primary;
-  color: @color-bg-page;
-  font-size: @font-size-lg;
-  font-weight: @font-weight-medium;
-  text-align: center;
-  border-radius: @radius-full;
-  box-shadow: @shadow-button;
-  
-  &:active:not(.loading) {
-    transform: scale(0.98);
-  }
-  
+  .button-primary();
+  margin-top: var(--spacing-6);
+  padding: var(--spacing-4);
+  font-size: 32px;
+  border-radius: var(--radius-full);
+
   &.loading {
     opacity: 0.7;
     pointer-events: none;
@@ -114,23 +92,21 @@
 }
 
 .footer-links {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: @spacing-6;
-  gap: @spacing-1;
+  .flex-center();
+  margin-top: var(--spacing-6);
+  gap: var(--spacing-1);
 }
 
 .link-text {
-  font-size: @font-size-sm;
-  color: @color-text-muted;
+  font-size: 24px;
+  color: var(--color-text-muted);
 }
 
 .link-action {
-  font-size: @font-size-sm;
-  color: @color-primary;
-  font-weight: @font-weight-medium;
-  
+  font-size: 24px;
+  color: var(--color-accent);
+  font-weight: 500;
+
   &:active {
     opacity: 0.8;
   }
