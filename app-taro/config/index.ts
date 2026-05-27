@@ -1,5 +1,4 @@
 import path from 'path'
-import os from 'os'
 
 const config = {
   projectName: 'funfact-taro',
@@ -18,8 +17,7 @@ const config = {
     '@tarojs/plugin-platform-weapp',
     '@tarojs/plugin-platform-tt',
     '@tarojs/plugin-platform-alipay',
-    '@tarojs/plugin-platform-h5',
-    '@tarojs/plugin-platform-harmony-cpp'
+    '@tarojs/plugin-platform-h5'
   ],
   defineConstants: {},
   alias: {
@@ -129,11 +127,6 @@ const config = {
         }
       }
     }
-  },
-  harmony: {
-    projectPath: path.join(os.homedir(), 'HarmonyProjects/FunFact'),
-    hapName: 'entry',
-    compileMode: 'c_api'
   }
 }
 

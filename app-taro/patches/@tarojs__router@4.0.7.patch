@@ -1,0 +1,15 @@
+diff --git a/dist/index.esm.js b/dist/index.esm.js
+index a5ba01312680ee5b015cbbadc84e3f8b8471be8c..6c8f1bbf027717e9298b34d36c0ebe667bababc6 100644
+--- a/dist/index.esm.js
++++ b/dist/index.esm.js
+@@ -1505,8 +1505,8 @@ function createRouter(history, app, config, framework) {
+     routesAlias.set(handler.router.customRoutes);
+     const basename = handler.router.basename;
+     const routes = handler.routes.map(route => {
+-        const routePath = addLeadingSlash(route.path);
+-        const paths = routesAlias.getAll(routePath);
++        const routePath = route.path;
++        const paths = routesAlias.getAll(addLeadingSlash(routePath));
+         return {
+             path: paths.length < 1 ? routePath : paths,
+             action: route.load

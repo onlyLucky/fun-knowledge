@@ -1,0 +1,2 @@
+patchedDependencies:
+  '@tarojs/router@4.0.7': patches/@tarojs__router@4.0.7.patch

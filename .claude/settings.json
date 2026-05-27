@@ -51,7 +51,13 @@
       "Bash(pnpm add *)",
       "Bash(taro --version)",
       "Bash(npx taro *)",
-      "Bash(npx lessc *)"
+      "Bash(npx lessc *)",
+      "Bash(pnpm run *)",
+      "Bash(curl -s http://localhost:10086)",
+      "Bash(curl -s -I http://localhost:10086/js/app.f1643e5c.js)",
+      "Bash(curl -s http://localhost:10086/pages/home/index)",
+      "Bash(curl -s http://localhost:10086/js/app.f1643e5c.js)",
+      "Bash(pkill -f \"taro build\")"
     ],
     "defaultMode": "bypassPermissions",
     "additionalDirectories": [
