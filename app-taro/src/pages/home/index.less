@@ -5,20 +5,22 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: @color-bg-page;
+  background-color: var(--color-bg-page);
 }
 
 .category-btn {
+  .flex-center();
   width: 76px;
   height: 76px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: @color-primary;
-  border-radius: @radius-md;
-  box-shadow: @shadow-button;
-  color: @color-bg-page;
-  
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration-fast) var(--ease-default);
+
+  &.active {
+    .selected();
+  }
+
   &:active {
     transform: scale(0.95);
   }
@@ -37,18 +39,18 @@
 
 .category-item {
   flex-shrink: 0;
-  padding: @spacing-2 @spacing-4;
-  border-radius: @radius-full;
-  font-size: @font-size-sm;
-  font-weight: @font-weight-medium;
-  background-color: @color-bg-card;
-  color: @color-text-sub;
-  border: 1px solid @color-border;
-  
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm, 24px);
+  font-weight: 500;
+  background-color: var(--color-bg-card);
+  color: var(--color-text-sub);
+  border: 1px solid var(--color-border);
+
   &.active {
-    background-color: @color-primary;
-    color: @color-bg-page;
-    box-shadow: 0 4px 16px rgba(253, 253, 253, 0.2);
+    background-color: var(--color-accent);
+    color: white;
+    box-shadow: 0 4px 16px rgba(52, 126, 251, 0.2);
   }
 }
 
@@ -99,15 +101,13 @@
 }
 
 .knowledge-card {
+  .card();
   position: absolute;
   inset: 0;
   display: flex;
   flex-direction: column;
-  background-color: @color-bg-card;
-  border-radius: @radius-xl;
   overflow: hidden;
-  box-shadow: @shadow-card;
-  
+
   &.active {
     pointer-events: auto;
   }
@@ -117,6 +117,7 @@
   position: relative;
   flex: 0 0 45%;
   overflow: hidden;
+  border-radius: 40px 40px 0 0;
 }
 
 .card-image {
@@ -126,14 +127,14 @@
 
 .category-badge {
   position: absolute;
-  top: @spacing-4;
-  left: @spacing-4;
-  padding: @spacing-1 @spacing-3;
-  background-color: @color-primary;
-  color: @color-bg-page;
+  top: var(--spacing-4);
+  left: var(--spacing-4);
+  padding: var(--spacing-1) var(--spacing-3);
+  background-color: var(--color-primary);
+  color: white;
   font-size: 20px;
-  font-weight: @font-weight-medium;
-  border-radius: @radius-full;
+  font-weight: 500;
+  border-radius: var(--radius-full);
 }
 
 .swipe-hint {
@@ -168,7 +169,7 @@
 
 .card-desc {
   margin-top: @spacing-3;
-  font-size: @font-size-base;
+  font-size: 28px;
   color: @color-text-sub;
   line-height: 1.6;
   .ellipsis-lines(6);
@@ -177,63 +178,59 @@
 .card-source {
   display: flex;
   align-items: center;
-  margin-top: @spacing-4;
-  padding-top: @spacing-4;
-  border-top: 1px solid @color-border;
+  margin-top: var(--spacing-4);
+  padding-top: var(--spacing-4);
+  border-top: 1px solid var(--color-border);
   font-size: 22px;
-  color: @color-text-muted;
+  color: var(--color-text-muted);
 }
 
 .source-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: @color-border;
-  margin-right: @spacing-2;
+  background-color: var(--color-border);
+  margin-right: var(--spacing-2);
 }
 
 .card-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  .flex-between();
   height: 128px;
-  padding: 0 @spacing-6;
-  background-color: @color-bg-card;
+  padding: 0 var(--spacing-6);
+  background-color: var(--color-bg-card);
   flex-shrink: 0;
 }
 
 .action-btn {
+  .flex-center();
   width: 80px;
   height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: @radius-full;
-  border: 1px solid @color-border;
-  color: @color-text-muted;
-  
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-card);
+  color: var(--color-text-muted);
+
   &:active {
     transform: scale(0.9);
   }
-  
+
   .starred {
-    color: @color-primary;
-    fill: @color-primary;
+    color: var(--color-error);
+    fill: var(--color-error);
   }
 }
 
 .ai-btn {
-  display: flex;
-  align-items: center;
-  gap: @spacing-2;
-  padding: @spacing-2 @spacing-5;
-  background-color: @color-primary;
-  color: @color-bg-page;
-  font-size: @font-size-sm;
-  font-weight: @font-weight-medium;
-  border-radius: @radius-full;
-  box-shadow: @shadow-button;
-  
+  .flex-center();
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-5);
+  background: linear-gradient(135deg, var(--color-accent), #6C63FF);
+  color: white;
+  font-size: 24px;
+  font-weight: 500;
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-md);
+
   &:active {
     transform: scale(0.95);
   }
@@ -250,8 +247,8 @@
 
 .progress-dots {
   position: absolute;
-  top: @spacing-4;
-  right: @spacing-5;
+  top: var(--spacing-4);
+  right: var(--spacing-5);
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -261,12 +258,35 @@
 .dot {
   width: 6px;
   height: 6px;
-  border-radius: @radius-full;
-  background-color: @color-border;
+  border-radius: var(--radius-full);
+  background-color: var(--color-border);
   transition: all 0.3s;
-  
+
   &.active {
     height: 16px;
-    background-color: @color-primary;
+    background-color: var(--color-accent);
+  }
+}
+
+// 打卡提示栏
+.checkin-banner {
+  .flex-center();
+  gap: var(--spacing-2);
+  height: 80px;
+  font-size: 24px;
+  font-weight: 500;
+  cursor: pointer;
+  flex-shrink: 0;
+  overflow: hidden;
+  transition: all 0.3s;
+
+  &.active {
+    background-color: var(--color-accent);
+    color: white;
+  }
+
+  &.inactive {
+    background-color: var(--color-bg-card);
+    color: var(--color-text-sub);
   }
 }
