@@ -1,0 +1,150 @@
+@import '../../styles/variables.less';
+@import '../../styles/mixins.less';
+
+.settings-page {
+  background-color: var(--color-bg-page);
+  min-height: 100vh;
+}
+
+// 设置分组
+.settings-section {
+  .card();
+  margin: var(--spacing-4) var(--spacing-5);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+
+  .section-title {
+    font-size: 20px;
+    color: var(--color-text-muted);
+    padding: var(--spacing-3) var(--spacing-4) var(--spacing-1);
+  }
+}
+
+// 设置项
+.settings-item {
+  .flex-between();
+  height: 112px;
+  padding: 0 var(--spacing-4);
+  transition: background-color var(--duration-fast) var(--ease-default);
+
+  &:active {
+    background-color: var(--color-bg-page);
+  }
+
+  .item-left {
+    .flex-center();
+    gap: var(--spacing-3);
+
+    .item-icon-wrapper {
+      .flex-center();
+      width: 68px;
+      height: 68px;
+      border-radius: var(--radius-xl);
+      background-color: var(--color-bg-page);
+
+      .item-icon {
+        width: 36px;
+        height: 36px;
+        color: var(--color-text-main);
+      }
+    }
+
+    .item-content {
+      .flex-column();
+      gap: var(--spacing-1);
+
+      .item-label {
+        font-size: 28px;
+        color: var(--color-text-main);
+      }
+
+      .item-desc {
+        font-size: 20px;
+        color: var(--color-text-muted);
+      }
+    }
+  }
+
+  .item-right {
+    .flex-center();
+    gap: var(--spacing-2);
+
+    .item-value {
+      font-size: 24px;
+      color: var(--color-text-muted);
+    }
+
+    .item-arrow {
+      width: 32px;
+      height: 32px;
+      color: var(--color-text-muted);
+    }
+
+    // 开关样式
+    .toggle-switch {
+      width: 88px;
+      height: 48px;
+      border-radius: var(--radius-full);
+      background-color: var(--color-border);
+      position: relative;
+      transition: background-color var(--duration-fast) var(--ease-default);
+
+      &.active {
+        background-color: var(--color-accent);
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-full);
+        background-color: white;
+        top: 4px;
+        left: 4px;
+        transition: transform var(--duration-fast) var(--ease-default);
+      }
+
+      &.active::after {
+        transform: translateX(40px);
+      }
+    }
+  }
+}
+
+// 退出登录按钮
+.logout-btn {
+  .flex-center();
+  width: calc(100% - 40px);
+  height: 112px;
+  margin: var(--spacing-8) var(--spacing-5);
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-2xl);
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--color-error);
+  transition: all var(--duration-fast) var(--ease-default);
+
+  &:active {
+    background-color: var(--color-bg-page);
+    transform: scale(0.95);
+  }
+}
+
+// 版本信息
+.version-info {
+  .flex-column();
+  align-items: center;
+  gap: var(--spacing-1);
+  padding: var(--spacing-8) 0;
+
+  .version-label {
+    font-size: 20px;
+    color: var(--color-text-muted);
+  }
+
+  .version-number {
+    font-size: 24px;
+    color: var(--color-text-sub);
+  }
+}

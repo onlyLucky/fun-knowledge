@@ -4,7 +4,10 @@ export default defineAppConfig({
     'pages/discover/index',
     'pages/profile/index',
     'pages/auth/welcome/index',
-    'pages/auth/login/index'
+    'pages/auth/login/index',
+    'pages/settings/index',
+    'pages/profile/favorites/index',
+    'pages/profile/calendar/index'
   ],
   window: {
     backgroundTextStyle: 'dark',
