@@ -102,59 +102,70 @@
 // ----------------------------------------
 
 .button-base() {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   border: none;
   outline: none;
   cursor: pointer;
-  transition: all @duration-fast @ease-default;
-  
+  border-radius: var(--radius-lg);
+  font-weight: 500;
+  transition: all var(--duration-fast) var(--ease-default);
+
   &:active {
-    transform: scale(0.97);
+    transform: scale(0.95);
     opacity: 0.9;
   }
 }
 
 .button-primary() {
   .button-base();
-  background-color: @color-primary;
-  color: @color-bg-page;
+  background-color: var(--color-primary);
+  color: white;
+
+  &:active {
+    background-color: var(--color-primary-soft);
+  }
 }
 
 .button-secondary() {
   .button-base();
-  background-color: @color-bg-card;
-  color: @color-text-main;
-  border: 1px solid @color-border;
+  background-color: var(--color-bg-card);
+  color: var(--color-text-main);
+  border: 1px solid var(--color-border);
+
+  &:active {
+    background-color: var(--color-bg-page);
+  }
 }
 
 // 卡片样式
 // ----------------------------------------
 
 .card() {
-  background-color: @color-bg-card;
-  border-radius: @radius-xl;
-  box-shadow: @shadow-card;
+  background-color: var(--color-bg-card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
 }
 
 // 输入框样式
 // ----------------------------------------
 
 .input-base() {
-  background-color: @color-bg-page;
-  border: 1px solid @color-border;
-  border-radius: @radius-md;
-  color: @color-text-main;
-  font-size: @font-size-base;
-  padding: @spacing-3 @spacing-4;
-  
-  &::placeholder {
-    color: @color-text-muted;
-  }
-  
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-3) var(--spacing-4);
+  color: var(--color-text-main);
+  transition: border-color var(--duration-fast) var(--ease-default);
+
   &:focus {
-    border-color: @color-primary;
+    border-color: var(--color-accent);
+    outline: none;
+  }
+
+  &::placeholder {
+    color: var(--color-text-muted);
   }
 }
 
@@ -170,23 +181,46 @@
 // ----------------------------------------
 
 .selected() {
-  background-color: @color-primary;
-  color: @color-bg-page;
+  background-color: var(--color-accent);
+  color: white;
+}
+
+// 骨架屏
+// ----------------------------------------
+
+.skeleton() {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-page) 25%,
+    var(--color-bg-card) 50%,
+    var(--color-bg-page) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 // 动画过渡
 // ----------------------------------------
 
 .transition-all() {
-  transition: all @duration-normal @ease-default;
+  transition: all var(--duration-normal) var(--ease-default);
 }
 
 .transition-transform() {
-  transition: transform @duration-normal @ease-default;
+  transition: transform var(--duration-normal) var(--ease-default);
 }
 
 .transition-opacity() {
-  transition: opacity @duration-normal @ease-default;
+  transition: opacity var(--duration-normal) var(--ease-default);
 }
 
 // 响应式断点
